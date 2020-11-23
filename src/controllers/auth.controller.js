@@ -45,5 +45,8 @@ export function login(req, res) {
           success: false, message: 'Invalid username or password.',
         });
       }
-    });
+    }).catch(User.NotFoundError, () => res.status(404).json({
+      success: false, message: 'User not found.',
+    }),
+  );
 }

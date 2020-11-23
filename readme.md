@@ -1,4 +1,4 @@
-Express and MySQL Boilerplate
+Express and MySQL Application
 
 ## Get Started
 
