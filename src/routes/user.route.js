@@ -9,8 +9,8 @@ const router = express.Router();
 /**
  * @swagger
  * tags:
- *   - name: user
- *     description: User operations
+ *   - name: users
+ *     description: User Operations
  */
 
 /**
@@ -92,7 +92,7 @@ router.route('/')
  * /users:
  *   post:
  *     tags:
- *       - user
+ *       - users
  *     summary: "Create a new user"
  *     security:
  *        - Bearer: []
@@ -119,7 +119,7 @@ router.route('/')
  *             $ref: '#/definitions/Error'
  */
 
-    .post(validate(schema.storeUser), (req, res) => {
+    .post(isAuthenticated, validate(schema.storeUser), (req, res) => {
         userCtrl.store(req, res);
     })
 
@@ -128,8 +128,10 @@ router.route('/')
      * /users:
      *   get:
      *     tags:
-     *       - user
+     *       - users
      *     summary: "List all users"
+     *     security:
+     *        - Bearer: []
      *     operationId: findAll
      *     consumes:
      *       - application/json
@@ -143,7 +145,7 @@ router.route('/')
      *            type: object
      */
 
-    .get( (req, res) => {
+    .get(isAuthenticated, (req, res) => {
         userCtrl.findAll(req, res);
     });
 
@@ -155,8 +157,10 @@ router.route('/:id')
  * /users/{id}:
  *   get:
  *     tags:
- *       - user
+ *       - users
  *     summary: Find the user by ID
+ *     security:
+ *        - Bearer: []
  *     operationId: findById
  *     consumes:
  *       - application/json
@@ -179,7 +183,7 @@ router.route('/:id')
  *             $ref: '#/definitions/Error'
  */
 
-    .get( (req, res) => {
+    .get(isAuthenticated, (req, res) => {
         userCtrl.findById(req, res);
     })
 
@@ -188,7 +192,7 @@ router.route('/:id')
      * /users/{id}:
      *   put:
      *     tags:
-     *       - user
+     *       - users
      *     summary: "Update an existing user by ID"
      *     security:
      *       - Bearer: []
@@ -227,7 +231,7 @@ router.route('/:id')
      * /users/{id}:
      *   delete:
      *     tags:
-     *       - user
+     *       - users
      *     summary: Delete the user by ID
      *     security:
      *       - Bearer: []

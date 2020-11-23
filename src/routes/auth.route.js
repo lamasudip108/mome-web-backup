@@ -7,7 +7,7 @@ const router = express.Router();
  * @swagger
  * tags:
  *   - name: auths
- *     description: User authentication
+ *     description: Authentication Operations
  */
 
 /**
