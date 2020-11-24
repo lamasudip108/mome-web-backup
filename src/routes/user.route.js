@@ -2,7 +2,7 @@ import express from 'express';
 import * as userCtrl from '../controllers/user.controller';
 import isAuthenticated from '../middlewares/authenticate';
 import validate from '../config/joi.validate';
-import schema from '../utils/validator';
+import userSchema from '../validators/user.validator';
 
 const router = express.Router();
 
@@ -96,7 +96,7 @@ router.route('/')
  *             $ref: '#/definitions/Error'
  */
 
-    .post(isAuthenticated, validate(schema.storeUser), (req, res) => {
+    .post(isAuthenticated, validate(userSchema.store), (req, res) => {
         userCtrl.store(req, res);
     })
 

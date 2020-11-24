@@ -1,7 +1,7 @@
 import Joi from '@hapi/joi';
 
 export default {
-  storeUser:
+  store:
     Joi.object({
       first_name: Joi.string().required(),
       last_name: Joi.string().required(),
@@ -9,7 +9,7 @@ export default {
       password: Joi.string().min(6).required(),
     }),
 
-  updateUser: Joi.object({
+  update: Joi.object({
     first_name: Joi.string().required(),
     last_name: Joi.string().required(),
     email: Joi.string().email().required(),
