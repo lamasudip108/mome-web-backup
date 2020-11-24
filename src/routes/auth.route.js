@@ -6,8 +6,8 @@ const router = express.Router();
 /**
  * @swagger
  * tags:
- *   - name: authentication
- *     description: User authentication
+ *   - name: auths
+ *     description: Authentication Operations
  */
 
 /**
@@ -21,7 +21,7 @@ const router = express.Router();
  *         example: test@gmail.com
  *       password:
  *         type: string
- *         example: "1234"
+ *         example: "123456"
  *   Token:
  *    type: object
  *    properties:
@@ -44,10 +44,10 @@ const router = express.Router();
 
 /**
  * @swagger
- * /auth/login:
+ * /auths/login:
  *   post:
  *     tags:
- *       - authentication
+ *       - auths
  *     summary: Authenticate a user and receive a JWT Token
  *     description:
  *     operationId: login

@@ -17,33 +17,28 @@ export function login(req, res) {
   User.query({ where: { email: email } })
     .fetch({ require: true })
     .then(user => {
-      if (user) {
-        if (bcrypt.compareSync(password, user.get('password'))) {
+      if (bcrypt.compareSync(password, user.get('password'))) {
 
-          const token = jwt.sign({
-            id: user.get('id'),
-            email: user.get('email'),
-          }, process.env.TOKEN_SECRET_KEY);
+        const token = jwt.sign({
+          id: user.get('id'),
+          email: user.get('email'),
+        }, process.env.TOKEN_SECRET_KEY);
 
-          res.json({
-            success: true,
-            token,
-            email: user.get('email'),
-          });
-        } else {
-          logger.log('error', 'Authentication failed. Invalid password.');
-
-          res.status(HttpStatus.UNAUTHORIZED).json({
-            success: false,
-            message: 'Authentication failed. Invalid password.',
-          });
-        }
+        res.json({
+          success: true,
+          token,
+          email: user.get('email'),
+        });
       } else {
-        logger.log('error', 'Invalid username or password.');
+        logger.log('error', 'Authentication failed. Invalid password.');
 
         res.status(HttpStatus.UNAUTHORIZED).json({
-          success: false, message: 'Invalid username or password.',
+          success: false,
+          message: 'Invalid username or password.',
         });
       }
-    });
+    }).catch(User.NotFoundError, () => res.status(404).json({
+      success: false, message: 'User not found.',
+    }),
+  );
 }

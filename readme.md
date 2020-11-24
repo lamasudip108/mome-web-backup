@@ -1,4 +1,4 @@
-Express and MySQL Boilerplate
+Express and MySQL Application
 
 ## Get Started
 
@@ -18,6 +18,7 @@ On the command prompt run the following commands:
  $ cp .env.example .env (edit it with your secret key and database information)
  $ npm install
  $ npm run migrate
+ $ npm run seed
  ```
  Finally, start and build the application:
  
