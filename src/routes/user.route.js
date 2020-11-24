@@ -22,7 +22,6 @@ const router = express.Router();
  *       id:
  *         type: integer
  *         description: Unique identifier representing a specific user
- *         example: 2
  *       first_name:
  *         type: string
  *         description: first name of the user
@@ -40,7 +39,7 @@ const router = express.Router();
  *         type: string
  *         description: password of the user
  *         required: true
- *         example: "1234"
+ *         example: "123456"
  *       status:
  *         type: integer
  *         description: status of the user
