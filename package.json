@@ -8,6 +8,7 @@
     "migrate": "knex migrate:latest",
     "migrate:make": "knex migrate:make",
     "migrate:rollback": "knex migrate:rollback",
+    "seed": "knex seed:run",
     "lint": "eslint client server; exit 0"
   },
   "repository": {
