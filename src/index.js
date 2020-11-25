@@ -5,6 +5,7 @@ import swagger from './config/swagger';
 import * as errorHandler from './middlewares/errorHandler';
 import joiErrorHandler from './middlewares/joiErrorHandler';
 import requestLogger from './middlewares/requestLogger';
+import jsonHandler from './middlewares/jsonHandler';
 
 // Swagger API documentation
 app.get('/swagger.json', (req, res) => {
@@ -13,6 +14,9 @@ app.get('/swagger.json', (req, res) => {
 
 // Request logger
 app.use(requestLogger);
+
+// JSON body validation
+app.use(jsonHandler);
 
 // Router
 app.use('/api', routes);
