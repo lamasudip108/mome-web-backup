@@ -52,28 +52,6 @@ const router = express.Router();
  *         type: string
  *         format: date-time
  *         description: User update datetime
- *   NewUser:
- *     title: NewUser
- *     type: object
- *     properties:
- *       first_name:
- *         type: string
- *         description: Name of the user
- *         example: Krishna
- *       last_name:
- *         type: string
- *         description: last name of the user
- *         example: Timilsina
- *       email:
- *         type: string
- *         description: email of the user
- *         required: true
- *         example: test@gmail.com
- *       password:
- *         type: string
- *         description: password of the user
- *         required: true
- *         example: "123456"
  *   Error:
  *     type: object
  *     properties:
@@ -106,7 +84,7 @@ router.route('/')
  *         description: Created user object
  *         required: true
  *         schema:
- *           $ref: "#/definitions/NewUser"
+ *           $ref: "#/definitions/User"
  *     responses:
  *       200:
  *         description: OK
