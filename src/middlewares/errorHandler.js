@@ -1,5 +1,7 @@
 import HttpStatus from 'http-status-codes';
+
 import logger from '../config/winston';
+import joiError from '../utils/joiError';
 
 /**
  * NOT_FOUND(404) middleware to catch error response
@@ -9,13 +11,13 @@ import logger from '../config/winston';
  * @param  {Function} next
  */
 export function notFound(req, res, next) {
-    res.status(HttpStatus.NOT_FOUND)
-        .json({
-            error: {
-                code: HttpStatus.NOT_FOUND,
-                message: HttpStatus.getStatusText(HttpStatus.NOT_FOUND)
-            }
-        });
+  res.status(HttpStatus.NOT_FOUND)
+    .json({
+      error: {
+        code: HttpStatus.NOT_FOUND,
+        message: HttpStatus.getStatusText(HttpStatus.NOT_FOUND),
+      },
+    });
 }
 
 /**
@@ -26,12 +28,12 @@ export function notFound(req, res, next) {
  * @param {Object} res
  */
 export function methodNotAllowed(req, res) {
-    res.status(HttpStatus.METHOD_NOT_ALLOWED).json({
-        error: {
-            code: HttpStatus.METHOD_NOT_ALLOWED,
-            message: HttpStatus.getStatusText(HttpStatus.METHOD_NOT_ALLOWED)
-        }
-    });
+  res.status(HttpStatus.METHOD_NOT_ALLOWED).json({
+    error: {
+      code: HttpStatus.METHOD_NOT_ALLOWED,
+      message: HttpStatus.getStatusText(HttpStatus.METHOD_NOT_ALLOWED),
+    },
+  });
 }
 
 /**
@@ -43,12 +45,8 @@ export function methodNotAllowed(req, res) {
  * @param  {Function} next
  */
 export function genericErrorHandler(err, req, res, next) {
-    logger.error(err);
-    res.status(err.status || HttpStatus.INTERNAL_SERVER_ERROR)
-        .json({
-            error: {
-                code: err.code || HttpStatus.INTERNAL_SERVER_ERROR,
-                message: err.message || HttpStatus.getStatusText(HttpStatus.INTERNAL_SERVER_ERROR)
-            }
-        });
+  logger.error(err);
+  const error = joiError(err);
+
+  res.status(error.code || HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
 }

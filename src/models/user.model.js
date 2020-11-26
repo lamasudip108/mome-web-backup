@@ -1,4 +1,3 @@
-import bcrypt from 'bcrypt';
 import bookshelf from '../config/bookshelf';
 
 const TABLE_NAME = 'users';
@@ -20,10 +19,6 @@ class User extends bookshelf.Model {
    */
   get hasTimestamps() {
     return true;
-  }
-
-  verifyPassword(password) {
-    return this.get('password') === password;
   }
 }
 

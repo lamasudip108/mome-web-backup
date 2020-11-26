@@ -1,136 +1,73 @@
-import bcrypt from 'bcrypt';
 import HttpStatus from 'http-status-codes';
 
-import User from '../models/user.model';
+import * as userService from '../services/user.service';
 
 /**
  * Find all the users
  *
- * @param {object} req
- * @param {object} res
- * @returns {*}
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
  */
-export function findAll(req, res) {
-  User.forge()
-    .fetchAll()
-    .then(user => res.json({
-        success: true,
-        data: user.toJSON(),
-      }),
-    )
-    .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-        success: false, message: err.message,
-      }),
-    );
+export function findAll(req, res, next) {
+  userService
+    .getAllUser()
+    .then(data => res.json({ data }))
+    .catch(err => next(err));
 }
 
 /**
  *  Find user by id
  *
- * @param {object} req
- * @param {object} res
- * @returns {*}
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
  */
-export function findById(req, res) {
-  User
-    .forge({ id: req.params.id })
-    .fetch({ require: true })
-    .then(user => {
-      res.json({
-        success: true,
-        data: user.toJSON(),
-      });
-    }).catch(User.NotFoundError, () => {
-    res.status(HttpStatus.NOT_FOUND).json({
-      success: false, message: 'User not found.',
-    });
-  }).catch((err) => {
-    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-      success: false, message: err.message,
-    });
-  });
+export function findById(req, res, next) {
+  userService
+    .getUser(req.params.id)
+    .then(data => res.json({ data }))
+    .catch(err => next(err));
 }
 
 /**
  * Store new user
  *
- * @param {object} req
- * @param {object} res
- * @returns {*}
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
  */
-export function store(req, res) {
-  const { first_name, last_name, email } = req.body;
-  const password = bcrypt.hashSync( req.body.password, 10);
-
-  User.forge({
-    first_name, last_name, email, password,
-  }).save()
-    .then(user => res.json({
-        success: true,
-        data: user.toJSON(),
-      }),
-    )
-    .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-        success: false, message: err.message,
-      }),
-    );
+export function store(req, res, next) {
+  userService
+    .storeUser(req.body)
+    .then(data => res.status(HttpStatus.CREATED).json({ data }))
+    .catch(err => next(err));
 }
 
 /**
  * Update user by id
  *
- * @param {object} req
- * @param {object} res
- * @returns {*}
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
  */
-export function update(req, res) {
-  const { first_name, last_name, email } = req.body;
-  User.forge({ id: req.params.id })
-    .fetch({ require: true })
-    .then(user => user.save({
-        first_name: first_name || user.get('first_name'),
-        last_name: last_name || user.get('last_name'),
-        email: email || user.get('email'),
-      })
-        .then(() => res.json({
-            success: true,
-            data: user.toJSON(),
-          }),
-        )
-        .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-            success: false, message: err.message,
-          }),
-        ),
-    )
-    .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-        success: false, message: err.message,
-      }),
-    );
+export function update(req, res, next) {
+  userService
+    .updateUser(req.params.id, req.body)
+    .then(data => res.json({ data }))
+    .catch(err => next(err));
 }
 
 /**
  * Destroy user by id
  *
- * @param {object} req
- * @param {object} res
- * @returns {*}
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
  */
-export function destroy(req, res) {
-  User.forge({ id: req.params.id })
-    .fetch({ require: true })
-    .then(user => user.destroy()
-      .then(() => res.json({
-          success: true,
-          data: { message: 'User deleted successfully.' },
-        }),
-      )
-      .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-          success: false, message: err.message,
-        }),
-      ),
-    )
-    .catch(err => res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-        success: false, message: err.message,
-      }),
-    );
+export function destroy(req, res, next) {
+  userService
+    .deleteUser(req.params.id)
+    .then(data => res.status(HttpStatus.NO_CONTENT).json({ data }))
+    .catch(err => next(err));
 }
