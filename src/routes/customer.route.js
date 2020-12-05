@@ -1,22 +1,22 @@
 import express from 'express';
-import * as userCtrl from '../controllers/user.controller';
+import * as customerCtrl from '../controllers/customer.controller';
 import isAuthenticated from '../middlewares/authenticate';
 import validate from '../config/joi.validate';
-import userSchema from '../validators/user.validator';
+import customerSchema from '../validators/customer.validator';
 
 const router = express.Router();
 
 /**
  * @swagger
  * tags:
- *   - name: users
- *     description: User Operations
+ *   - name: customers
+ *     description: Customers Operations
  */
 
 /**
  * @swagger
  * definitions:
- *   User:
+ *   Customers:
  *     type: object
  *     properties:
  *       id:
@@ -67,7 +67,7 @@ router
 
   /**
    * @swagger
-   * /users:
+   * /customers:
    *   post:
    *     tags:
    *       - users
@@ -94,14 +94,14 @@ router
    *       403:
    *          description: User not found
    *          schema:
-   *             $ref: '#/definitions/Error'user.route
+   *             $ref: '#/definitions/Error'
    */
 
-  .post(validate(userSchema.store), userCtrl.store)
+  .post(validate(customerSchema.store), customerCtrl.store)
 
   /**
    * @swagger
-   * /users:
+   * /customers:
    *   get:
    *     tags:
    *       - users
@@ -121,7 +121,7 @@ router
    *            type: object
    */
 
-  .get(isAuthenticated, userCtrl.findAll);
+  .get(isAuthenticated, customerCtrl.findAll);
 
 router
   .route('/:id')
@@ -157,7 +157,7 @@ router
    *             $ref: '#/definitions/Error'
    */
 
-  .get(isAuthenticated, userCtrl.findById)
+  .get(isAuthenticated, customerCtrl.findById)
 
   /**
    * @swagger
@@ -194,7 +194,7 @@ router
    *         description: Invalid user
    */
 
-  .put(isAuthenticated, validate(userSchema.update), userCtrl.update)
+  .put(isAuthenticated, validate(customerSchema.update), customerCtrl.update)
 
   /**
    * @swagger
@@ -221,6 +221,6 @@ router
    *          description: "Invalid ID"
    */
 
-  .delete(isAuthenticated, userCtrl.destroy);
+  .delete(isAuthenticated, customerCtrl.destroy);
 
 export default router;

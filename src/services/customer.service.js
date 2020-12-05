@@ -1,7 +1,7 @@
 import Boom from '@hapi/boom';
 import bcrypt from 'bcrypt';
 
-import User from '../models/customer.model';
+import Customer from '../models/customer.model';
 
 /**
  * Get all users.
@@ -9,7 +9,7 @@ import User from '../models/customer.model';
  * @returns {Promise}
  */
 export function getAllUser() {
-  return User.forge().fetchAll();
+  return Customer.forge().fetchAll();
 }
 
 /**
@@ -19,31 +19,32 @@ export function getAllUser() {
  * @returns {Promise}
  */
 export function getUser(id) {
-  return new User({ id })
+  return new Customer({ id })
     .fetch({ require: true })
     .then((user) => user)
-    .catch(User.NotFoundError, () => {
+    .catch(Customer.NotFoundError, () => {
       throw Boom.notFound('User not found.');
     });
 }
 
 /**
- * Create new user.
+ * Create new customer.
  *
- * @param   {Object}  user
+ * @param   {Object}  customer
  * @returns {Promise}
  */
-export function storeUser(user) {
+export function storeUser(customer) {
   // eslint-disable-next-line camelcase
-  const { first_name, middle_name, last_name, email } = user;
-  const password = bcrypt.hashSync(user.password, 10);
+  const { first_name, middle_name, last_name, email, phone } = customer;
+  const password = bcrypt.hashSync(customer.password, 10);
 
-  return new User({
+  return new Customer({
     first_name,
     middle_name,
     last_name,
     email,
     password,
+    phone,
   }).save();
 }
 
@@ -51,21 +52,21 @@ export function storeUser(user) {
  * Update a user.
  *
  * @param   {Number|String}  id
- * @param   {Object}         user
+ * @param   {Object}         customer
  * @returns {Promise}
  */
-export function updateUser(id, user) {
+export function updateUser(id, customer) {
   // eslint-disable-next-line camelcase
-  const { first_name, last_name, email, status } = user;
+  const { first_name, last_name, email, status } = customer;
 
-  return new User({ id })
+  return new Customer({ id })
     .save({
       first_name: first_name,
       last_name: last_name,
       email: email,
       status: status,
     })
-    .catch(User.NoRowsUpdatedError, () => {
+    .catch(Customer.NoRowsUpdatedError, () => {
       throw Boom.notFound('User not found.');
     });
 }
@@ -77,10 +78,10 @@ export function updateUser(id, user) {
  * @returns {Promise}
  */
 export function deleteUser(id) {
-  return new User({ id })
+  return new Customer({ id })
     .fetch()
     .then((user) => user.destroy())
-    .catch(User.NotFoundError, () => {
+    .catch(Customer.NotFoundError, () => {
       throw Boom.notFound('User not found.');
     });
 }
