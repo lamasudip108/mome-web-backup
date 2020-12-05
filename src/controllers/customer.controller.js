@@ -10,7 +10,7 @@ import * as CustomerService from '../services/customer.service';
  * @param {Function} next
  */
 export function findAll(req, res, next) {
-  CustomerService.getAllUser()
+  CustomerService.getAllCustomer()
     .then((data) => res.json({ data }))
     .catch((err) => next(err));
 }
@@ -23,7 +23,7 @@ export function findAll(req, res, next) {
  * @param {Function} next
  */
 export function findById(req, res, next) {
-  CustomerService.getUser(req.params.id)
+  CustomerService.getCustomer(req.params.id)
     .then((data) => res.json({ data }))
     .catch((err) => next(err));
 }
@@ -36,7 +36,7 @@ export function findById(req, res, next) {
  * @param {Function} next
  */
 export function store(req, res, next) {
-  CustomerService.storeUser(req.body)
+  CustomerService.storeCustomer(req.body)
     .then((data) => res.status(HttpStatus.CREATED).json({ data }))
     .catch((err) => next(err));
 }
@@ -49,7 +49,7 @@ export function store(req, res, next) {
  * @param {Function} next
  */
 export function update(req, res, next) {
-  CustomerService.updateUser(req.params.id, req.body)
+  CustomerService.updateCustomer(req.params.id, req.body)
     .then((data) => res.json({ data }))
     .catch((err) => next(err));
 }
@@ -62,7 +62,7 @@ export function update(req, res, next) {
  * @param {Function} next
  */
 export function destroy(req, res, next) {
-  CustomerService.deleteUser(req.params.id)
+  CustomerService.deleteCustomer(req.params.id)
     .then((data) => res.status(HttpStatus.NO_CONTENT).json({ data }))
     .catch((err) => next(err));
 }

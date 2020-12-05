@@ -8,7 +8,7 @@ import Customer from '../models/customer.model';
  *
  * @returns {Promise}
  */
-export function getAllUser() {
+export function getAllCustomer() {
   return Customer.forge().fetchAll();
 }
 
@@ -18,7 +18,7 @@ export function getAllUser() {
  * @param   {Number|String}  id
  * @returns {Promise}
  */
-export function getUser(id) {
+export function getCustomer(id) {
   return new Customer({ id })
     .fetch({ require: true })
     .then((user) => user)
@@ -33,7 +33,7 @@ export function getUser(id) {
  * @param   {Object}  customer
  * @returns {Promise}
  */
-export function storeUser(customer) {
+export function storeCustomer(customer) {
   // eslint-disable-next-line camelcase
   const { first_name, middle_name, last_name, email, phone } = customer;
   const password = bcrypt.hashSync(customer.password, 10);
@@ -55,7 +55,7 @@ export function storeUser(customer) {
  * @param   {Object}         customer
  * @returns {Promise}
  */
-export function updateUser(id, customer) {
+export function updateCustomer(id, customer) {
   // eslint-disable-next-line camelcase
   const { first_name, last_name, email, status } = customer;
 
@@ -77,7 +77,7 @@ export function updateUser(id, customer) {
  * @param   {Number|String}  id
  * @returns {Promise}
  */
-export function deleteUser(id) {
+export function deleteCustomer(id) {
   return new Customer({ id })
     .fetch()
     .then((user) => user.destroy())
