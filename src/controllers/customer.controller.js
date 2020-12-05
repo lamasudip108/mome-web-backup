@@ -1,17 +1,16 @@
 import HttpStatus from 'http-status-codes';
 
-import * as userService from '../services/user.service';
+import * as CustomerService from '../services/customer.service';
 
 /**
  * Find all the users
  *
  * @param {Object} req
  * @param {Object} res
- * @param {Function} nextuser.model
+ * @param {Function} next
  */
 export function findAll(req, res, next) {
-  userService
-    .getAllUser()
+  CustomerService.getAllUser()
     .then((data) => res.json({ data }))
     .catch((err) => next(err));
 }
@@ -24,8 +23,7 @@ export function findAll(req, res, next) {
  * @param {Function} next
  */
 export function findById(req, res, next) {
-  userService
-    .getUser(req.params.id)
+  CustomerService.getUser(req.params.id)
     .then((data) => res.json({ data }))
     .catch((err) => next(err));
 }
@@ -38,8 +36,7 @@ export function findById(req, res, next) {
  * @param {Function} next
  */
 export function store(req, res, next) {
-  userService
-    .storeUser(req.body)
+  CustomerService.storeUser(req.body)
     .then((data) => res.status(HttpStatus.CREATED).json({ data }))
     .catch((err) => next(err));
 }
@@ -52,8 +49,7 @@ export function store(req, res, next) {
  * @param {Function} next
  */
 export function update(req, res, next) {
-  userService
-    .updateUser(req.params.id, req.body)
+  CustomerService.updateUser(req.params.id, req.body)
     .then((data) => res.json({ data }))
     .catch((err) => next(err));
 }
@@ -66,8 +62,7 @@ export function update(req, res, next) {
  * @param {Function} next
  */
 export function destroy(req, res, next) {
-  userService
-    .deleteUser(req.params.id)
+  CustomerService.deleteUser(req.params.id)
     .then((data) => res.status(HttpStatus.NO_CONTENT).json({ data }))
     .catch((err) => next(err));
 }

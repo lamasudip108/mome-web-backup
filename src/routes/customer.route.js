@@ -94,7 +94,7 @@ router
    *       403:
    *          description: User not found
    *          schema:
-   *             $ref: '#/definitions/Error'
+   *             $ref: '#/definitions/Error'user.route
    */
 
   .post(validate(userSchema.store), userCtrl.store)
