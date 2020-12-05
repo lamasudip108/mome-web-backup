@@ -96,35 +96,31 @@ router.route('/')
  *             $ref: '#/definitions/Error'
  */
 
-    .post(isAuthenticated, validate(userSchema.store), (req, res) => {
-        userCtrl.store(req, res);
-    })
+  .post(isAuthenticated, validate(userSchema.store), userCtrl.store)
 
-    /**
-     * @swagger
-     * /users:
-     *   get:
-     *     tags:
-     *       - users
-     *     summary: "List all users"
-     *     security:
-     *        - Bearer: []
-     *     operationId: findAll
-     *     consumes:
-     *       - application/json
-     *     produces:
-     *       - application/json
-     *     parameters: []
-     *     responses:
-     *       200:
-     *         description: OK
-     *         schema:
-     *            type: object
-     */
+  /**
+   * @swagger
+   * /users:
+   *   get:
+   *     tags:
+   *       - users
+   *     summary: "List all users"
+   *     security:
+   *        - Bearer: []
+   *     operationId: findAll
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters: []
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *            type: object
+   */
 
-    .get(isAuthenticated, (req, res) => {
-        userCtrl.findAll(req, res);
-    });
+  .get(isAuthenticated, userCtrl.findAll);
 
 
 router.route('/:id')
@@ -160,77 +156,71 @@ router.route('/:id')
  *             $ref: '#/definitions/Error'
  */
 
-    .get(isAuthenticated, (req, res) => {
-        userCtrl.findById(req, res);
-    })
+  .get(isAuthenticated, userCtrl.findById)
 
-    /**
-     * @swagger
-     * /users/{id}:
-     *   put:
-     *     tags:
-     *       - users
-     *     summary: "Update an existing user by ID"
-     *     security:
-     *       - Bearer: []
-     *     operationId: update
-     *     consumes:
-     *       - application/json
-     *     produces:
-     *       - application/json
-     *     parameters:
-     *       - name: id
-     *         in: path
-     *         description: id that need to be updated
-     *         required: true
-     *         type: integer
-     *       - name: body
-     *         in: body
-     *         description: Updated user object
-     *         required: true
-     *         schema:
-     *           $ref: "#/definitions/User"
-     *     responses:
-     *       200:
-     *         description: OK
-     *         schema:
-     *           $ref: "#/definitions/User"
-     *       400:
-     *         description: Invalid user
-     */
+  /**
+   * @swagger
+   * /users/{id}:
+   *   put:
+   *     tags:
+   *       - users
+   *     summary: "Update an existing user by ID"
+   *     security:
+   *       - Bearer: []
+   *     operationId: update
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: id
+   *         in: path
+   *         description: id that need to be updated
+   *         required: true
+   *         type: integer
+   *       - name: body
+   *         in: body
+   *         description: Updated user object
+   *         required: true
+   *         schema:
+   *           $ref: "#/definitions/User"
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *           $ref: "#/definitions/User"
+   *       400:
+   *         description: Invalid user
+   */
 
-    .put(isAuthenticated, (req, res) => {
-        userCtrl.update(req, res);
-    })
+  .put(isAuthenticated, validate(userSchema.update), userCtrl.update)
 
-    /**
-     * @swagger
-     * /users/{id}:
-     *   delete:
-     *     tags:
-     *       - users
-     *     summary: Delete the user by ID
-     *     security:
-     *       - Bearer: []
-     *     operationId: destroy
-     *     produces:
-     *       - application/json
-     *     parameters:
-     *       - name: id
-     *         in: path
-     *         description: id of user that needs to be deleted
-     *         required: true
-     *         type: integer
-     *     responses:
-     *       200:
-     *         description: OK
-     *       400:
-     *          description: "Invalid ID"
-     */
+  /**
+   * @swagger
+   * /users/{id}:
+   *   delete:
+   *     tags:
+   *       - users
+   *     summary: Delete the user by ID
+   *     security:
+   *       - Bearer: []
+   *     operationId: destroy
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: id
+   *         in: path
+   *         description: id of user that needs to be deleted
+   *         required: true
+   *         type: integer
+   *     responses:
+   *       200:
+   *         description: OK
+   *       400:
+   *          description: "Invalid ID"
+   */
 
-    .delete(isAuthenticated, (req, res) => {
-        userCtrl.destroy(req, res);
-    });
+  .delete(isAuthenticated, userCtrl.destroy);
 
 
 export default router;
