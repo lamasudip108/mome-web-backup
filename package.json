@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Express And MySQL Application",
   "scripts": {
-    "start": "nodemon --exec babel-node src/index.js",
+    "dev": "nodemon --exec babel-node src/index.js",
+    "start": "node --experimental-modules --es-module-specifier-resolution=node src/index.js",
     "clean": "rimraf node_modules && rimraf dist && npm install",
     "migrate": "knex migrate:latest",
     "migrate:make": "knex migrate:make",
@@ -86,5 +87,6 @@
   "engines": {
     "node": ">= 6.9.0",
     "npm": ">= 3.10.8"
-  }
+  },
+  "type": "module"
 }
