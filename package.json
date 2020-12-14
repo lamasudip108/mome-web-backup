@@ -2,7 +2,6 @@
   "name": "mome-web-app",
   "version": "1.0.0",
   "description": "Express And MySQL Application",
-  "type": "module",
   "scripts": {
     "start:dev": "nodemon --exec babel-node -- src/index.js",
     "start": "babel-node -- src/index.js",
