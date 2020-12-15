@@ -23,7 +23,8 @@ exports.up = function (knex) {
     table.string('remember_token').nullable();
     table.string('otp_code').nullable();
     table.timestamp('created_at').defaultTo(knex.fn.now());
-    table.timestamp('updated_at').defaultTo(knex.fn.now());
+    //table.timestamp('updated_at').defaultTo(knex.fn.now());
+    table.timestamp('updated_at').nullable();
   });
 };
 

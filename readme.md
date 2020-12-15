@@ -23,7 +23,8 @@ On the command prompt run the following commands:
  Finally, start and build the application:
  
  ```
- $ npm start
+ $ npm run start (production)
+ $ npm run start:dev (development)
 ```
 
 List of NPM Commands:

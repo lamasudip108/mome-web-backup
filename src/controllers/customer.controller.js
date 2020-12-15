@@ -1,6 +1,7 @@
 import HttpStatus from 'http-status-codes';
 
 import * as CustomerService from '../services/customer.service';
+import {sendConfirmationEmail} from '../config/mailer';
 
 /**
  * Find all the users
@@ -36,8 +37,13 @@ export function findById(req, res, next) {
  * @param {Function} next
  */
 export function store(req, res, next) {
-  CustomerService.storeCustomer(req.body)
-    .then((data) => res.status(HttpStatus.CREATED).json({ data }))
+  CustomerService
+    .storeCustomer(req.body)
+    .then(data =>{
+
+      sendConfirmationEmail(data);
+      res.status(HttpStatus.CREATED).json({ data })
+    })
     .catch((err) => next(err));
 }
 
