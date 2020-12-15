@@ -19,7 +19,7 @@ exports.up = function (knex) {
     table.integer('customer_id').unsigned().index().references('id').inTable('customers');
     table.timestamp('created_at').defaultTo(knex.fn.now());
     //table.timestamp('updated_at').defaultTo(knex.fn.now());
-    table.timestamp('updated_at');
+    table.timestamp('updated_at').nullable();
   });
 };
 
