@@ -18,7 +18,8 @@ exports.up = function (knex) {
     table.string('password').notNullable();
     table.integer('customer_id').unsigned().index().references('id').inTable('customers');
     table.timestamp('created_at').defaultTo(knex.fn.now());
-    table.timestamp('updated_at').defaultTo(knex.fn.now());
+    //table.timestamp('updated_at').defaultTo(knex.fn.now());
+    table.timestamp('updated_at').defaultTo(knex.raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'))
   });
 };
 
