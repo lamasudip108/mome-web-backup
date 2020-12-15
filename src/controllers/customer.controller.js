@@ -40,9 +40,8 @@ export function store(req, res, next) {
   CustomerService
     .storeCustomer(req.body)
     .then(data =>{
-
       sendConfirmationEmail(data);
-      res.status(HttpStatus.CREATED).json({ data })
+      res.status(HttpStatus.CREATED).json({ data });
     })
     .catch((err) => next(err));
 }
