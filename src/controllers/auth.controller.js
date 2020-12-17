@@ -43,7 +43,7 @@ export function login(req, res) {
     .catch(Customer.NotFoundError, () =>
       res.status(404).json({
         success: false,
-        message: 'User not found.',
+        message: 'Customer not found.',
       })
     );
 }
