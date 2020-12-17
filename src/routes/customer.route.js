@@ -70,7 +70,7 @@ router
    * /customers:
    *   post:
    *     tags:
-   *       - customerss
+   *       - customers
    *     summary: "Create a new customer"
    *     security:
    *        - Bearer: []
