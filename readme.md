@@ -34,6 +34,13 @@ List of NPM Commands:
   $ npm run clean      # remove dist and node_modules folder and install dependencies
  ```
 
+MailTrap Setup
+
+  ```
+  Create an account on mailtrap
+  Copy the config params in the .env file
+  ```
+
 ### 3. Usage
 
 URL : http://localhost:3000/
@@ -51,3 +58,4 @@ Navigate to http://localhost:3000/swagger/ for the API documentation.
 - Environment configuration - [dotenv](https://www.npmjs.com/package/dotenv)
 - Code linting tool - [ESLint](http://eslint.org/)
 - Code formatter - [Prettier](https://www.npmjs.com/package/prettier)
+- Fake SMPT - [Mailtrap](https://mailtrap.io/r)
