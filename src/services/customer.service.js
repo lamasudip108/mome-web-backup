@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import Customer from '../models/customer.model';
 
 /**
- * Get all users.
+ * Get all customers.
  *
  * @returns {Promise}
  */
@@ -13,7 +13,7 @@ export function getAllCustomer() {
 }
 
 /**
- * Get a user.
+ * Get a customer.
  *
  * @param   {Number|String}  id
  * @returns {Promise}
@@ -23,7 +23,7 @@ export function getCustomer(id) {
     .fetch({ require: true })
     .then((user) => user)
     .catch(Customer.NotFoundError, () => {
-      throw Boom.notFound('User not found.');
+      throw Boom.notFound('Customer not found.');
     });
 }
 
@@ -49,7 +49,7 @@ export function storeCustomer(customer) {
 }
 
 /**
- * Update a user.
+ * Update a customer.
  *
  * @param   {Number|String}  id
  * @param   {Object}         customer
@@ -67,12 +67,12 @@ export function updateCustomer(id, customer) {
       status: status,
     })
     .catch(Customer.NoRowsUpdatedError, () => {
-      throw Boom.notFound('User not found.');
+      throw Boom.notFound('Customer not found.');
     });
 }
 
 /**
- * Delete a user.
+ * Delete a customer.
  *
  * @param   {Number|String}  id
  * @returns {Promise}
@@ -82,6 +82,6 @@ export function deleteCustomer(id) {
     .fetch()
     .then((user) => user.destroy())
     .catch(Customer.NotFoundError, () => {
-      throw Boom.notFound('User not found.');
+      throw Boom.notFound('Customer not found.');
     });
 }
