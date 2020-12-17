@@ -3,10 +3,15 @@ import nodemailer from 'nodemailer';
 /**
  * This is a config file for nodemailer
  *
- * @type {string}
  */
 
 const from = '"Mome" <noreply@mome.com>';
+
+/**
+ * Mailer config params
+ *
+ * @returns {*}
+ */
 
 function setup() {
   return nodemailer.createTransport({

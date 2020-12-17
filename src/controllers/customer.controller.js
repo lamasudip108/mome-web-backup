@@ -4,7 +4,7 @@ import * as CustomerService from '../services/customer.service';
 import {sendConfirmationEmail} from '../config/mailer';
 
 /**
- * Find all the users
+ * Find all the customers
  *
  * @param {Object} req
  * @param {Object} res
@@ -17,7 +17,7 @@ export function findAll(req, res, next) {
 }
 
 /**
- *  Find user by id
+ *  Find customer by id
  *
  * @param {Object} req
  * @param {Object} res
@@ -30,7 +30,7 @@ export function findById(req, res, next) {
 }
 
 /**
- * Store new user
+ * Store new customer
  *
  * @param {Object} req
  * @param {Object} res
@@ -47,7 +47,7 @@ export function store(req, res, next) {
 }
 
 /**
- * Update user by id
+ * Update customer by id
  *
  * @param {Object} req
  * @param {Object} res
@@ -60,7 +60,7 @@ export function update(req, res, next) {
 }
 
 /**
- * Destroy user by id
+ * Destroy customer by id
  *
  * @param {Object} req
  * @param {Object} res
