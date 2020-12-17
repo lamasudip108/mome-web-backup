@@ -7,7 +7,8 @@ export default {
     last_name: Joi.string().required(),
     email: Joi.string().email().required(),
     password: Joi.string().min(6).required(),
-    phone_number: Joi.string().min(6).required(),
+    phone: Joi.string().min(10).required(),
+    status: Joi.string().default('invited'),
   }),
 
   update: Joi.object({

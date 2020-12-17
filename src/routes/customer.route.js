@@ -1,57 +1,57 @@
 import express from 'express';
-import * as userCtrl from '../controllers/user.controller';
+import * as customerCtrl from '../controllers/customer.controller';
 import isAuthenticated from '../middlewares/authenticate';
 import validate from '../config/joi.validate';
-import userSchema from '../validators/user.validator';
+import customerSchema from '../validators/customer.validator';
 
 const router = express.Router();
 
 /**
  * @swagger
  * tags:
- *   - name: users
- *     description: User Operations
+ *   - name: customers
+ *     description: Customers Operations
  */
 
 /**
  * @swagger
  * definitions:
- *   User:
+ *   Customers:
  *     type: object
  *     properties:
  *       id:
  *         type: integer
- *         description: Unique identifier representing a specific user
+ *         description: Unique identifier representing a specific customer
  *       first_name:
  *         type: string
- *         description: first name of the user
+ *         description: first name of the customer
  *         example: Krishna
  *       last_name:
  *         type: string
- *         description: last name of the user
+ *         description: last name of the customer
  *         example: Timilsina
  *       email:
  *         type: string
- *         description: email of the user
+ *         description: email of the customer
  *         required: true
  *         example: test@gmail.com
  *       password:
  *         type: string
- *         description: password of the user
+ *         description: password of the customer
  *         required: true
  *         example: "123456"
  *       status:
  *         type: integer
- *         description: status of the user
+ *         description: status of the customer
  *         example: 1
  *       created_at:
  *         type: string
  *         format: date-time
- *         description: User creation datetime
+ *         description: customer creation datetime
  *       updated_at:
  *         type: string
  *         format: date-time
- *         description: User update datetime
+ *         description: customer update datetime
  *   Error:
  *     type: object
  *     properties:
@@ -67,14 +67,14 @@ router
 
   /**
    * @swagger
-   * /users:
+   * /customers:
    *   post:
    *     tags:
-   *       - users
-   *     summary: "Create a new user"
+   *       - customerss
+   *     summary: "Create a new customer"
    *     security:
    *        - Bearer: []
-   *     operationId: storeUser
+   *     operationId: storeCustomer
    *     consumes:
    *       - application/json
    *     produces:
@@ -82,30 +82,30 @@ router
    *     parameters:
    *       - name: body
    *         in: body
-   *         description: Created user object
+   *         description: Created customer object
    *         required: true
    *         schema:
-   *           $ref: "#/definitions/User"
+   *           $ref: "#/definitions/Customer"
    *     responses:
    *       200:
    *         description: OK
    *         schema:
-   *           $ref: "#/definitions/User"
+   *           $ref: "#/definitions/Customer"
    *       403:
-   *          description: User not found
+   *          description: customer not found
    *          schema:
    *             $ref: '#/definitions/Error'
    */
 
-  .post(validate(userSchema.store), userCtrl.store)
+  .post(validate(customerSchema.store), customerCtrl.store)
 
   /**
    * @swagger
-   * /users:
+   * /customers:
    *   get:
    *     tags:
-   *       - users
-   *     summary: "List all users"
+   *       - customers
+   *     summary: "List all customers"
    *     security:
    *        - Bearer: []
    *     operationId: findAll
@@ -121,18 +121,18 @@ router
    *            type: object
    */
 
-  .get(isAuthenticated, userCtrl.findAll);
+  .get(isAuthenticated, customerCtrl.findAll);
 
 router
   .route('/:id')
 
   /**
    * @swagger
-   * /users/{id}:
+   * /customers/{id}:
    *   get:
    *     tags:
-   *       - users
-   *     summary: Find the user by ID
+   *       - customers
+   *     summary: Find the customers by ID
    *     security:
    *        - Bearer: []
    *     operationId: findById
@@ -143,29 +143,29 @@ router
    *     parameters:
    *       - name: id
    *         in: path
-   *         description: id of user that needs to be fetched
+   *         description: id of customer that needs to be fetched
    *         required: true
    *         type: integer
    *     responses:
    *       200:
    *         description: OK
    *         schema:
-   *           $ref: "#/definitions/User"
+   *           $ref: "#/definitions/customers"
    *       404:
-   *          description: User not found
+   *          description: customer not found
    *          schema:
    *             $ref: '#/definitions/Error'
    */
 
-  .get(isAuthenticated, userCtrl.findById)
+  .get(isAuthenticated, customerCtrl.findById)
 
   /**
    * @swagger
-   * /users/{id}:
+   * /customers/{id}:
    *   put:
    *     tags:
-   *       - users
-   *     summary: "Update an existing user by ID"
+   *       - customers
+   *     summary: "Update an existing customer by ID"
    *     security:
    *       - Bearer: []
    *     operationId: update
@@ -181,28 +181,28 @@ router
    *         type: integer
    *       - name: body
    *         in: body
-   *         description: Updated user object
+   *         description: Updated customers object
    *         required: true
    *         schema:
-   *           $ref: "#/definitions/User"
+   *           $ref: "#/definitions/Customer"
    *     responses:
    *       200:
    *         description: OK
    *         schema:
-   *           $ref: "#/definitions/User"
+   *           $ref: "#/definitions/Customer"
    *       400:
-   *         description: Invalid user
+   *         description: Invalid customer
    */
 
-  .put(isAuthenticated, validate(userSchema.update), userCtrl.update)
+  .put(isAuthenticated, validate(customerSchema.update), customerCtrl.update)
 
   /**
    * @swagger
-   * /users/{id}:
+   * /customers/{id}:
    *   delete:
    *     tags:
-   *       - users
-   *     summary: Delete the user by ID
+   *       - customers
+   *     summary: Delete the customer by ID
    *     security:
    *       - Bearer: []
    *     operationId: destroy
@@ -211,7 +211,7 @@ router
    *     parameters:
    *       - name: id
    *         in: path
-   *         description: id of user that needs to be deleted
+   *         description: id of customer that needs to be deleted
    *         required: true
    *         type: integer
    *     responses:
@@ -221,6 +221,6 @@ router
    *          description: "Invalid ID"
    */
 
-  .delete(isAuthenticated, userCtrl.destroy);
+  .delete(isAuthenticated, customerCtrl.destroy);
 
 export default router;

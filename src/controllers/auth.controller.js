@@ -2,7 +2,7 @@ import HttpStatus from 'http-status-codes';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
-import User from '../models/user.model';
+import Customer from '../models/customer.model';
 import logger from '../config/winston';
 
 /**
@@ -14,15 +14,17 @@ import logger from '../config/winston';
  */
 export function login(req, res) {
   const { email, password } = req.body;
-  User.query({ where: { email: email } })
+  Customer.query({ where: { email: email } })
     .fetch({ require: true })
-    .then(user => {
+    .then((user) => {
       if (bcrypt.compareSync(password, user.get('password'))) {
-
-        const token = jwt.sign({
-          id: user.get('id'),
-          email: user.get('email'),
-        }, process.env.TOKEN_SECRET_KEY);
+        const token = jwt.sign(
+          {
+            id: user.get('id'),
+            email: user.get('email'),
+          },
+          process.env.TOKEN_SECRET_KEY
+        );
 
         res.json({
           success: true,
@@ -37,8 +39,11 @@ export function login(req, res) {
           message: 'Invalid username or password.',
         });
       }
-    }).catch(User.NotFoundError, () => res.status(404).json({
-      success: false, message: 'User not found.',
-    }),
-  );
+    })
+    .catch(Customer.NotFoundError, () =>
+      res.status(404).json({
+        success: false,
+        message: 'User not found.',
+      })
+    );
 }
