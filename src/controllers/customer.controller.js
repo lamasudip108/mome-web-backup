@@ -1,7 +1,7 @@
 import HttpStatus from 'http-status-codes';
 
 import * as CustomerService from '../services/customer.service';
-import {sendConfirmationEmail} from '../config/mailer';
+import {notify} from '../config/mailer';
 
 /**
  * Find all the customers
@@ -40,7 +40,7 @@ export function store(req, res, next) {
   CustomerService
     .storeCustomer(req.body)
     .then(data =>{
-      sendConfirmationEmail(data);
+      notify(data);
       res.status(HttpStatus.CREATED).json({ data });
     })
     .catch((err) => next(err));
