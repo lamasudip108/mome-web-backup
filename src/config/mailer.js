@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer';
 import logger from '../config/winston';
 import * as emailTemplate from '../utils/email';
 
-const senderEmail = '"Express Web APP" <noreply@express.com>';
+const senderEmail = '"Mome" <noreply@mome.com>';
 
 /**
  * Setup config params
@@ -29,15 +29,19 @@ function setup() {
  * @returns {Object}
  */
 function preparePayLoad(params) {
-  const subject = `Welcome to Express`;
+
+  const data = JSON.stringify(params);
+
+  const subject = `Welcome to Mome`;
   const message = 'Hello';
-  const html = emailTemplate.render(params.filename, message);
+  const html = emailTemplate.render('welcome', message);
 
   return {
     from: senderEmail,
-    to: params.email,
-    subject,
-    html,
+    to: JSON.parse(data).email,
+    subject: subject,
+    text: 'Hello world?',
+    html: html,
   };
 }
 
@@ -51,7 +55,7 @@ function sendNotification(payload) {
 
   const transport = setup();
 
-  return transport.sendMail(payload);
+ return transport.sendMail(payload);
 }
 
 /**
