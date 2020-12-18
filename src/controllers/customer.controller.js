@@ -40,7 +40,13 @@ export function store(req, res, next) {
   CustomerService
     .storeCustomer(req.body)
     .then(data =>{
-      notify(data);
+
+      const param = JSON.parse(JSON.stringify(data));
+
+      param.template = 'welcome';
+
+      notify(param);
+
       res.status(HttpStatus.CREATED).json({ data });
     })
     .catch((err) => next(err));

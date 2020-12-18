@@ -30,15 +30,12 @@ function setup() {
  */
 function preparePayLoad(params) {
 
-  const data = JSON.stringify(params);
-
   const subject = `Welcome to Mome`;
-  const message = 'Hello';
-  const html = emailTemplate.render('welcome', message);
+  const html = emailTemplate.render(params.template, {params});
 
   return {
     from: senderEmail,
-    to: JSON.parse(data).email,
+    to: params.email,
     subject: subject,
     text: 'Hello world?',
     html: html,
@@ -71,6 +68,7 @@ export function notify(params) {
   try {
     const result = sendNotification(payload);
     logger.log('info', 'Email Request Payload:' + JSON.stringify(result));
+
     return result;
   } catch (err) {
     logger.log('error', 'Error sending notification to email.', err);
