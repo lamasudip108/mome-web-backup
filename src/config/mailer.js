@@ -1,16 +1,14 @@
 import nodemailer from 'nodemailer';
 
-/**
- * This is a config file for nodemailer
- *
- */
+import logger from '../config/winston';
+import * as emailTemplate from '../utils/email';
 
-const from = '"Mome" <noreply@mome.com>';
+const senderEmail = '"Express Web APP" <noreply@express.com>';
 
 /**
- * Mailer config params
+ * Setup config params
  *
- * @returns {*}
+ * @returns {Object}
  */
 
 function setup() {
@@ -19,31 +17,59 @@ function setup() {
     port: process.env.EMAIL_PORT,
     auth: {
       user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
-    }
+      pass: process.env.EMAIL_PASS,
+    },
   });
 }
 
 /**
- * Send an email after successful signup
+ * Prepare payload for email.
  *
- * @param user
+ * @param   {Object} params
+ * @returns {Object}
  */
+function preparePayLoad(params) {
+  const subject = `Welcome to Express`;
+  const message = 'Hello';
+  const html = emailTemplate.render(params.filename, message);
 
-export function sendConfirmationEmail(user) {
+  return {
+    from: senderEmail,
+    to: params.email,
+    subject,
+    html,
+  };
+}
+
+/**
+ * Send email notification.
+ *
+ * @param   {Object} payload
+ * @returns {Promise}
+ */
+function sendNotification(payload) {
+
   const transport = setup();
 
-  const data = JSON.stringify(user);
+  return transport.sendMail(payload);
+}
 
-  const email = {
-    from,
-    to: JSON.parse(data).email,
-    subject: 'Welcome to Mome',
-    text: `
-        Welcome to Mome.
-        `
-  };
+/**
+ * Send email notification to user.
+ *
+ * @param   {Object} params [filename, email, subject]
+ * @returns {Promise}
+ */
+export function notify(params) {
 
-  transport.sendMail(email);
+  let payload = preparePayLoad(params);
+
+  try {
+    const result = sendNotification(payload);
+    logger.log('info', 'Email Request Payload:' + JSON.stringify(result));
+    return result;
+  } catch (err) {
+    logger.log('error', 'Error sending notification to email.', err);
+  }
 }
 
