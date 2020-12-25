@@ -85,3 +85,34 @@ export function deleteCustomer(id) {
       throw Boom.notFound('Customer not found.');
     });
 }
+
+
+/**
+ * Get a customer.
+ *
+ * @param   {String}  email
+ * @returns {Promise}
+ */
+export function getCustomerByEmail(email) {
+  return new Customer({ 'email':email })
+    .fetch({ require: false })
+    .then((user) => user)
+    .catch(Customer.NotFoundError, () => {
+      throw Boom.notFound('Customer not found.');
+    });
+}
+
+/**
+ * Get a customer.
+ *
+ * @param   {Number|String}  phone
+ * @returns {Promise}
+ */
+export function getCustomerByPhone(phone) {
+  return new Customer({ 'phone':phone })
+    .fetch({ require: false })
+    .then((user) => user)
+    .catch(Customer.NotFoundError, () => {
+      throw Boom.notFound('Customer not found.');
+    });
+}

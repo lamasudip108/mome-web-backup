@@ -2,6 +2,8 @@ import HttpStatus from 'http-status-codes';
 
 import * as CustomerService from '../services/customer.service';
 import {notify} from '../config/mailer';
+import Customer from '../models/customer.model';
+import Boom from "@hapi/boom";
 
 /**
  * Find all the customers
@@ -37,17 +39,31 @@ export function findById(req, res, next) {
  * @param {Function} next
  */
 export function store(req, res, next) {
-  CustomerService
-    .storeCustomer(req.body)
-    .then(data =>{
 
-      const param = JSON.parse(JSON.stringify(data));
+  CustomerService.getCustomerByEmail(req.body.email)
+    .then(user => {
+      if (user !== null) {
+        res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({ 'error': req.body.email + ' already exist.' });
+      } else {
+        CustomerService.getCustomerByPhone(req.body.phone)
+          .then(user => {
+            if (user !== null) {
+              res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({ 'error': req.body.phone + ' already exist.' });
+            } else {
+              CustomerService
+                .storeCustomer(req.body)
+                .then(data => {
 
-      param.template = 'welcome';
+                  const param = JSON.parse(JSON.stringify(data));
+                  param.template = 'welcome';
 
-      notify(param);
+                  notify(param);
 
-      res.status(HttpStatus.CREATED).json({ data });
+                  res.status(HttpStatus.CREATED).json({ data });
+                });
+            }
+          });
+      }
     })
     .catch((err) => next(err));
 }
