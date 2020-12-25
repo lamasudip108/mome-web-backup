@@ -1,5 +1,6 @@
 import Boom from '@hapi/boom';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 import Customer from '../models/customer.model';
 
@@ -115,4 +116,22 @@ export function getCustomerByPhone(phone) {
     .catch(Customer.NotFoundError, () => {
       throw Boom.notFound('Customer not found.');
     });
+}
+
+/**
+ * Generate Confirmation Url
+ *
+ * @param   {String}  email
+ * @returns {string}
+ */
+export function generateConfirmationUrl(email){
+  return `${process.env.APP_HOST}/api/auth/confirmation?token=${confirmationToken(email)}`;
+}
+
+function confirmationToken(email){
+  return jwt.sign({
+      email: email
+    },
+    process.env.TOKEN_SECRET_KEY
+  );
 }
