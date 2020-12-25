@@ -56,7 +56,7 @@ export function store(req, res, next) {
 
                   const param = JSON.parse(JSON.stringify(data));
                   param.template = 'welcome';
-                  param.confirmationUrl = CustomerService.generateConfirmationUrl(req.body.email);
+                  param.confirmationUrl = CustomerService.generateConfirmationUrl(param.remember_token);
 
                   notify(param);
 
