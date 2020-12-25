@@ -43,12 +43,12 @@ export function store(req, res, next) {
   CustomerService.getCustomerByEmail(req.body.email)
     .then(user => {
       if (user !== null) {
-        res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({ 'error': req.body.email + ' already exist.' });
+        res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({ 'error':true, message: req.body.email + ' already exist.' });
       } else {
         CustomerService.getCustomerByPhone(req.body.phone)
           .then(user => {
             if (user !== null) {
-              res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({ 'error': req.body.phone + ' already exist.' });
+              res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({ 'error':true, message: req.body.phone + ' already exist.' });
             } else {
               CustomerService
                 .storeCustomer(req.body)
