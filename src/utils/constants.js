@@ -1,3 +1,7 @@
+/**
+ * We can define general constant over here
+ *
+ */
 export const Constant = {
   users: {
     status: {

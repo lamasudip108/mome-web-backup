@@ -85,7 +85,7 @@ router.route('/login')
 /**
  * @swagger
  * /auths/confirmation:
- *   post:
+ *   get:
  *     tags:
  *       - auths
  *     summary: Verify user account using jwt
@@ -96,11 +96,11 @@ router.route('/login')
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: body
- *         in: body
+ *       - name: token
+ *         in: path
+ *         description: token of customer that needs to be fetched
  *         required: true
- *         schema:
- *           $ref: '#/definitions/Auth'
+ *         type: integer
  *     responses:
  *       200:
  *         description: OK
