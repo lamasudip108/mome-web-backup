@@ -1,6 +1,7 @@
 import Boom from '@hapi/boom';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import Constant from "../utils/constants";
 
 import Customer from '../models/customer.model';
 
@@ -128,7 +129,7 @@ export function getCustomerByPhone(phone) {
  * @returns {string}
  */
 export function generateConfirmationUrl(token){
-  return `${process.env.APP_HOST}/api/auth/confirmation?token=${token}`;
+  return `${process.env.APP_HOST}/api/auths/confirmation?token=${token}`;
 }
 
 function confirmationToken(email){
@@ -137,4 +138,49 @@ function confirmationToken(email){
     },
     process.env.TOKEN_SECRET_KEY
   );
+}
+
+/**
+ * Verify User Account
+ *
+ * @param token
+ * @returns {*}
+ */
+export function verifyAccount(token) {
+  return new Customer({ remember_token: token })
+    .fetch({ require: false })
+    .then((user) => {
+      if (user !== null) {
+
+        const id = user.attributes.id;
+
+        return new Customer({ id })
+          .save({
+            'is_verified': 1,
+            'status': Constant.users.status.active,
+            'remember_token': null
+          });
+      }
+      else {
+        user = null;
+      }
+    })
+    .catch(Customer.NotFoundError, () => {
+      throw Boom.notFound('Customer not found.');
+    });
+/*
+
+// check with this code why not working, directly update by token
+
+ return new Customer
+    .where({ remember_token: token })
+    .save({ email: "bissssss@example.com" }, { patch: true })
+    .then((user) => {
+      console.log(user, "asdf");
+    })
+    .catch(Customer.NotFoundError, () => {
+      throw Boom.notFound("Customer not found.");
+    });
+*/
+
 }

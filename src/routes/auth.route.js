@@ -81,4 +81,43 @@ router.route('/login')
         authCtrl.login(req, res);
     });
 
+
+/**
+ * @swagger
+ * /auths/confirmation:
+ *   post:
+ *     tags:
+ *       - auths
+ *     summary: Verify user account using jwt
+ *     description:
+ *     operationId: account verification
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/Auth'
+ *     responses:
+ *       200:
+ *         description: OK
+ *         schema:
+ *            $ref: '#/definitions/Token'
+ *       400:
+ *         description: Invalid token
+ *         schema:
+ *            $ref: '#/definitions/Error'
+ *       404:
+ *         description: Token not found
+ *         schema:
+ *            $ref: '#/definitions/Error'
+ */
+
+router.route('/confirmation')
+  .get((req, res) => {
+    authCtrl.accountConfirmation(req, res);
+  });
 export default router;

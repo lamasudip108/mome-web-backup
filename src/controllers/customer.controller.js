@@ -2,8 +2,6 @@ import HttpStatus from 'http-status-codes';
 
 import * as CustomerService from '../services/customer.service';
 import {notify} from '../config/mailer';
-import Customer from '../models/customer.model';
-import Boom from "@hapi/boom";
 
 /**
  * Find all the customers
@@ -54,7 +52,7 @@ export function store(req, res, next) {
                 .storeCustomer(req.body)
                 .then(data => {
 
-                  const param = JSON.parse(JSON.stringify(data));
+                  const param = data.attributes;
                   param.template = 'welcome';
                   param.confirmationUrl = CustomerService.generateConfirmationUrl(param.remember_token);
 
