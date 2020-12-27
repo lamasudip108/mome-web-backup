@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer';
 import logger from '../config/winston';
 import * as emailTemplate from '../utils/email';
 
-const senderEmail = '"Mome" <noreply@mome.com>';
+const senderEmail = '"Mome" <noreplymome123@gmail.com>';
 
 /**
  * Setup config params
