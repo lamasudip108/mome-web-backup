@@ -1,9 +1,10 @@
 import Boom from '@hapi/boom';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import Constant from "../utils/constants";
+import Constant from '../utils/constants';
 
 import Customer from '../models/customer.model';
+import Address from "../models/address.model";
 
 /**
  * Get all customers.

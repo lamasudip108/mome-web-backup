@@ -2,6 +2,7 @@ import HttpStatus from 'http-status-codes';
 
 import * as CustomerService from '../services/customer.service';
 import {notify} from '../config/mailer';
+import Address from "../models/address.model";
 
 /**
  * Find all the customers
@@ -25,7 +26,15 @@ export function findAll(req, res, next) {
  */
 export function findById(req, res, next) {
   CustomerService.getCustomer(req.params.id)
-    .then((data) => res.json({ data }))
+    .then((data) =>
+      {
+        Address.getAddressById(data.attributes.id)
+          .then(customer=>{
+               data.attributes.address = customer;
+               res.json({data});
+          });
+      }
+    )
     .catch((err) => next(err));
 }
 
