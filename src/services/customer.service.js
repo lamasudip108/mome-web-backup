@@ -1,7 +1,10 @@
 import Boom from '@hapi/boom';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import Constant from '../utils/constants';
 
 import Customer from '../models/customer.model';
+import Address from "../models/address.model";
 
 /**
  * Get all customers.
@@ -37,6 +40,8 @@ export function storeCustomer(customer) {
   // eslint-disable-next-line camelcase
   const { first_name, middle_name, last_name, email, phone } = customer;
   const password = bcrypt.hashSync(customer.password, 10);
+  // eslint-disable-next-line camelcase
+  const remember_token = confirmationToken(email);
 
   return new Customer({
     first_name,
@@ -45,6 +50,7 @@ export function storeCustomer(customer) {
     email,
     password,
     phone,
+    remember_token,
   }).save();
 }
 
@@ -84,4 +90,98 @@ export function deleteCustomer(id) {
     .catch(Customer.NotFoundError, () => {
       throw Boom.notFound('Customer not found.');
     });
+}
+
+
+/**
+ * Get a customer.
+ *
+ * @param   {String}  email
+ * @returns {Promise}
+ */
+export function getCustomerByEmail(email) {
+  return new Customer({ 'email':email })
+    .fetch({ require: false })
+    .then((user) => user)
+    .catch(Customer.NotFoundError, () => {
+      throw Boom.notFound('Customer not found.');
+    });
+}
+
+/**
+ * Get a customer.
+ *
+ * @param   {Number|String}  phone
+ * @returns {Promise}
+ */
+export function getCustomerByPhone(phone) {
+  return new Customer({ 'phone':phone })
+    .fetch({ require: false })
+    .then((user) => user)
+    .catch(Customer.NotFoundError, () => {
+      throw Boom.notFound('Customer not found.');
+    });
+}
+
+/**
+ * Generate Confirmation Url
+ *
+ * @param   {String}  token
+ * @returns {string}
+ */
+export function generateConfirmationUrl(token){
+  return `${process.env.APP_HOST}/api/auths/confirmation?token=${token}`;
+}
+
+function confirmationToken(email){
+  return jwt.sign({
+      email: email
+    },
+    process.env.TOKEN_SECRET_KEY
+  );
+}
+
+/**
+ * Verify User Account
+ *
+ * @param token
+ * @returns {*}
+ */
+export function verifyAccount(token) {
+  return new Customer({ remember_token: token })
+    .fetch({ require: false })
+    .then((user) => {
+      if (user !== null) {
+
+        const id = user.attributes.id;
+
+        return new Customer({ id })
+          .save({
+            'is_verified': 1,
+            'status': Constant.users.status.active,
+            'remember_token': null
+          });
+      }
+      else {
+        user = null;
+      }
+    })
+    .catch(Customer.NotFoundError, () => {
+      throw Boom.notFound('Customer not found.');
+    });
+/*
+
+// check with this code why not working, directly update by token
+
+ return new Customer
+    .where({ remember_token: token })
+    .save({ email: "bissssss@example.com" }, { patch: true })
+    .then((user) => {
+      console.log(user, "asdf");
+    })
+    .catch(Customer.NotFoundError, () => {
+      throw Boom.notFound("Customer not found.");
+    });
+*/
+
 }

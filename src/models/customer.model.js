@@ -1,4 +1,5 @@
 import bookshelf from '../config/bookshelf';
+import Address from './address.model';
 
 const TABLE_NAME = 'customers';
 
@@ -19,6 +20,11 @@ class Customer extends bookshelf.Model {
   get hasTimestamps() {
     return true;
   }
+
+  address() {
+    return this.hasMany(Address, 'customer_id', 'id');
+  }
+
 }
 
 export default Customer;
