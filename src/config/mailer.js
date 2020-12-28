@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer';
 import logger from '../config/winston';
 import * as emailTemplate from '../utils/email';
 
-const senderEmail = '"Mome" <noreply@mome.com>';
+const senderEmail = '"Mome" <noreplymome123@gmail.com>';
 
 /**
  * Setup config params
@@ -13,12 +13,13 @@ const senderEmail = '"Mome" <noreply@mome.com>';
 
 function setup() {
   return nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
+    service: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
+    secure: process.env.EMAIL_SECURE,
     auth: {
       user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
+      pass: process.env.EMAIL_PASS
+    }
   });
 }
 
