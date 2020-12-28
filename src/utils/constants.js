@@ -4,7 +4,7 @@
  */
 export const Constant = {
   app:{
-    host : process.env.APP_HOST,
+    host : process.env.HOST,
   },
   users: {
     status: {
