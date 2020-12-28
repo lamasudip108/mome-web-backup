@@ -15,12 +15,12 @@ exports.up = function (knex) {
     table.string('password').notNullable();
     table.string('nationality').nullable();
     table.string('profile_image').nullable();
-    table.string('language').nullable();
+    table.string('language').nullable().comment('en, ar');
     table.double('wallet_amount', 10, 2).default(0);
     table.double('total_purchase', 10, 2).default(0);
-    table.bool('is_verified').default(0);
-    table.string('status').default('invited');
-    table.string('remember_token').nullable();
+    table.bool('is_verified').default(0).comment('0: not verified, 1: verified');
+    table.string('status').default('invited').comment('invited, inactive, active, deleted');
+    table.string('token').nullable();
     table.string('otp_code').nullable();
     table.timestamp('created_at').defaultTo(knex.fn.now());
     //table.timestamp('updated_at').defaultTo(knex.fn.now());

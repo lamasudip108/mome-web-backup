@@ -2,7 +2,7 @@ import HttpStatus from 'http-status-codes';
 
 import * as CustomerService from '../services/customer.service';
 import {notify} from '../config/mailer';
-import Address from "../models/address.model";
+import Address from '../models/address.model';
 
 /**
  * Find all the customers
@@ -63,7 +63,7 @@ export function store(req, res, next) {
 
                   const param = data.attributes;
                   param.template = 'welcome';
-                  param.confirmationUrl = CustomerService.generateConfirmationUrl(param.remember_token);
+                  param.confirmationUrl = CustomerService.generateConfirmationUrl(param.token);
 
                   notify(param);
 

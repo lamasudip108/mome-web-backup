@@ -2,9 +2,8 @@ import Boom from '@hapi/boom';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import Constant from '../utils/constants';
-
 import Customer from '../models/customer.model';
-import Address from "../models/address.model";
+
 
 /**
  * Get all customers.
@@ -41,7 +40,7 @@ export function storeCustomer(customer) {
   const { first_name, middle_name, last_name, email, phone } = customer;
   const password = bcrypt.hashSync(customer.password, 10);
   // eslint-disable-next-line camelcase
-  const remember_token = confirmationToken(email);
+  const token = confirmationToken(email);
 
   return new Customer({
     first_name,
@@ -50,7 +49,7 @@ export function storeCustomer(customer) {
     email,
     password,
     phone,
-    remember_token,
+    token,
   }).save();
 }
 
@@ -130,7 +129,7 @@ export function getCustomerByPhone(phone) {
  * @returns {string}
  */
 export function generateConfirmationUrl(token){
-  return `${process.env.APP_HOST}/api/auths/confirmation?token=${token}`;
+  return `${Constant.app.host}/api/auths/confirmation?token=${token}`;
 }
 
 function confirmationToken(email){
@@ -148,7 +147,7 @@ function confirmationToken(email){
  * @returns {*}
  */
 export function verifyAccount(token) {
-  return new Customer({ remember_token: token })
+  return new Customer({ token: token })
     .fetch({ require: false })
     .then((user) => {
       if (user !== null) {
@@ -159,7 +158,7 @@ export function verifyAccount(token) {
           .save({
             'is_verified': 1,
             'status': Constant.users.status.active,
-            'remember_token': null
+            'token': null
           });
       }
       else {

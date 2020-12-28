@@ -3,6 +3,9 @@
  *
  */
 export const Constant = {
+  app:{
+    host : process.env.APP_HOST,
+  },
   users: {
     status: {
       invited: 'invited',
