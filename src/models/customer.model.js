@@ -27,7 +27,7 @@ class Customer extends bookshelf.Model {
    * @returns {string[]}
    */
   get hidden(){
-    return ['password', 'token', 'created_at', 'updated_at', 'template', 'otp_code', 'confirmationUrl', 'status'];
+    return ['password', 'token', 'created_at', 'updated_at', 'template', 'otp_code', 'confirmationUrl'];
   }
 
   address() {
