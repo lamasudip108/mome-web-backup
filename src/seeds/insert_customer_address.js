@@ -45,7 +45,6 @@ exports.seed = function(knex) {
             ];
 
             return knex('address').insert(script);
-
           }
         )
         .catch((err) => console.log(err, 'er'));

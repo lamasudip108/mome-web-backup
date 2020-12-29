@@ -26,7 +26,9 @@ exports.seed = function(knex) {
                 type: "qr",
                 fees: 0.56,
                 description: "I love shopping",
-                customer_id: ids[random]
+                customer_id: ids[random],
+                created_at: new Date(),
+                updated_at: new Date()
               },
               {
                 number: "23345335353",
@@ -36,7 +38,9 @@ exports.seed = function(knex) {
                 type: "qr",
                 fees: 0.56,
                 description: "I am good",
-                customer_id: ids[random]
+                customer_id: ids[random],
+                created_at: new Date(),
+                updated_at: new Date()
               },
               {
                 number: "23453353353",
@@ -46,7 +50,9 @@ exports.seed = function(knex) {
                 type: "qr",
                 fees: 0.56,
                 description: "best product",
-                customer_id: ids[random]
+                customer_id: ids[random],
+                created_at: new Date(),
+                updated_at: new Date()
               },
               {
                 number: "23453335353",
@@ -56,7 +62,9 @@ exports.seed = function(knex) {
                 type: "qr",
                 fees: 0.56,
                 description: "I love bag",
-                customer_id: ids[random]
+                customer_id: ids[random],
+                created_at: new Date(),
+                updated_at: new Date()
               },
               {
                 number: "23452335353",
@@ -66,12 +74,13 @@ exports.seed = function(knex) {
                 type: "qr",
                 fees: 0.56,
                 description: "I don't like it",
-                customer_id: ids[random]
+                customer_id: ids[random],
+                created_at: new Date(),
+                updated_at: new Date()
               }
             ];
 
             return knex("transactions").insert(script);
-
           }
         )
         .catch((err) => console.log(err, "er"));

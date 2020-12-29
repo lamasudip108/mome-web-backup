@@ -15,7 +15,6 @@ exports.up = function (knex) {
     table.double('fees', 10, 2).notNullable();
     table.text('description').nullable();
     table.string('status').notNullable().comment('pending, success, failed, cancelled, server');
-    table.string('password').notNullable();
     table.integer('customer_id').unsigned().index().references('id').inTable('customers');
     table.timestamp('created_at').defaultTo(knex.fn.now());
     //table.timestamp('updated_at').defaultTo(knex.fn.now());
