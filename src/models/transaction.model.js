@@ -5,7 +5,7 @@ const TABLE_NAME = 'transactions';
 /**
  * Transaction model.
  */
-class Address extends bookshelf.Model {
+class Transaction extends bookshelf.Model {
 
   /**
    * Get table name.
@@ -21,10 +21,6 @@ class Address extends bookshelf.Model {
     return true;
   }
 
-
-  static getAddressById(id) {
-    return Address.forge().where({customer_id:id}).fetchAll();
-  }
 }
 
-export default Address;
+export default Transaction;

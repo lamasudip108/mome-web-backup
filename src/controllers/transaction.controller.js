@@ -1,17 +1,32 @@
-import * as TransactionService from '../services/transaction.service';
+import * as TransactionService from "../services/transaction.service";
 
 
 /**
- * Returns jwt token if valid email and password is provided
+ * Returns all transaction record by customer id
  *
  * @param {object} req
  * @param {object} res
  * @returns {*}
  */
 
-export function finaAllByUserId(req,res,next){
+export function findAllByUserId(req, res, next) {
 
-  TransactionService.finaAllByUserId(req.param.userid)
+  TransactionService.getAllByUserId(req.params.userid)
     .then((data) => res.json({ data }))
-    .catch((err) => console.log(err,'er'));
+    .catch((err) => next(err));
+}
+
+/**
+ * Returns all transaction
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function findAll(req, res, next) {
+
+  TransactionService.getAll()
+    .then((data) => res.json({ data }))
+    .catch((err) => next(err));
 }
