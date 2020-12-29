@@ -21,6 +21,15 @@ class Customer extends bookshelf.Model {
     return true;
   }
 
+  /**
+   * Hide the fields in the response
+   *
+   * @returns {string[]}
+   */
+  get hidden(){
+    return ['password', 'token', 'created_at', 'updated_at', 'template', 'otp_code', 'confirmationUrl'];
+  }
+
   address() {
     return this.hasMany(Address, 'customer_id', 'id');
   }

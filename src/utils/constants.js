@@ -4,7 +4,7 @@
  */
 export const Constant = {
   app:{
-    host : process.env.HOST,
+    host : process.env.HOST ? process.env.HOST : 'https://mome-web-app.herokuapp.com' ,
   },
   users: {
     status: {

@@ -1,5 +1,5 @@
-import * as TransactionService from "../services/transaction.service";
-
+import * as TransactionService from '../services/transaction.service';
+import {successResponse} from '../utils/response';
 
 /**
  * Returns all transaction record by customer id
@@ -12,7 +12,9 @@ import * as TransactionService from "../services/transaction.service";
 export function findAllByUserId(req, res, next) {
 
   TransactionService.getAllByUserId(req.params.userid)
-    .then((data) => res.json({ data }))
+    .then((data) => {
+      successResponse(res, data);
+    })
     .catch((err) => next(err));
 }
 
@@ -27,6 +29,8 @@ export function findAllByUserId(req, res, next) {
 export function findAll(req, res, next) {
 
   TransactionService.getAll()
-    .then((data) => res.json({ data }))
+    .then((data) => {
+      successResponse(res, data);
+    })
     .catch((err) => next(err));
 }
