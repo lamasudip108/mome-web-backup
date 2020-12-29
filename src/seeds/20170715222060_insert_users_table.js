@@ -20,4 +20,4 @@ exports.seed = function(knex) {
         },
       ]);
     });
-}
+};
