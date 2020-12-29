@@ -121,7 +121,7 @@ router
    *            type: object
    */
 
-  .get( customerCtrl.findAll);
+  .get(isAuthenticated, customerCtrl.findAll);
 
 router
   .route('/:id')
@@ -157,7 +157,7 @@ router
    *             $ref: '#/definitions/Error'
    */
 
-  .get( customerCtrl.findById)
+  .get(isAuthenticated, customerCtrl.findById)
 
   /**
    * @swagger
