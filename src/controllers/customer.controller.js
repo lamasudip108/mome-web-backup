@@ -1,7 +1,7 @@
 import HttpStatus from 'http-status-codes';
-
 import * as CustomerService from '../services/customer.service';
 import {notify} from '../config/mailer';
+import {successResponse, errorResponse, removeKey} from '../utils/response';
 import Address from '../models/address.model';
 
 /**
@@ -13,7 +13,9 @@ import Address from '../models/address.model';
  */
 export function findAll(req, res, next) {
   CustomerService.getAllCustomer()
-    .then((data) => res.json({ data }))
+    .then((data) => {
+      successResponse(res, data);
+    })
     .catch((err) => next(err));
 }
 
@@ -26,12 +28,11 @@ export function findAll(req, res, next) {
  */
 export function findById(req, res, next) {
   CustomerService.getCustomer(req.params.id)
-    .then((data) =>
-      {
+    .then((data) => {
         Address.getAddressById(data.attributes.id)
-          .then(customer=>{
-               data.attributes.address = customer;
-               res.json({data});
+          .then(customer => {
+            data.attributes.address = customer;
+            successResponse(res, data);
           });
       }
     )
@@ -50,12 +51,14 @@ export function store(req, res, next) {
   CustomerService.getCustomerByEmail(req.body.email)
     .then(user => {
       if (user !== null) {
-        res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({ 'error':true, message: req.body.email + ' already exist.' });
+        errorResponse(res,req.body.email + ' is taken.');
+
       } else {
         CustomerService.getCustomerByPhone(req.body.phone)
           .then(user => {
             if (user !== null) {
-              res.status(HttpStatus.UNPROCESSABLE_ENTITY).json({ 'error':true, message: req.body.phone + ' already exist.' });
+              errorResponse(res,req.body.phone + ' is taken.');
+
             } else {
               CustomerService
                 .storeCustomer(req.body)
@@ -67,7 +70,7 @@ export function store(req, res, next) {
 
                   notify(param);
 
-                  res.status(HttpStatus.CREATED).json({ data });
+                  successResponse(res, data, HttpStatus.CREATED);
                 });
             }
           });
@@ -85,7 +88,9 @@ export function store(req, res, next) {
  */
 export function update(req, res, next) {
   CustomerService.updateCustomer(req.params.id, req.body)
-    .then((data) => res.json({ data }))
+    .then((data) => {
+      successResponse(res, data);
+    })
     .catch((err) => next(err));
 }
 
@@ -98,6 +103,8 @@ export function update(req, res, next) {
  */
 export function destroy(req, res, next) {
   CustomerService.deleteCustomer(req.params.id)
-    .then((data) => res.status(HttpStatus.NO_CONTENT).json({ data }))
+    .then((data) => {
+      successResponse(res, data, HttpStatus.NO_CONTENT);
+    })
     .catch((err) => next(err));
 }

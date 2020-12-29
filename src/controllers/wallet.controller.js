@@ -1,5 +1,5 @@
-import * as WalletService from "../services/wallet.service";
-
+import * as WalletService from '../services/wallet.service';
+import { successResponse } from '../utils/response';
 
 /**
  * Returns all wallet record by customer id
@@ -12,7 +12,9 @@ import * as WalletService from "../services/wallet.service";
 export function findAllByUserId(req, res, next) {
 
   WalletService.getAllByUserId(req.params.userid)
-    .then((data) => res.json({ data }))
+    .then((data) => {
+      successResponse(res, data);
+    })
     .catch((err) => next(err));
 }
 
@@ -27,6 +29,8 @@ export function findAllByUserId(req, res, next) {
 export function findAll(req, res, next) {
 
   WalletService.getAll()
-    .then((data) => res.json({ data }))
+    .then((data) => {
+      successResponse(res, data);
+    })
     .catch((err) => next(err));
 }

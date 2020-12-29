@@ -1,6 +1,7 @@
 import HttpStatus from 'http-status-codes';
 
 import * as userService from '../services/user.service';
+import {successResponse} from '../utils/response';
 
 /**
  * Find all the users
@@ -12,7 +13,9 @@ import * as userService from '../services/user.service';
 export function findAll(req, res, next) {
   userService
     .getAllUser()
-    .then((data) => res.json({ data }))
+    .then((data) => {
+      successResponse(res, data);
+    })
     .catch((err) => next(err));
 }
 
@@ -26,7 +29,9 @@ export function findAll(req, res, next) {
 export function findById(req, res, next) {
   userService
     .getUser(req.params.id)
-    .then((data) => res.json({ data }))
+    .then((data) => {
+      successResponse(res, data);
+    })
     .catch((err) => next(err));
 }
 
@@ -40,7 +45,9 @@ export function findById(req, res, next) {
 export function store(req, res, next) {
   userService
     .storeUser(req.body)
-    .then((data) => res.status(HttpStatus.CREATED).json({ data }))
+    .then((data) => {
+      successResponse(res, data, HttpStatus.CREATED);
+    })
     .catch((err) => next(err));
 }
 
@@ -54,7 +61,9 @@ export function store(req, res, next) {
 export function update(req, res, next) {
   userService
     .updateUser(req.params.id, req.body)
-    .then((data) => res.json({ data }))
+    .then((data) => {
+      successResponse(res, data);
+    })
     .catch((err) => next(err));
 }
 
@@ -68,6 +77,8 @@ export function update(req, res, next) {
 export function destroy(req, res, next) {
   userService
     .deleteUser(req.params.id)
-    .then((data) => res.status(HttpStatus.NO_CONTENT).json({ data }))
+    .then((data) => {
+      successResponse(res, data, HttpStatus.NO_CONTENT);
+    })
     .catch((err) => next(err));
 }

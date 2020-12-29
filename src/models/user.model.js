@@ -20,6 +20,15 @@ class User extends bookshelf.Model {
   get hasTimestamps() {
     return true;
   }
+
+  /**
+   * Hide the fields in the response
+   *
+   * @returns {string[]}
+   */
+  get hidden(){
+    return ['created_at', 'updated_at'];
+  }
 }
 
 export default User;

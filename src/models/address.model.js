@@ -22,14 +22,21 @@ class Address extends bookshelf.Model {
     return true;
   }
 
-
   user() {
-    return this.belongsTo(Customer, "customer_id", "id");
+    return this.belongsTo(Customer, 'customer_id', 'id');
   }
-
 
   static getAddressById(id) {
     return Address.forge().where({customer_id:id}).fetchAll();
+  }
+
+  /**
+   * Hide the fields in the response
+   *
+   * @returns {string[]}
+   */
+  get hidden(){
+    return ['customer_id', 'created_at', 'updated_at'];
   }
 }
 
