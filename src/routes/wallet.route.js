@@ -38,7 +38,7 @@ router
    *             $ref: '#/definitions/Error'
    */
 
-  .get( walletCtrl.findAllByUserId);
+  .get(isAuthenticated, walletCtrl.findAllByUserId);
 
 
 router
@@ -68,6 +68,6 @@ router
    *             $ref: '#/definitions/Error'
    */
 
-  .get( walletCtrl.findAll);
+  .get(isAuthenticated, walletCtrl.findAll);
 
 export default router;
