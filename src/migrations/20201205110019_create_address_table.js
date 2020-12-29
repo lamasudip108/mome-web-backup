@@ -13,7 +13,7 @@ exports.up = function (knex) {
     table.string('state').nullable();
     table.string('province').nullable();
     table.string('country').notNullable();
-    table.string('type').notNullable().comment('1: home, 2: office');
+    table.string('type').notNullable().comment('home, office');
     table.integer('customer_id').unsigned().index().references('id').inTable('customers');
     table.timestamp('created_at').defaultTo(knex.fn.now());
     //table.timestamp('updated_at').defaultTo(knex.fn.now());

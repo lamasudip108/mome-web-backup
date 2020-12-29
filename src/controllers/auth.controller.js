@@ -21,28 +21,40 @@ export function login(req, res) {
   Customer.query({ where: { email: email } })
     .fetch({ require: true })
     .then((user) => {
-      if (bcrypt.compareSync(password, user.get('password')) && user.get('is_verified') === 1 && user.get('status') === Constant.users.status.active ) {
-        const token = jwt.sign(
-          {
-            id: user.get('id'),
-            email: user.get('email'),
-          },
-          process.env.TOKEN_SECRET_KEY
-        );
 
-        res.json({
-          success: true,
-          token,
-          email: user.get('email'),
-        });
-      } else {
-        logger.log('error', 'Authentication failed. Invalid password.');
+      if(user.get('is_verified') === 1 && user.get('status') === Constant.users.status.active){
+
+        if (bcrypt.compareSync(password, user.get('password'))  ) {
+          const token = jwt.sign(
+            {
+              id: user.get('id'),
+              email: user.get('email'),
+            },
+            process.env.TOKEN_SECRET_KEY
+          );
+
+          res.json({
+            success: true,
+            token,
+            email: user.get('email'),
+          });
+        } else {
+          logger.log('error', 'Authentication failed. Invalid password.');
+
+          res.status(HttpStatus.UNAUTHORIZED).json({
+            success: false,
+            message: 'Invalid username or password.',
+          });
+        }
+      }else{
+        logger.log('error', 'Authentication failed. Account not verified');
 
         res.status(HttpStatus.UNAUTHORIZED).json({
           success: false,
-          message: 'Invalid username or password.',
+          message: 'Please verify your account.',
         });
       }
+
     })
     .catch(Customer.NotFoundError, () =>
       res.status(404).json({
