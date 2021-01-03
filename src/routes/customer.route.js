@@ -262,7 +262,7 @@ router
   /**
    * @swagger
    * /customers/{id}/updatePassword:
-   *   get:
+   *   post:
    *     tags:
    *       - customers
    *     summary: "Update new password for logged in user"
