@@ -184,3 +184,25 @@ export function verifyAccount(token) {
 */
 
 }
+
+/**
+ * Update password for logged in user
+ *
+ * @param id
+ * @param password
+ * @returns {*}
+ */
+
+export function updatePassword(id, password) {
+
+  const newPassword = bcrypt.hashSync(password, 10);
+
+  return new Customer({ id })
+    .save({
+      password: newPassword
+    })
+    .catch(Customer.NoRowsUpdatedError, () => {
+      throw Boom.notFound('Customer not found.');
+    });
+
+}
