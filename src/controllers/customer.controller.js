@@ -123,7 +123,6 @@ export function isUniqueEmail(req, res, next){
     .then(user => {
       if (user !== null) {
         successResponse(res, true);
-
       } else {
         successResponse(res, false);
       }
