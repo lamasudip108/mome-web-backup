@@ -223,4 +223,37 @@ router
 
   .delete(isAuthenticated, customerCtrl.destroy);
 
+router
+  .route('/isUniqueEmail')
+
+  /**
+   * @swagger
+   * /customers/isUniqueEmail:
+   *   get:
+   *     tags:
+   *       - customers
+   *     summary: "Check email existence for customer"
+   *     security:
+   *        - Bearer: []
+   *     operationId: isUniqueEmail
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: body
+   *         in: body
+   *         description: Check email existence
+   *         required: true
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   */
+
+  .post(validate(customerSchema.email), customerCtrl.isUniqueEmail);
+
 export default router;

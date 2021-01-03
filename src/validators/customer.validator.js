@@ -23,4 +23,8 @@ export default {
     username: Joi.string().required(),
     password: Joi.string().required(),
   }),
+
+  email : Joi.object({
+    email: Joi.string().email().required(),
+  })
 };
