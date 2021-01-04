@@ -256,4 +256,37 @@ router
 
   .post(validate(customerSchema.email), customerCtrl.isUniqueEmail);
 
+router
+  .route('/:id/updatePassword')
+
+  /**
+   * @swagger
+   * /customers/{id}/updatePassword:
+   *   post:
+   *     tags:
+   *       - customers
+   *     summary: "Update new password for logged in user"
+   *     security:
+   *        - Bearer: []
+   *     operationId: updatePassword
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: body
+   *         in: body
+   *         description: Update new password for logged in user
+   *         required: true
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   */
+
+  .post(isAuthenticated, validate(customerSchema.updatePassword), customerCtrl.updatePassword);
+
 export default router;

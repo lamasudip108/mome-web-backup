@@ -3,6 +3,7 @@ import * as CustomerService from '../services/customer.service';
 import {notify} from '../config/mailer';
 import {successResponse, errorResponse} from '../utils/response';
 import Address from '../models/address.model';
+import bcrypt from 'bcrypt';
 
 /**
  * Find all the customers
@@ -51,13 +52,13 @@ export function store(req, res, next) {
   CustomerService.getCustomerByEmail(req.body.email)
     .then(user => {
       if (user !== null) {
-        errorResponse(res,req.body.email + ' already in use.');
+        errorResponse(res,req.body.email + ' is already in use.');
 
       } else {
         CustomerService.getCustomerByPhone(req.body.phone)
           .then(user => {
             if (user !== null) {
-              errorResponse(res,req.body.phone + ' already in use.');
+              errorResponse(res,req.body.phone + ' is already in use.');
 
             } else {
               CustomerService
@@ -128,4 +129,44 @@ export function isUniqueEmail(req, res, next){
       }
     })
     .catch((err) => next(err));
+}
+
+/**
+ * Update the password for logged in user
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+
+export function updatePassword(req, res, next) {
+
+  // eslint-disable-next-line camelcase
+  const { old_password, new_password } = req.body;
+
+  CustomerService.getCustomer(req.params.id)
+    .then(user => {
+
+
+      if (bcrypt.compareSync(old_password, user.get('password'))) {
+
+        // eslint-disable-next-line camelcase
+        if (old_password === new_password) {
+          successResponse(res, 'Old password and New password is same.');
+        }
+
+        CustomerService.updatePassword(req.params.id, new_password)
+          .then(user => {
+            successResponse(res, 'Password changed successfully.');
+          });
+
+      } else {
+        successResponse(res, 'Your old password does not match.');
+      }
+
+    })
+    .catch(err => {
+      next(err);
+    });
+
 }
