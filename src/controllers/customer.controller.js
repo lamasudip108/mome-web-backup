@@ -1,7 +1,7 @@
 import HttpStatus from 'http-status-codes';
 import * as CustomerService from '../services/customer.service';
 import {notify} from '../config/mailer';
-import {successResponse, errorResponse, removeKey} from '../utils/response';
+import {successResponse, errorResponse} from '../utils/response';
 import Address from '../models/address.model';
 
 /**
@@ -51,13 +51,13 @@ export function store(req, res, next) {
   CustomerService.getCustomerByEmail(req.body.email)
     .then(user => {
       if (user !== null) {
-        errorResponse(res,req.body.email + ' is taken.');
+        errorResponse(res,req.body.email + ' already in use.');
 
       } else {
         CustomerService.getCustomerByPhone(req.body.phone)
           .then(user => {
             if (user !== null) {
-              errorResponse(res,req.body.phone + ' is taken.');
+              errorResponse(res,req.body.phone + ' already in use.');
 
             } else {
               CustomerService
@@ -105,6 +105,27 @@ export function destroy(req, res, next) {
   CustomerService.deleteCustomer(req.params.id)
     .then((data) => {
       successResponse(res, data, HttpStatus.NO_CONTENT);
+    })
+    .catch((err) => next(err));
+}
+
+/**
+ * Check customer email existence
+ *
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
+ */
+
+export function isUniqueEmail(req, res, next){
+
+  CustomerService.getCustomerByEmail(req.body.email)
+    .then(user => {
+      if (user !== null) {
+        successResponse(res, true);
+      } else {
+        successResponse(res, false);
+      }
     })
     .catch((err) => next(err));
 }
