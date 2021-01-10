@@ -229,7 +229,7 @@ router
   /**
    * @swagger
    * /customers/isUniqueEmail:
-   *   get:
+   *   post:
    *     tags:
    *       - customers
    *     summary: "Check email existence for customer"
