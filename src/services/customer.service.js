@@ -62,14 +62,18 @@ export function storeCustomer(customer) {
  */
 export function updateCustomer(id, customer) {
   // eslint-disable-next-line camelcase
-  const { first_name, last_name, email, status } = customer;
+  const { first_name, last_name, email, phone, street, city, state_province, po_box } = customer;
 
   return new Customer({ id })
     .save({
       first_name: first_name,
       last_name: last_name,
       email: email,
-      status: status,
+      phone: phone,
+      street: street,
+      city: city,
+      state_province: state_province,
+      po_box:po_box
     })
     .catch(Customer.NoRowsUpdatedError, () => {
       throw Boom.notFound('Customer not found.');
