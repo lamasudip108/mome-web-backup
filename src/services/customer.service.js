@@ -1,8 +1,8 @@
-import Boom from '@hapi/boom';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import Constant from '../utils/constants';
-import Customer from '../models/customer.model';
+import Boom from "@hapi/boom";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import Constant from "../utils/constants";
+import Customer from "../models/customer.model";
 
 
 /**
@@ -25,7 +25,7 @@ export function getCustomer(id) {
     .fetch({ require: true })
     .then((user) => user)
     .catch(Customer.NotFoundError, () => {
-      throw Boom.notFound('Customer not found.');
+      throw Boom.notFound("Customer not found.");
     });
 }
 
@@ -49,7 +49,7 @@ export function storeCustomer(customer) {
     email,
     password,
     phone,
-    token,
+    token
   }).save();
 }
 
@@ -73,10 +73,10 @@ export function updateCustomer(id, customer) {
       street: street,
       city: city,
       state_province: state_province,
-      po_box:po_box
+      po_box: po_box
     })
     .catch(Customer.NoRowsUpdatedError, () => {
-      throw Boom.notFound('Customer not found.');
+      throw Boom.notFound("Customer not found.");
     });
 }
 
@@ -91,7 +91,7 @@ export function deleteCustomer(id) {
     .fetch()
     .then((user) => user.destroy())
     .catch(Customer.NotFoundError, () => {
-      throw Boom.notFound('Customer not found.');
+      throw Boom.notFound("Customer not found.");
     });
 }
 
@@ -103,11 +103,11 @@ export function deleteCustomer(id) {
  * @returns {Promise}
  */
 export function getCustomerByEmail(email) {
-  return new Customer({ 'email':email })
+  return new Customer({ "email": email })
     .fetch({ require: false })
     .then((user) => user)
     .catch(Customer.NotFoundError, () => {
-      throw Boom.notFound('Customer not found.');
+      throw Boom.notFound("Customer not found.");
     });
 }
 
@@ -118,11 +118,11 @@ export function getCustomerByEmail(email) {
  * @returns {Promise}
  */
 export function getCustomerByPhone(phone) {
-  return new Customer({ 'phone':phone })
+  return new Customer({ "phone": phone })
     .fetch({ require: false })
     .then((user) => user)
     .catch(Customer.NotFoundError, () => {
-      throw Boom.notFound('Customer not found.');
+      throw Boom.notFound("Customer not found.");
     });
 }
 
@@ -132,11 +132,11 @@ export function getCustomerByPhone(phone) {
  * @param   {String}  token
  * @returns {string}
  */
-export function generateConfirmationUrl(token){
+export function generateConfirmationUrl(token) {
   return `${Constant.app.host}/api/auths/confirmation?token=${token}`;
 }
 
-function confirmationToken(email){
+function confirmationToken(email) {
   return jwt.sign({
       email: email
     },
@@ -160,32 +160,31 @@ export function verifyAccount(token) {
 
         return new Customer({ id })
           .save({
-            'is_verified': 1,
-            'status': Constant.users.status.active,
-            'token': null
+            "is_verified": 1,
+            "status": Constant.users.status.active,
+            "token": null
           });
-      }
-      else {
+      } else {
         user = null;
       }
     })
     .catch(Customer.NotFoundError, () => {
-      throw Boom.notFound('Customer not found.');
-    });
-/*
-
-// check with this code why not working, directly update by token
-
- return new Customer
-    .where({ remember_token: token })
-    .save({ email: "bissssss@example.com" }, { patch: true })
-    .then((user) => {
-      console.log(user, "asdf");
-    })
-    .catch(Customer.NotFoundError, () => {
       throw Boom.notFound("Customer not found.");
     });
-*/
+  /*
+
+  // check with this code why not working, directly update by token
+
+   return new Customer
+      .where({ remember_token: token })
+      .save({ email: "bissssss@example.com" }, { patch: true })
+      .then((user) => {
+        console.log(user, "asdf");
+      })
+      .catch(Customer.NotFoundError, () => {
+        throw Boom.notFound("Customer not found.");
+      });
+  */
 
 }
 
@@ -206,7 +205,7 @@ export function updatePassword(id, password) {
       password: newPassword
     })
     .catch(Customer.NoRowsUpdatedError, () => {
-      throw Boom.notFound('Customer not found.');
+      throw Boom.notFound("Customer not found.");
     });
 
 }

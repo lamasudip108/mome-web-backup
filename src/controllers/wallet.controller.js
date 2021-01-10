@@ -9,9 +9,9 @@ import { successResponse } from '../utils/response';
  * @returns {*}
  */
 
-export function findAllByUserId(req, res, next) {
+export function findAllByCustomerId(req, res, next) {
 
-  WalletService.getAllByUserId(req.params.userid)
+  WalletService.getAllByCustomerId(req.params.id)
     .then((data) => {
       successResponse(res, data);
     })

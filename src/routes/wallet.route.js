@@ -5,15 +5,15 @@ import isAuthenticated from "../middlewares/authenticate";
 const router = express.Router();
 
 router
-  .route("/:userid")
+  .route("/:id")
 
   /**
    * @swagger
-   * /wallets/{userid}:
+   * /wallets/{id}:
    *   get:
    *     tags:
    *       - wallets
-   *     summary: Find all wallets record of user by ID
+   *     summary: Find all wallets record of customer by ID
    *     security:
    *        - Bearer: []
    *     operationId: finaAllByUserId
@@ -38,7 +38,7 @@ router
    *             $ref: '#/definitions/Error'
    */
 
-  .get(isAuthenticated, walletCtrl.findAllByUserId);
+  .get(isAuthenticated, walletCtrl.findAllByCustomerId);
 
 
 router
