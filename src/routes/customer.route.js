@@ -229,7 +229,7 @@ router
   /**
    * @swagger
    * /customers/isUniqueEmail:
-   *   get:
+   *   post:
    *     tags:
    *       - customers
    *     summary: "Check email existence for customer"
@@ -257,11 +257,11 @@ router
   .post(validate(customerSchema.email), customerCtrl.isUniqueEmail);
 
 router
-  .route('/:id/updatePassword')
+  .route('/:id/update-password')
 
   /**
    * @swagger
-   * /customers/{id}/updatePassword:
+   * /customers/{id}/update-password:
    *   post:
    *     tags:
    *       - customers
@@ -288,5 +288,38 @@ router
    */
 
   .post(isAuthenticated, validate(customerSchema.updatePassword), customerCtrl.updatePassword);
+
+router
+  .route('/forgot-password-request')
+
+  /**
+   * @swagger
+   * /customers/forgot-password-request:
+   *   post:
+   *     tags:
+   *       - customers
+   *     summary: "Forgot password for customers"
+   *     security:
+   *        - Bearer: []
+   *     operationId: forgot-password
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: body
+   *         in: body
+   *         description: Update new password for logged in user
+   *         required: true
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   */
+
+  .post(validate(customerSchema.email), customerCtrl.forgotPassword);
 
 export default router;

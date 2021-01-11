@@ -168,5 +168,46 @@ export function updatePassword(req, res, next) {
     .catch(err => {
       next(err);
     });
+}
 
+/**
+ * Send forgot password url to customers
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+
+export function forgotPassword(req, res, next) {
+  const { email } = req.body;
+
+  CustomerService.getCustomerByEmail(email)
+    .then(user => {
+
+      if (user === null) {
+        errorResponse(res, 'Customer not found.');
+      }
+
+      let isVerified = user.get('is_verified');
+
+      if (0 === isVerified) {
+        successResponse(res, 'Your account is not verified.');
+      }
+
+      CustomerService.setForgotPasswordToken(email)
+        .then(user => {
+
+          const param = user.attributes;
+          param.template = 'forgot-password';
+          param.forgotPasswordUrl = CustomerService.generateForgotPasswordUrl(param.token);
+
+          notify(param);
+
+          successResponse(res, 'Reset password link send successfully in your email.');
+        });
+
+    })
+    .catch(err => {
+      next(err);
+    });
 }

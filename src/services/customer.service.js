@@ -206,3 +206,45 @@ export function updatePassword(id, password) {
     });
 
 }
+
+/**
+ * Set forgot password token for customers
+ *
+ * @param email
+ * @returns {*}
+ */
+
+export function setForgotPasswordToken(email){
+
+  return new Customer({ email: email })
+    .fetch({ require: false })
+    .then((user) => {
+      if (user !== null) {
+
+        const id = user.get('id');
+        const token = confirmationToken(email);
+
+        return new Customer({ id })
+          .save({
+            'token': token
+          });
+      }
+      else {
+        user = null;
+      }
+    })
+    .catch(Customer.NotFoundError, () => {
+      throw Boom.notFound('Customer not found.');
+    });
+}
+
+
+/**
+ * Generate Forgot Password Url
+ *
+ * @param   {String}  token
+ * @returns {string}
+ */
+export function generateForgotPasswordUrl(token){
+  return `${Constant.app.host}/api/customers/forgot-password-?token=${token}`;
+}
