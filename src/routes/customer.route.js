@@ -320,6 +320,6 @@ router
    *           $ref: "#/definitions/Customer"
    */
 
-  .post(validate(customerSchema.email), customerCtrl.forgotPassword);
-
+  .post(validate(customerSchema.email), customerCtrl.forgotPasswordRequest);
+  
 export default router;

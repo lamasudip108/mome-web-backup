@@ -147,7 +147,6 @@ export function updatePassword(req, res, next) {
   CustomerService.getCustomer(req.params.id)
     .then(user => {
 
-
       if (bcrypt.compareSync(old_password, user.get('password'))) {
 
         // eslint-disable-next-line camelcase
@@ -178,7 +177,7 @@ export function updatePassword(req, res, next) {
  * @param next
  */
 
-export function forgotPassword(req, res, next) {
+export function forgotPasswordRequest(req, res, next) {
   const { email } = req.body;
 
   CustomerService.getCustomerByEmail(email)
