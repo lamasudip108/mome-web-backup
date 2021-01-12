@@ -2,7 +2,6 @@ import HttpStatus from 'http-status-codes';
 import * as CustomerService from '../services/customer.service';
 import {notify} from '../config/mailer';
 import {successResponse, errorResponse} from '../utils/response';
-import Address from '../models/address.model';
 import bcrypt from 'bcrypt';
 
 /**
@@ -30,11 +29,7 @@ export function findAll(req, res, next) {
 export function findById(req, res, next) {
   CustomerService.getCustomer(req.params.id)
     .then((data) => {
-        Address.getAddressById(data.attributes.id)
-          .then(customer => {
-            data.attributes.address = customer;
-            successResponse(res, data);
-          });
+        successResponse(res, data);
       }
     )
     .catch((err) => next(err));
@@ -183,7 +178,7 @@ export function forgotPasswordRequest(req, res, next) {
 
   CustomerService.getCustomerByEmail(email)
     .then(user => {
-
+      
       if (user === null) {
         errorResponse(res, 'Customer not found.');
       }
@@ -219,4 +214,5 @@ export function forgotPassword(req,res, next){
   const { token } = req.query;
 
   res.json({'t':token});
+
 }

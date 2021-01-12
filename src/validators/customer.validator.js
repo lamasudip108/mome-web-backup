@@ -7,7 +7,7 @@ export default {
     last_name: Joi.string().required(),
     email: Joi.string().email().required(),
     password: Joi.string().min(6).max(15).required(),
-    phone: Joi.string().min(10).required(),
+    phone: Joi.string().min(10).max(10).required(),
     status: Joi.string().default('invited'),
   }),
 
@@ -15,8 +15,11 @@ export default {
     first_name: Joi.string().required(),
     last_name: Joi.string().required(),
     email: Joi.string().email().required(),
-    password: Joi.string().min(6).required(),
-    status: Joi.number().integer().required(),
+    phone: Joi.string().min(10).max(10).required(),
+    street : Joi.string().required(),
+    city: Joi.string().required(),
+    state_province: Joi.string().required(),
+    po_box: Joi.string().required()
   }),
 
   login: Joi.object({

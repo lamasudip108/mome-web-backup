@@ -1,5 +1,4 @@
 import bookshelf from '../config/bookshelf';
-import Address from './address.model';
 
 const TABLE_NAME = 'customers';
 
@@ -29,11 +28,6 @@ class Customer extends bookshelf.Model {
   get hidden(){
     return ['password', 'token', 'created_at', 'updated_at', 'template', 'otp_code', 'confirmationUrl'];
   }
-
-  address() {
-    return this.hasMany(Address, 'customer_id', 'id');
-  }
-
 }
 
 export default Customer;

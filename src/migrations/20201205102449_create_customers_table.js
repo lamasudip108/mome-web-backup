@@ -13,7 +13,6 @@ exports.up = function (knex) {
     table.string('email').notNullable().unique('cus_email');
     table.string('phone').notNullable().unique('cus_phone');
     table.string('password').notNullable();
-    table.string('nationality').nullable();
     table.string('profile_image').nullable();
     table.string('language').nullable().comment('en, ar');
     table.double('wallet_amount', 10, 2).default(0);
@@ -22,6 +21,10 @@ exports.up = function (knex) {
     table.string('status').default('invited').comment('invited, inactive, active, deleted');
     table.string('token').nullable();
     table.string('otp_code').nullable();
+    table.string('street').nullable();
+    table.string('city').nullable();
+    table.string('state_province').nullable();
+    table.string('po_box').nullable();
     table.timestamp('created_at').defaultTo(knex.fn.now());
     //table.timestamp('updated_at').defaultTo(knex.fn.now());
     table.timestamp('updated_at').nullable();

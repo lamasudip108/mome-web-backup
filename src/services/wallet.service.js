@@ -5,7 +5,7 @@ import Wallet from '../models/wallet.model';
  *
  * @returns {Promise}
  */
-export function getAllByUserId(id) {
+export function getAllByCustomerId(id) {
   return Wallet.forge().where({ customer_id: id }).fetchAll();
 }
 
