@@ -67,6 +67,7 @@ export function store(req, res, next) {
 
                   const param = data.attributes;
                   param.template = 'welcome';
+                  param.subject = 'Welcome to Mome';
                   param.confirmationUrl = CustomerService.generateConfirmationUrl(param.token);
 
                   notify(param);
@@ -197,6 +198,7 @@ export function forgotPasswordRequest(req, res, next) {
         .then(user => {
 
           const param = user.attributes;
+          param.subject = 'Reset your password';
           param.template = 'forgot-password';
           param.forgotPasswordUrl = CustomerService.generateForgotPasswordUrl(param.token);
 
@@ -209,4 +211,12 @@ export function forgotPasswordRequest(req, res, next) {
     .catch(err => {
       next(err);
     });
+}
+
+
+export function forgotPassword(req,res, next){
+
+  const { token } = req.query;
+
+  res.json({'t':token});
 }

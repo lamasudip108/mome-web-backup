@@ -246,5 +246,5 @@ export function setForgotPasswordToken(email){
  * @returns {string}
  */
 export function generateForgotPasswordUrl(token){
-  return `${Constant.app.host}/api/customers/forgot-password-?token=${token}`;
+  return `${Constant.app.host}/api/customers/forgot-password?token=${token}`;
 }
