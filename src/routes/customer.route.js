@@ -157,7 +157,7 @@ router
    *             $ref: '#/definitions/Error'
    */
 
-  .get(customerCtrl.findById)
+  .get(isAuthenticated, customerCtrl.findById)
 
   /**
    * @swagger
