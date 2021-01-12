@@ -147,7 +147,7 @@ export function updatePassword(req, res, next) {
 
         // eslint-disable-next-line camelcase
         if (old_password === new_password) {
-          successResponse(res, 'Old password and New password is same.');
+          errorResponse(res, 'Old password and New password is same.',HttpStatus.FORBIDDEN);
         }
 
         CustomerService.updatePassword(req.params.id, new_password)
@@ -156,7 +156,7 @@ export function updatePassword(req, res, next) {
           });
 
       } else {
-        successResponse(res, 'Your old password does not match.');
+        errorResponse(res, 'Your old password does not match.',HttpStatus.FORBIDDEN);
       }
 
     })
@@ -178,15 +178,15 @@ export function forgotPasswordRequest(req, res, next) {
 
   CustomerService.getCustomerByEmail(email)
     .then(user => {
-      
+
       if (user === null) {
-        errorResponse(res, 'Customer not found.');
+        errorResponse(res, 'Customer not found.',HttpStatus.NOT_FOUND);
       }
 
       let isVerified = user.get('is_verified');
 
       if (0 === isVerified) {
-        successResponse(res, 'Your account is not verified.');
+        errorResponse(res, 'Your account is not verified.', HttpStatus.FORBIDDEN);
       }
 
       CustomerService.setForgotPasswordToken(email)
@@ -206,13 +206,4 @@ export function forgotPasswordRequest(req, res, next) {
     .catch(err => {
       next(err);
     });
-}
-
-
-export function forgotPassword(req,res, next){
-
-  const { token } = req.query;
-
-  res.json({'t':token});
-
 }
