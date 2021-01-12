@@ -1,6 +1,7 @@
 import HttpStatus from 'http-status-codes';
 import jwt from 'jsonwebtoken';
 import User from '../models/user.model';
+import Customer from "../models/customer.model";
 
 /**
  * Route authentication middleware to verify a token
@@ -24,7 +25,7 @@ export default (req, res, next) => {
             if (err) {
                 res.status(HttpStatus.UNAUTHORIZED).json({error: 'You are not authorized to perform this operation!'});
             } else {
-                User.query({
+                Customer.query({
                     where: {id: decoded.id},
                     select: ['email', 'id']
                 }).fetch().then(user => {
