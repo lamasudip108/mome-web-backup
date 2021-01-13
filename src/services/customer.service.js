@@ -202,7 +202,8 @@ export function updatePassword(id, password) {
 
   return new Customer({ id })
     .save({
-      password: newPassword
+      password: newPassword,
+      token: null
     })
     .catch(Customer.NoRowsUpdatedError, () => {
       throw Boom.notFound('Customer not found.');
@@ -225,7 +226,7 @@ export function setForgotPasswordToken(email){
       if (user !== null) {
 
         const id = user.get('id');
-        const token = confirmationToken(email);
+        const token = generateForgotPasswordToken(user);
 
         return new Customer({ id })
           .save({
@@ -240,6 +241,23 @@ export function setForgotPasswordToken(email){
       throw Boom.notFound('Customer not found.');
     });
 }
+
+/**
+ * Generate forgot password link
+ *
+ * @param user
+ * @returns {*}
+ */
+
+function generateForgotPasswordToken(user) {
+  return jwt.sign({
+      id: user.get("id"),
+      email: user.get("email")
+    },
+    process.env.TOKEN_SECRET_KEY
+  );
+}
+
 
 
 /**

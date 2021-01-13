@@ -84,7 +84,7 @@ router.route('/login')
 
 /**
  * @swagger
- * /auths/confirmation:
+ * /auths/confirmation/{token}:
  *   get:
  *     tags:
  *       - auths

@@ -5,7 +5,6 @@ import {successResponse, errorResponse} from '../utils/response';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import path from "path";
-import * as emailTemplate from '../utils/email';
 
 
 /**
@@ -178,6 +177,7 @@ export function updatePassword(req, res, next) {
  */
 
 export function forgotPasswordRequest(req, res, next) {
+
   const { email } = req.body;
 
   CustomerService.getCustomerByEmail(email)
@@ -197,8 +197,8 @@ export function forgotPasswordRequest(req, res, next) {
         .then(user => {
 
           const param = user.attributes;
-          param.subject = 'Reset your password';
-          param.template = 'forgot_password';
+          param.subject = 'Reset Your Password';
+          param.template = 'forgot-password';
           param.forgotPasswordUrl = CustomerService.generateForgotPasswordUrl(param.token);
 
           notify(param);
@@ -220,16 +220,67 @@ export function forgotPasswordRequest(req, res, next) {
  * @param next
  */
 
-export function forgotPassword(req,res,next){
+export function forgotPassword(req, res, next) {
 
-  const {token} = req.params;
+  const { token } = req.params;
 
-  jwt.verify(token, process.env.TOKEN_SECRET_KEY, ((err, decode) => {
+        jwt.verify(token, process.env.TOKEN_SECRET_KEY, ((err, decode) => {
+          if (err) {
+            res.sendFile(path.join(__dirname, '../../public/customer/account_verified.html'));
+          } else {
+            res.render('new-password-form', { data:{token: token}, layout: false });
+          }
+        }));
+}
+
+/**
+ * Set new password for the user
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+
+export function resetPassword(req, res, next) {
+
+  // eslint-disable-next-line camelcase
+  const { password, c_password, token } = req.body;
+
+  jwt.verify(token, process.env.TOKEN_SECRET_KEY, (err, decoded) => {
     if (err) {
-      res.sendFile(path.join(__dirname, '../../public/customer/link_expired.html'));
+     errorResponse(res,'Invalid Token',HttpStatus.FORBIDDEN);
     } else {
-res.json({token});
-    }
-  }));
 
+      // eslint-disable-next-line camelcase
+      if (password !== c_password) {
+
+        res.render('new-password-form', {
+          data: {
+            token: token,
+            message: 'Password does not match.',
+            color: 'red'
+          },
+          layout: false
+        });
+      } else {
+        const id = decoded.id;
+
+        CustomerService.updatePassword(id, password)
+          .then(user => {
+
+            const param = user.attributes;
+            param.subject = 'Password Changed Successfully';
+            param.template = 'password-change-success';
+
+            notify(param);
+
+            res.render('password-success', {
+              data: {
+                first_name: user.get('first_name'),
+              },
+              layout: false
+            });
+          });
+      }}
+  });
 }
