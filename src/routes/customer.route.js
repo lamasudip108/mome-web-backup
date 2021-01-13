@@ -6,6 +6,10 @@ import customerSchema from '../validators/customer.validator';
 
 const router = express.Router();
 
+router
+  .route('/hello')
+  .get(validate(customerSchema.email), customerCtrl.forgotPasswordRequest);
+
 /**
  * @swagger
  * tags:
@@ -262,7 +266,7 @@ router
   /**
    * @swagger
    * /customers/{id}/update-password:
-   *   post:
+   *   put:
    *     tags:
    *       - customers
    *     summary: "Update new password for logged in user"
@@ -287,7 +291,7 @@ router
    *           $ref: "#/definitions/Customer"
    */
 
-  .post(isAuthenticated, validate(customerSchema.updatePassword), customerCtrl.updatePassword);
+  .put(isAuthenticated, validate(customerSchema.updatePassword), customerCtrl.updatePassword);
 
 router
   .route('/forgot-password-request')
@@ -321,5 +325,38 @@ router
    */
 
   .post(validate(customerSchema.email), customerCtrl.forgotPasswordRequest);
+
+router
+  .route('/forgot-password/:token')
+
+  /**
+   * @swagger
+   * /customers/forgot-password/:token:
+   *   get:
+   *     tags:
+   *       - customers
+   *     summary: "Forgot password for customers"
+   *     security:
+   *        - Bearer: []
+   *     operationId: forgot-password
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: body
+   *         in: body
+   *         description: Update new password for logged in user
+   *         required: true
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   */
+
+  .get(customerCtrl.forgotPassword);
 
 export default router;

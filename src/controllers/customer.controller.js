@@ -3,6 +3,10 @@ import * as CustomerService from '../services/customer.service';
 import {notify} from '../config/mailer';
 import {successResponse, errorResponse} from '../utils/response';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import path from "path";
+import * as emailTemplate from '../utils/email';
+
 
 /**
  * Find all the customers
@@ -194,7 +198,7 @@ export function forgotPasswordRequest(req, res, next) {
 
           const param = user.attributes;
           param.subject = 'Reset your password';
-          param.template = 'forgot-password';
+          param.template = 'forgot_password';
           param.forgotPasswordUrl = CustomerService.generateForgotPasswordUrl(param.token);
 
           notify(param);
@@ -206,4 +210,26 @@ export function forgotPasswordRequest(req, res, next) {
     .catch(err => {
       next(err);
     });
+}
+
+/**
+ * Render forgot password display page
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+
+export function forgotPassword(req,res,next){
+
+  const {token} = req.params;
+
+  jwt.verify(token, process.env.TOKEN_SECRET_KEY, ((err, decode) => {
+    if (err) {
+      res.sendFile(path.join(__dirname, '../../public/customer/link_expired.html'));
+    } else {
+res.json({token});
+    }
+  }));
+
 }
