@@ -320,7 +320,7 @@ router
    *           $ref: "#/definitions/Customer"
    */
 
-  .post(validate(customerSchema.addBank),customerCtrl.addBank);
+  .post(isAuthenticated, validate(customerSchema.addBank), customerCtrl.addBank);
 
 router
   .route('/:id/bank')
@@ -353,6 +353,6 @@ router
    *           $ref: "#/definitions/Customer"
    */
 
-  .get(customerCtrl.findAllBankById);
+  .get(isAuthenticated, customerCtrl.findAllBankById);
 
 export default router;

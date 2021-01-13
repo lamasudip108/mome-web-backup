@@ -31,6 +31,6 @@ router
    *             $ref: '#/definitions/Error'
    */
 
-  .get( transactionCtrl.findAll);
+  .get(isAuthenticated, transactionCtrl.findAll);
 
 export default router;
