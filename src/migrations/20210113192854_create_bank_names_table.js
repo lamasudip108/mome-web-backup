@@ -5,7 +5,7 @@
  * @returns {Promise}
  */
 exports.up = function (knex) {
-  return knex.schema.createTable('banks', (table) => {
+  return knex.schema.createTable('bank_names', (table) => {
     table.increments('id').primary().unsigned();
     table.string('name').notNullable();
     table.string('status').notNullable().defaultTo('active').comment(' active, inactive');
@@ -22,5 +22,5 @@ exports.up = function (knex) {
  * @returns {Promise}
  */
 exports.down = function (knex) {
-  return knex.schema.dropTable('banks');
+  return knex.schema.dropTable('banks_names');
 };
