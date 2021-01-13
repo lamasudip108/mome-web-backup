@@ -392,4 +392,70 @@ router
 
   .post(customerCtrl.resetPassword);
 
+router
+  .route('/:id/banks')
+
+  /**
+   * @swagger
+   * /customers/{id}/banks:
+   *   post:
+   *     tags:
+   *       - customers
+   *     summary: "Create a bank for customer"
+   *     security:
+   *        - Bearer: []
+   *     operationId: banks
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: body
+   *         in: body
+   *         description: Create a new bank for customer
+   *         required: true
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   */
+
+  .post(isAuthenticated, validate(customerSchema.addBank), customerCtrl.addBank);
+
+router
+  .route('/:id/banks')
+
+  /**
+   * @swagger
+   * /customers/{id}/banks:
+   *   post:
+   *     tags:
+   *       - customers
+   *     summary: "Create a bank for customer"
+   *     security:
+   *        - Bearer: []
+   *     operationId: banks
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: body
+   *         in: body
+   *         description: Create a new bank for customer
+   *         required: true
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   */
+
+  .get(isAuthenticated, customerCtrl.findAllBankById);
+
 export default router;

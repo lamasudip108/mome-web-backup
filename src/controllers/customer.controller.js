@@ -3,9 +3,9 @@ import * as CustomerService from '../services/customer.service';
 import {notify} from '../config/mailer';
 import {successResponse, errorResponse} from '../utils/response';
 import bcrypt from 'bcrypt';
+import BankName from '../models/bank_name.model';
 import jwt from 'jsonwebtoken';
-import path from "path";
-
+import path from 'path';
 
 /**
  * Find all the customers
@@ -283,4 +283,51 @@ export function resetPassword(req, res, next) {
           });
       }}
   });
+}
+
+/**
+ * Add a new bank for customer
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+
+export function addBank(req, res, next) {
+
+  CustomerService.getCustomerByAccNumber(req.params.id, req.body.account_number)
+    .then(account => {
+
+      if (account !== null) {
+        errorResponse(res, req.body.account_number + ' is already in use.');
+      }else {
+
+        CustomerService.addBank(req.params.id, req.body)
+          .then((data) => {
+            BankName.getBankNameById(data.attributes.bank_id)
+              .then(customer => {
+                data.attributes.bank = customer;
+                successResponse(res, data);
+              });
+          });
+      }
+    })
+    .catch((err) => next(err));
+
+}
+
+/**
+ * Find all bank for customers
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+
+export function findAllBankById(req, res, next) {
+  CustomerService.findAllBankById(req.params.id)
+    .then((data) => {
+      successResponse(res, data);
+    })
+    .catch((err) => next(err));
 }

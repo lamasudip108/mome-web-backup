@@ -4,6 +4,7 @@ import userRoutes from './user.route';
 import customerRoutes from './customer.route';
 import transactionRoutes from './transaction.route';
 import walletRoutes from './wallet.route';
+import bankRoutes from './bank.route';
 
 const router = express.Router();
 
@@ -21,5 +22,8 @@ router.use('/transactions', transactionRoutes);
 
 // mount wallet routes at /customers
 router.use('/wallets',walletRoutes);
+
+// mount wallet routes at /customers
+router.use('/banks',bankRoutes);
 
 export default router;
