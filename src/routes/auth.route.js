@@ -84,7 +84,7 @@ router.route('/login')
 
 /**
  * @swagger
- * /auths/confirmation:
+ * /auths/confirmation/{token}:
  *   get:
  *     tags:
  *       - auths
@@ -116,7 +116,7 @@ router.route('/login')
  *            $ref: '#/definitions/Error'
  */
 
-router.route('/confirmation')
+router.route('/confirmation/:token')
   .get((req, res) => {
     authCtrl.accountConfirmation(req, res);
   });

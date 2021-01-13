@@ -1,10 +1,9 @@
-import Boom from "@hapi/boom";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import Constant from "../utils/constants";
-import Customer from "../models/customer.model";
+import Boom from '@hapi/boom';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import Constant from '../utils/constants';
+import Customer from '../models/customer.model';
 import Bank from '../models/bank.model';
-import Transaction from "../models/transaction.model";
 
 
 /**
@@ -27,7 +26,7 @@ export function getCustomer(id) {
     .fetch({ require: true })
     .then((user) => user)
     .catch(Customer.NotFoundError, () => {
-      throw Boom.notFound("Customer not found.");
+      throw Boom.notFound('Customer not found.');
     });
 }
 
@@ -78,7 +77,7 @@ export function updateCustomer(id, customer) {
       po_box: po_box
     })
     .catch(Customer.NoRowsUpdatedError, () => {
-      throw Boom.notFound("Customer not found.");
+      throw Boom.notFound('Customer not found.');
     });
 }
 
@@ -93,7 +92,7 @@ export function deleteCustomer(id) {
     .fetch()
     .then((user) => user.destroy())
     .catch(Customer.NotFoundError, () => {
-      throw Boom.notFound("Customer not found.");
+      throw Boom.notFound('Customer not found.');
     });
 }
 
@@ -105,11 +104,11 @@ export function deleteCustomer(id) {
  * @returns {Promise}
  */
 export function getCustomerByEmail(email) {
-  return new Customer({ "email": email })
+  return new Customer({ 'email': email })
     .fetch({ require: false })
     .then((user) => user)
     .catch(Customer.NotFoundError, () => {
-      throw Boom.notFound("Customer not found.");
+      throw Boom.notFound('Customer not found.');
     });
 }
 
@@ -120,11 +119,11 @@ export function getCustomerByEmail(email) {
  * @returns {Promise}
  */
 export function getCustomerByPhone(phone) {
-  return new Customer({ "phone": phone })
+  return new Customer({ 'phone': phone })
     .fetch({ require: false })
     .then((user) => user)
     .catch(Customer.NotFoundError, () => {
-      throw Boom.notFound("Customer not found.");
+      throw Boom.notFound('Customer not found.');
     });
 }
 
@@ -135,7 +134,7 @@ export function getCustomerByPhone(phone) {
  * @returns {string}
  */
 export function generateConfirmationUrl(token) {
-  return `${Constant.app.host}/api/auths/confirmation?token=${token}`;
+  return `${Constant.app.host}/api/auths/confirmation/${token}`;
 }
 
 function confirmationToken(email) {
@@ -162,16 +161,16 @@ export function verifyAccount(token) {
 
         return new Customer({ id })
           .save({
-            "is_verified": 1,
-            "status": Constant.users.status.active,
-            "token": null
+            'is_verified': 1,
+            'status': Constant.users.status.active,
+            'token': null
           });
       } else {
         user = null;
       }
     })
     .catch(Customer.NotFoundError, () => {
-      throw Boom.notFound("Customer not found.");
+      throw Boom.notFound('Customer not found.');
     });
   /*
 
@@ -204,10 +203,11 @@ export function updatePassword(id, password) {
 
   return new Customer({ id })
     .save({
-      password: newPassword
+      password: newPassword,
+      token: null
     })
     .catch(Customer.NoRowsUpdatedError, () => {
-      throw Boom.notFound("Customer not found.");
+      throw Boom.notFound('Customer not found.');
     });
 
 }
@@ -239,11 +239,69 @@ export function findAllBankById(id) {
 
 
 // eslint-disable-next-line camelcase
-export function getCustomerByAccNumber(customer_id,account_number){
-  return new Bank({ 'customer_id':customer_id, 'account_number': account_number })
+export function getCustomerByAccNumber(customer_id,account_number) {
+  return new Bank({ 'customer_id': customer_id, 'account_number': account_number })
     .fetch({ require: false })
     .then((data) => data)
     .catch(Customer.NotFoundError, () => {
-      throw Boom.notFound("Customer not found.");
+      throw Boom.notFound('Customer not found.');
     });
+}
+/**
+ * Set forgot password token for customers
+ *
+ * @param email
+ * @returns {*}
+ */
+
+export function setForgotPasswordToken(email){
+
+  return new Customer({ email: email })
+    .fetch({ require: false })
+    .then((user) => {
+      if (user !== null) {
+
+        const id = user.get('id');
+        const token = generateForgotPasswordToken(user);
+
+        return new Customer({ id })
+          .save({
+            'token': token
+          });
+      }
+      else {
+        user = null;
+      }
+    })
+    .catch(Customer.NotFoundError, () => {
+      throw Boom.notFound('Customer not found.');
+    });
+}
+
+/**
+ * Generate forgot password link
+ *
+ * @param user
+ * @returns {*}
+ */
+
+function generateForgotPasswordToken(user) {
+  return jwt.sign({
+      id: user.get('id'),
+      email: user.get('email')
+    },
+    process.env.TOKEN_SECRET_KEY
+  );
+}
+
+
+
+/**
+ * Generate Forgot Password Url
+ *
+ * @param   {String}  token
+ * @returns {string}
+ */
+export function generateForgotPasswordUrl(token){
+  return `${Constant.app.host}/api/customers/forgot-password/${token}`;
 }

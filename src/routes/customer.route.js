@@ -6,6 +6,10 @@ import customerSchema from '../validators/customer.validator';
 
 const router = express.Router();
 
+router
+  .route('/hello')
+  .get(validate(customerSchema.email), customerCtrl.forgotPasswordRequest);
+
 /**
  * @swagger
  * tags:
@@ -157,7 +161,7 @@ router
    *             $ref: '#/definitions/Error'
    */
 
-  .get(isAuthenticated, customerCtrl.findById)
+  .get( customerCtrl.findById)
 
   /**
    * @swagger
@@ -257,12 +261,12 @@ router
   .post(validate(customerSchema.email), customerCtrl.isUniqueEmail);
 
 router
-  .route('/:id/updatePassword')
+  .route('/:id/update-password')
 
   /**
    * @swagger
-   * /customers/{id}/updatePassword:
-   *   post:
+   * /customers/{id}/update-password:
+   *   put:
    *     tags:
    *       - customers
    *     summary: "Update new password for logged in user"
@@ -287,7 +291,106 @@ router
    *           $ref: "#/definitions/Customer"
    */
 
-  .post(isAuthenticated, validate(customerSchema.updatePassword), customerCtrl.updatePassword);
+  .put(isAuthenticated, validate(customerSchema.updatePassword), customerCtrl.updatePassword);
+
+router
+  .route('/forgot-password-request')
+
+  /**
+   * @swagger
+   * /customers/forgot-password-request:
+   *   post:
+   *     tags:
+   *       - customers
+   *     summary: "Forgot password for customers"
+   *     security:
+   *        - Bearer: []
+   *     operationId: forgot-password
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: body
+   *         in: body
+   *         description: Update new password for logged in user
+   *         required: true
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   */
+
+  .post(validate(customerSchema.email), customerCtrl.forgotPasswordRequest);
+
+router
+  .route('/forgot-password/:token')
+
+  /**
+   * @swagger
+   * /customers/forgot-password/{token}:
+   *   get:
+   *     tags:
+   *       - customers
+   *     summary: "Forgot password for customers"
+   *     security:
+   *        - Bearer: []
+   *     operationId: forgot-password
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: body
+   *         in: body
+   *         description: Update new password for logged in user
+   *         required: true
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   */
+
+  .get(customerCtrl.forgotPassword);
+
+router
+  .route('/reset-password')
+
+  /**
+   * @swagger
+   * /customers/forgot-password:
+   *   get:
+   *     tags:
+   *       - customers
+   *     summary: "Forgot password for customers"
+   *     security:
+   *        - Bearer: []
+   *     operationId: forgot-password
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: body
+   *         in: body
+   *         description: Update new password for logged in user
+   *         required: true
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   */
+
+  .post(customerCtrl.resetPassword);
 
 router
   .route('/:id/banks')

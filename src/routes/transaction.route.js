@@ -1,11 +1,11 @@
-import express from "express";
-import * as transactionCtrl from "../controllers/transaction.controller";
-import isAuthenticated from "../middlewares/authenticate";
+import express from 'express';
+import * as transactionCtrl from '../controllers/transaction.controller';
+import isAuthenticated from '../middlewares/authenticate';
 
 const router = express.Router();
 
 router
-  .route("/:id")
+  .route('/:id')
 
   /**
    * @swagger
@@ -42,7 +42,7 @@ router
 
 
 router
-  .route("/")
+  .route('/')
 
   /**
    * @swagger
