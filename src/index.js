@@ -22,7 +22,7 @@ app.use(jsonHandler);
 app.use('/api', routes);
 
 // Landing page
-app.get('*', (req, res) => {
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
