@@ -31,7 +31,7 @@ function setup() {
  */
 function preparePayLoad(params) {
 
-  const subject = `Welcome to Mome`;
+  const subject = params.subject;
   const html = emailTemplate.render(params.template, {params});
 
   return {

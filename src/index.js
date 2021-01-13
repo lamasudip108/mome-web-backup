@@ -6,6 +6,8 @@ import * as errorHandler from './middlewares/errorHandler';
 import joiErrorHandler from './middlewares/joiErrorHandler';
 import requestLogger from './middlewares/requestLogger';
 import jsonHandler from './middlewares/jsonHandler';
+import hbs from 'express-handlebars';
+import bodyParser from 'body-parser';
 
 // Swagger API documentation
 app.get('/swagger.json', (req, res) => {
@@ -18,11 +20,20 @@ app.use(requestLogger);
 // JSON body validation
 app.use(jsonHandler);
 
+//set handlebar
+
+app.engine('hbs',hbs({extname:'hbs', layoutsDir:__dirname + '/views'}));
+app.set('views',path.join(__dirname,'views'));
+app.set('view engine', 'hbs');
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+
 // Router
 app.use('/api', routes);
 
 // Landing page
-app.get('*', (req, res) => {
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 

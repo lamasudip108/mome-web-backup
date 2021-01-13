@@ -73,7 +73,7 @@ export function login(req, res) {
  */
 
 export function accountConfirmation(req,res,next){
-  const { token } = req.query;
+  const { token } = req.params;
 
   CustomerService.verifyAccount(token)
     .then((data) => {
