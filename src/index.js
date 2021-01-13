@@ -26,8 +26,8 @@ app.engine('hbs',hbs({extname:'hbs', layoutsDir:__dirname + '/views'}));
 app.set('views',path.join(__dirname,'views'));
 app.set('view engine', 'hbs');
 
-app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 // Router
 app.use('/api', routes);

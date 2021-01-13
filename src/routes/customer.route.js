@@ -364,7 +364,7 @@ router
 
   /**
    * @swagger
-   * /customers/forgot-password/{token}:
+   * /customers/forgot-password:
    *   get:
    *     tags:
    *       - customers
