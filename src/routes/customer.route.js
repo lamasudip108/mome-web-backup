@@ -290,7 +290,7 @@ router
   .post(isAuthenticated, validate(customerSchema.updatePassword), customerCtrl.updatePassword);
 
 router
-  .route('/:id/bank')
+  .route('/:id/banks')
 
   /**
    * @swagger
@@ -323,7 +323,7 @@ router
   .post(isAuthenticated, validate(customerSchema.addBank), customerCtrl.addBank);
 
 router
-  .route('/:id/bank')
+  .route('/:id/banks')
 
   /**
    * @swagger
