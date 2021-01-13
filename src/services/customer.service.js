@@ -3,6 +3,8 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Constant from "../utils/constants";
 import Customer from "../models/customer.model";
+import Bank from '../models/bank.model';
+import Transaction from "../models/transaction.model";
 
 
 /**
@@ -208,4 +210,40 @@ export function updatePassword(id, password) {
       throw Boom.notFound("Customer not found.");
     });
 
+}
+
+export function addBank(customer_id, bank) {
+
+  // eslint-disable-next-line camelcase
+  const { branch, account_holder, account_number, bank_id } = bank;
+
+  return new Bank({
+    branch,
+    account_holder,
+    account_number,
+    customer_id,
+    bank_id
+  }).save();
+}
+
+/**
+ * Fetch all bank of customers
+ *
+ * @param id
+ * @returns {Promise<Collection>|Promise|*}
+ */
+
+export function findAllBankById(id) {
+  return Bank.forge().where({ customer_id: id }).fetchAll();
+}
+
+
+// eslint-disable-next-line camelcase
+export function getCustomerByAccNumber(customer_id,account_number){
+  return new Bank({ 'customer_id':customer_id, 'account_number': account_number })
+    .fetch({ require: false })
+    .then((data) => data)
+    .catch(Customer.NotFoundError, () => {
+      throw Boom.notFound("Customer not found.");
+    });
 }

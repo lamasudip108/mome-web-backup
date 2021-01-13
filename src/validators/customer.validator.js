@@ -38,5 +38,12 @@ export default {
       .required()
       .label('Confirm password')
       .messages({ 'any.only': '{{#label}} does not match' })
-    })
+    }),
+
+  addBank: Joi.object({
+    bank_id: Joi.string().required(),
+    branch: Joi.string().required(),
+    account_holder: Joi.string().required(),
+    account_number: Joi.string().required(),
+  }),
 };

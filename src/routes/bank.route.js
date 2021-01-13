@@ -1,6 +1,6 @@
-import express from "express";
-import * as transactionCtrl from "../controllers/bank.controller";
-import isAuthenticated from "../middlewares/authenticate";
+import express from 'express';
+import * as transactionCtrl from '../controllers/bank.controller';
+import isAuthenticated from '../middlewares/authenticate';
 
 const router = express.Router();
 

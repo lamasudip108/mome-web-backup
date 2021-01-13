@@ -1,12 +1,12 @@
 import bookshelf from '../config/bookshelf';
-import Bank from "./bank.model";
+import BankName from "./bank_name.model";
 
-const TABLE_NAME = 'bank_names';
+const TABLE_NAME = 'banks';
 
 /**
  * Transaction model.
  */
-class BankName extends bookshelf.Model {
+class Bank extends bookshelf.Model {
 
   /**
    * Get table name.
@@ -28,17 +28,13 @@ class BankName extends bookshelf.Model {
    * @returns {string[]}
    */
   get hidden(){
-    return ['status', 'created_at', 'updated_at'];
+    return ['bank_id', 'created_at', 'updated_at'];
   }
 
-  static getBankNameById(id) {
-    return BankName.forge().where({ id: id }).fetchAll();
-  }
-
-  bankName() {
-    return this.belongsTo('banks', 'bank_id');
+  bank() {
+    return this.belongsTo('bank_names', 'user_id');
   }
 
 }
 
-export default BankName;
+export default Bank;
