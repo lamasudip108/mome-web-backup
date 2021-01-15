@@ -1,5 +1,5 @@
 import bookshelf from '../config/bookshelf';
-import BankName from "./bank_name.model";
+import BankName from './bank_name.model';
 
 const TABLE_NAME = 'banks';
 
@@ -31,8 +31,14 @@ class Bank extends bookshelf.Model {
     return ['bank_id', 'created_at', 'updated_at'];
   }
 
-  bank() {
-    return this.belongsTo('bank_names', 'user_id');
+
+  /**
+   * Create relation with BankName
+   *
+   * @returns {Bookshelf.Model}
+   */
+  bank () {
+    return this.belongsTo(BankName, 'bank_id');
   }
 
 }
