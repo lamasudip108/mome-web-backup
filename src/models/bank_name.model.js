@@ -35,8 +35,13 @@ class BankName extends bookshelf.Model {
     return BankName.forge().where({ id: id }).fetchAll();
   }
 
-  bankName() {
-    return this.belongsTo('banks', 'bank_id');
+  /**
+   * Create relation with customers bank
+   *
+   * @returns {Collection}
+   */
+  bankName () {
+    return this.hasMany(Bank, 'bank_id');
   }
 
 }

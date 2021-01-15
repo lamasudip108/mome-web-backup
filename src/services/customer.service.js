@@ -234,7 +234,7 @@ export function addBank(customer_id, bank) {
  */
 
 export function findAllBankById(id) {
-  return Bank.forge().where({ customer_id: id }).fetchAll();
+  return Bank.forge().where({ customer_id: id }).fetchAll({ withRelated: ['bank'] });
 }
 
 

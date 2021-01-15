@@ -6,10 +6,6 @@ import customerSchema from '../validators/customer.validator';
 
 const router = express.Router();
 
-router
-  .route('/hello')
-  .get(validate(customerSchema.email), customerCtrl.forgotPasswordRequest);
-
 /**
  * @swagger
  * tags:
@@ -161,7 +157,7 @@ router
    *             $ref: '#/definitions/Error'
    */
 
-  .get( customerCtrl.findById)
+  .get(isAuthenticated, customerCtrl.findById)
 
   /**
    * @swagger
@@ -423,11 +419,8 @@ router
    *           $ref: "#/definitions/Customer"
    */
 
-  .post(isAuthenticated, validate(customerSchema.addBank), customerCtrl.addBank);
-
-router
-  .route('/:id/banks')
-
+  .post(isAuthenticated, validate(customerSchema.addBank), customerCtrl.addBank)
+  
   /**
    * @swagger
    * /customers/{id}/banks:
