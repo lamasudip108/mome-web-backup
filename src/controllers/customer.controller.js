@@ -1,8 +1,8 @@
 import HttpStatus from 'http-status-codes';
 import * as CustomerService from '../services/customer.service';
 import * as WalletService from '../services/wallet.service';
-import {notify} from '../config/mailer';
-import {successResponse, errorResponse} from '../utils/response';
+import { notify } from '../config/mailer';
+import { successResponse, errorResponse } from '../utils/response';
 import bcrypt from 'bcrypt';
 import BankName from '../models/bank_name.model';
 import jwt from 'jsonwebtoken';
@@ -54,13 +54,13 @@ export function store(req, res, next) {
   CustomerService.getCustomerByEmail(req.body.email)
     .then(user => {
       if (user !== null) {
-        errorResponse(res,req.body.email + ' is already in use.');
+        errorResponse(res, req.body.email + ' is already in use.');
 
       } else {
         CustomerService.getCustomerByPhone(req.body.phone)
           .then(user => {
             if (user !== null) {
-              errorResponse(res,req.body.phone + ' is already in use.');
+              errorResponse(res, req.body.phone + ' is already in use.');
 
             } else {
               CustomerService
@@ -121,7 +121,7 @@ export function destroy(req, res, next) {
  * @param {Function} next
  */
 
-export function isUniqueEmail(req, res, next){
+export function isUniqueEmail(req, res, next) {
 
   CustomerService.getCustomerByEmail(req.body.email)
     .then(user => {
@@ -154,7 +154,7 @@ export function updatePassword(req, res, next) {
 
         // eslint-disable-next-line camelcase
         if (old_password === new_password) {
-          errorResponse(res, 'Old password and New password is same.',HttpStatus.FORBIDDEN);
+          errorResponse(res, 'Old password and New password is same.', HttpStatus.FORBIDDEN);
         }
 
         CustomerService.updatePassword(req.params.id, new_password)
@@ -163,7 +163,7 @@ export function updatePassword(req, res, next) {
           });
 
       } else {
-        errorResponse(res, 'Your old password does not match.',HttpStatus.FORBIDDEN);
+        errorResponse(res, 'Your old password does not match.', HttpStatus.FORBIDDEN);
       }
 
     })
@@ -188,7 +188,7 @@ export function forgotPasswordRequest(req, res, next) {
     .then(user => {
 
       if (user === null) {
-        errorResponse(res, 'Customer not found.',HttpStatus.NOT_FOUND);
+        errorResponse(res, 'Customer not found.', HttpStatus.NOT_FOUND);
       }
 
       let isVerified = user.get('is_verified');
@@ -228,13 +228,13 @@ export function forgotPassword(req, res, next) {
 
   const { token } = req.params;
 
-        jwt.verify(token, process.env.TOKEN_SECRET_KEY, ((err, decode) => {
-          if (err) {
-            res.sendFile(path.join(__dirname, '../../public/customer/account_verified.html'));
-          } else {
-            res.render('new-password-form', { data:{token: token}, layout: false });
-          }
-        }));
+  jwt.verify(token, process.env.TOKEN_SECRET_KEY, ((err, decode) => {
+    if (err) {
+      res.sendFile(path.join(__dirname, '../../public/customer/account_verified.html'));
+    } else {
+      res.render('new-password-form', { data: { token: token }, layout: false });
+    }
+  }));
 }
 
 /**
@@ -252,7 +252,7 @@ export function resetPassword(req, res, next) {
 
   jwt.verify(token, process.env.TOKEN_SECRET_KEY, (err, decoded) => {
     if (err) {
-     errorResponse(res,'Invalid Token',HttpStatus.FORBIDDEN);
+      errorResponse(res, 'Invalid Token', HttpStatus.FORBIDDEN);
     } else {
 
       // eslint-disable-next-line camelcase
@@ -280,12 +280,13 @@ export function resetPassword(req, res, next) {
 
             res.render('password-success', {
               data: {
-                first_name: user.get('first_name'),
+                first_name: user.get('first_name')
               },
               layout: false
             });
           });
-      }}
+      }
+    }
   });
 }
 
@@ -304,7 +305,7 @@ export function addBank(req, res, next) {
 
       if (account !== null) {
         errorResponse(res, req.body.account_number + ' is already in use.');
-      }else {
+      } else {
 
         CustomerService.addBank(req.params.id, req.body)
           .then((data) => {
@@ -350,7 +351,7 @@ export function sendMoney(req, res, next) {
 
   const { email, phone, amount, description } = req.body;
 
-   CustomerService.getCustomer(cusId)
+  CustomerService.getCustomer(cusId)
     .then(sender => {
 
       if (parseFloat(amount) > sender.get('wallet_amount')) {
@@ -366,11 +367,11 @@ export function sendMoney(req, res, next) {
       CustomerService.geCustomerByParams(param)
         .then(receiver => {
 
-          if(sender.get('id') === receiver.get('id')){
+          if (sender.get('id') === receiver.get('id')) {
             errorResponse(res, 'You can\'t send money to yourself ');
           }
 
-          bookshelf.transaction(t=> {
+          bookshelf.transaction(t => {
             return Promise.all([
               (CustomerService.updateSenderAmount(sender, amount), { transacting: t }),
               (CustomerService.updateReceiverAmount(receiver, amount), { transacting: t }),
@@ -383,7 +384,7 @@ export function sendMoney(req, res, next) {
           });
         });
     })
-     .catch(err => next(err));
+    .catch(err => next(err));
 }
 
 /**
@@ -435,7 +436,7 @@ export function sentWalletRequest(req, res, next) {
 
   WalletService.getRequestWalletByCustomerId(cusId, 'sent')
     .then(data => {
-     successResponse(res, data);
+      successResponse(res, data);
     })
     .catch(err => {
       next(err);
@@ -456,13 +457,20 @@ export function receiveWalletRequest(req, res, next) {
 
   WalletService.getRequestWalletByCustomerId(cusId, 'receive')
     .then(data => {
-      successResponse(res,data);
+      successResponse(res, data);
     })
     .catch(err => {
       next(err);
     });
 }
 
+/**
+ * Respond to wallet request
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
 export function respondWalletRequest(req, res, next) {
 
   let cusId = req.params.id;
@@ -477,7 +485,39 @@ export function respondWalletRequest(req, res, next) {
         next(err);
       });
   } else {
-res.json({'d':'d'});
-  }
+    CustomerService.getCustomer(cusId)
+      .then(sender => {
 
+        WalletService.getWalletRequestById(request_id)
+          .then(wallet => {
+
+            if (wallet.get('amount') > sender.get('wallet_amount')) {
+              errorResponse(res, 'You don\'t have sufficient amount in your wallet.');
+            }
+
+            CustomerService.getCustomer(wallet.get('receiver'))
+              .then(receiver => {
+
+                if (sender.get('id') === receiver.get('id')) {
+                  errorResponse(res, 'You can\'t send money to yourself ');
+                }
+
+                let amount = wallet.get('amount');
+
+                bookshelf.transaction(t => {
+                  return Promise.all([
+                    (CustomerService.updateSenderAmount(sender, amount), { transacting: t }),
+                    (CustomerService.updateReceiverAmount(receiver, amount), { transacting: t }),
+                    (WalletService.updateWalletTransferStatus(request_id, Constant.payment.status.success), { transacting: t })
+                  ]);
+                }).then(response => {
+                  successResponse(res, 'transfer successful');
+                }).catch(err => {
+                  errorResponse(res, 'unsuccessful transfer', HttpStatus.BAD_REQUEST);
+                });
+              });
+          });
+      })
+      .catch(err => next(err));
+  }
 }
