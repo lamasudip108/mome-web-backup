@@ -420,7 +420,7 @@ router
    */
 
   .post(isAuthenticated, validate(customerSchema.addBank), customerCtrl.addBank)
-  
+
   /**
    * @swagger
    * /customers/{id}/banks:
@@ -450,5 +450,42 @@ router
    */
 
   .get(isAuthenticated, customerCtrl.findAllBankById);
+
+/**
+ * @swagger
+ * /auths/confirmation/{token}:
+ *   get:
+ *     tags:
+ *       - auths
+ *     summary: Verify user account using jwt
+ *     description:
+ *     operationId: account verification
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: token
+ *         in: path
+ *         description: token of customer that needs to be fetched
+ *         required: true
+ *         type: integer
+ *     responses:
+ *       200:
+ *         description: OK
+ *         schema:
+ *            $ref: '#/definitions/Token'
+ *       400:
+ *         description: Invalid token
+ *         schema:
+ *            $ref: '#/definitions/Error'
+ *       404:
+ *         description: Token not found
+ *         schema:
+ *            $ref: '#/definitions/Error'
+ */
+
+router.route('/confirmation/:token')
+  .get(authCtrl.accountConfirmation);
 
 export default router;

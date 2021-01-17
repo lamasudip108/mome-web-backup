@@ -54,6 +54,7 @@ Navigate to http://localhost:3000/swagger/ for the API documentation.
 - JSON Web Tokens(jwt) - [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
 - Logging Library - [Winston](https://www.npmjs.com/package/winston)
 - Object schema validation  - [Joi](https://www.npmjs.com/package/joi)
+- Create aliases of directories  - [module-alias](https://www.npmjs.com/package/module-alias)
 - API documentation using [swagger-jsdoc](https://www.npmjs.com/package/swagger-jsdoc) and [swagger-ui](https://www.npmjs.com/package/swagger-ui)
 - Environment configuration - [dotenv](https://www.npmjs.com/package/dotenv)
 - Code linting tool - [ESLint](http://eslint.org/)
