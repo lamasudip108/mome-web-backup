@@ -331,3 +331,27 @@ export function findAllBankById(req, res, next) {
     })
     .catch((err) => next(err));
 }
+
+
+/**
+ * Returns jwt token if valid email and password is provided
+ *
+ * @param {object} req
+ * @param {object} res
+ * @returns {*}
+ */
+
+export function accountConfirmation(req, res) {
+  const { token } = req.params;
+
+  CustomerService.verifyAccount(token)
+    .then((data) => {
+      if (undefined === data) {
+        res.sendFile(path.join(__dirname, '../../public/customer/link_expired.html'));
+      } else {
+        res.sendFile(path.join(__dirname, '../../public/customer/account_verified.html'));
+      }
+    })
+    .catch((err) => console.log(err));
+
+}

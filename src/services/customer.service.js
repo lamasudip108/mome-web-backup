@@ -1,7 +1,8 @@
 import Boom from '@hapi/boom';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import Constant from '../utils/constants';
+
+import {APP, CUSTOMER} from '../constants';
 import Customer from '../models/customer.model';
 import Bank from '../models/bank.model';
 
@@ -134,7 +135,7 @@ export function getCustomerByPhone(phone) {
  * @returns {string}
  */
 export function generateConfirmationUrl(token) {
-  return `${Constant.app.host}/api/auths/confirmation/${token}`;
+  return `${APP.HOST}/api/auths/confirmation/${token}`;
 }
 
 function confirmationToken(email) {
@@ -162,7 +163,7 @@ export function verifyAccount(token) {
         return new Customer({ id })
           .save({
             'is_verified': 1,
-            'status': Constant.users.status.active,
+            'status': CUSTOMER.STATUS.ACTIVE,
             'token': null
           });
       } else {
@@ -303,5 +304,5 @@ function generateForgotPasswordToken(user) {
  * @returns {string}
  */
 export function generateForgotPasswordUrl(token){
-  return `${Constant.app.host}/api/customers/forgot-password/${token}`;
+  return `${APP.HOST}/api/customers/forgot-password/${token}`;
 }

@@ -4,7 +4,7 @@ Express and MySQL Application
 
 ### 1. Prerequisites
 
-- [NodeJs](https://nodejs.org/en/)
+- [NodeJs](https://nodejs.org/en/) - JavaScript runtime built on Chrome's V8 JavaScript engine
 - [NPM](https://npmjs.org/) - Node package manager
 - [MySQL](https://www.mysql.com/downloads/) - Relational database management system (RDBMS)
 

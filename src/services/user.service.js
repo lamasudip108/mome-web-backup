@@ -8,7 +8,7 @@ import User from '../models/user.model';
  *
  * @returns {Promise}
  */
-export function getAllUser() {
+export function getAll() {
   return User.forge().fetchAll();
 }
 
@@ -18,7 +18,7 @@ export function getAllUser() {
  * @param   {Number|String}  id
  * @returns {Promise}
  */
-export function getUser(id) {
+export function getOne(id) {
   return new User({ id })
     .fetch({ require: true })
     .then((user) => user)
@@ -33,7 +33,7 @@ export function getUser(id) {
  * @param   {Object}  user
  * @returns {Promise}
  */
-export function storeUser(user) {
+export function store(user) {
   // eslint-disable-next-line camelcase
   const { first_name, middle_name, last_name, email } = user;
   const password = bcrypt.hashSync(user.password, 10);
@@ -44,7 +44,13 @@ export function storeUser(user) {
     last_name,
     email,
     password,
-  }).save();
+  }).save().catch(function(err) {
+    if (err.code === 'ER_DUP_ENTRY' || err.errno === 1062) { // MySQL
+      throw Boom.badRequest('User already exists in our system.');
+    } else if (err.code === '23505') { // PostgreSQL
+      throw Boom.badRequest('User already exists in our system.');
+    }
+  });
 }
 
 /**
@@ -54,7 +60,7 @@ export function storeUser(user) {
  * @param   {Object}         user
  * @returns {Promise}
  */
-export function updateUser(id, user) {
+export function update(id, user) {
   // eslint-disable-next-line camelcase
   const { first_name, last_name, email, status } = user;
 
@@ -76,7 +82,7 @@ export function updateUser(id, user) {
  * @param   {Number|String}  id
  * @returns {Promise}
  */
-export function deleteUser(id) {
+export function destroy(id) {
   return new User({ id })
     .fetch()
     .then((user) => user.destroy())
