@@ -365,6 +365,11 @@ export function sendMoney(req, res, next) {
 
       CustomerService.geCustomerByParams(param)
         .then(receiver => {
+
+          if(sender.get('id') === receiver.get('id')){
+            errorResponse(res, 'You can\'t send money to yourself ');
+          }
+
           bookshelf.transaction(t=> {
             return Promise.all([
               (CustomerService.updateSenderAmount(sender, amount), { transacting: t }),
@@ -456,4 +461,23 @@ export function receiveWalletRequest(req, res, next) {
     .catch(err => {
       next(err);
     });
+}
+
+export function respondWalletRequest(req, res, next) {
+
+  let cusId = req.params.id;
+  const { request_id, status } = req.body;
+
+  if (status === 0) {
+    WalletService.updateWalletTransferStatus(request_id, Constant.payment.status.cancelled)
+      .then(response => {
+        successResponse(res, response);
+      })
+      .catch(err => {
+        next(err);
+      });
+  } else {
+res.json({'d':'d'});
+  }
+
 }

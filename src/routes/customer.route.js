@@ -583,4 +583,37 @@ router
 
   .get(customerCtrl.receiveWalletRequest);
 
+router
+  .route('/:id/respond-wallet-request')
+
+  /**
+   * @swagger
+   * /customers/{id}/receive-wallet-request:
+   *   post:
+   *     tags:
+   *       - customers
+   *     summary: "Show all receive wallet request"
+   *     security:
+   *        - Bearer: []
+   *     operationId: banks
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: body
+   *         in: body
+   *         description: Show all receive wallet request
+   *         required: true
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   */
+
+  .post(validate(customerSchema.respondRequest), customerCtrl.respondWalletRequest);
+
 export default router;

@@ -54,4 +54,9 @@ export default {
     description : Joi.string().max(50),
   }),
 
+  respondRequest:Joi.object({
+    request_id: Joi.int().required(),
+    status: Joi.int().required(),
+  })
+
 };

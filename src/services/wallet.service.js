@@ -1,6 +1,8 @@
 import Wallet from '../models/wallet.model';
 import uniqid from 'uniqid';
 import Constant from '../utils/constants';
+import Customer from "../models/customer.model";
+import Boom from "@hapi/boom";
 
 /**
  * Get all wallet by customer id
@@ -86,4 +88,17 @@ export function getRequestWalletByCustomerId(id, type) {
   }
 
   return Wallet.forge().where(param).fetchAll();
+}
+
+
+export function updateWalletTransferStatus(id,status){
+
+  return new Wallet({ id })
+    .save({
+      status: status,
+    })
+    .catch(Wallet.NoRowsUpdatedError, () => {
+      throw Boom.notFound('Wallet not found.');
+    });
+
 }
