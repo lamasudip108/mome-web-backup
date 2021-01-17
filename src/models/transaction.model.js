@@ -3,7 +3,7 @@ import bookshelf from '../config/bookshelf';
 const TABLE_NAME = 'transactions';
 
 /**
- * Transaction model.
+ * Transaction Model.
  */
 class Transaction extends bookshelf.Model {
 

@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import * as CustomerService from '@services/customer.service';
 import {notify} from '@config/mailer';
 import {successResponse, errorResponse} from '@utils/response';
-import BankName from '@models/bank_name.model';
+import Bank from '@models/bank.model';
 
 /**
  * Find all the customers
@@ -223,7 +223,7 @@ export function addBank(req, res, next) {
 
         CustomerService.addBank(req.params.id, req.body)
           .then((data) => {
-            BankName.getBankNameById(data.attributes.bank_id)
+            Bank.getNameById(data.attributes.bank_id)
               .then(customer => {
                 data.attributes.bank = customer;
                 successResponse(res, data);

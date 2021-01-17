@@ -1,7 +1,7 @@
 import HttpStatus from 'http-status-codes';
 import jwt from 'jsonwebtoken';
 
-import Customer from '../models/customer.model';
+import Customer from '@models/customer.model';
 
 /**
  * Validate application jwt was provided in the request

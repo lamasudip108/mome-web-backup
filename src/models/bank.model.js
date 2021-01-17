@@ -1,10 +1,10 @@
 import bookshelf from '../config/bookshelf';
-import BankName from './bank_name.model';
+import CustomerBank from './customer_bank.model';
 
 const TABLE_NAME = 'banks';
 
 /**
- * Transaction model.
+ * Bank Model.
  */
 class Bank extends bookshelf.Model {
 
@@ -27,18 +27,21 @@ class Bank extends bookshelf.Model {
    *
    * @returns {string[]}
    */
-  get hidden(){
-    return ['bank_id', 'created_at', 'updated_at'];
+  get hidden() {
+    return ['status', 'created_at', 'updated_at'];
   }
 
+  static getNameById(id) {
+    return Bank.forge().where({ id: id }).fetchAll();
+  }
 
   /**
-   * Create relation with BankName
+   * Create relation with customers bank
    *
-   * @returns {Bookshelf.Model}
+   * @returns {Collection}
    */
-  bank () {
-    return this.belongsTo(BankName, 'bank_id');
+  bankName() {
+    return this.hasMany(CustomerBank, 'bank_id');
   }
 
 }

@@ -2,8 +2,8 @@ import Boom from '@hapi/boom';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-import Customer from '../models/customer.model';
-import {CUSTOMER} from '../constants';
+import Customer from '@models/customer.model';
+import {CUSTOMER} from '@constants';
 
 /**
  * Login user.

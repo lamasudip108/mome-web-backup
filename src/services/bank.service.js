@@ -1,4 +1,4 @@
-import BankName from '../models/bank_name.model';
+import Bank from '@models/bank.model';
 
 
 /**
@@ -7,5 +7,5 @@ import BankName from '../models/bank_name.model';
  * @returns {Promise}
  */
 export function getAll() {
-  return BankName.forge().where({status:'active'}).fetchAll();
+  return Bank.forge().where({ status: 'active' }).fetchAll();
 }
