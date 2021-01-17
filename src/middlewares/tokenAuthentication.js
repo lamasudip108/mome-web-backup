@@ -20,8 +20,8 @@ export default (req, res, next) => {
     '/api/web/auths/forgot-password',
     '/api/web/auths/reset-password',
   ]; //List of endpoints that doesn't require auth
-
-  if (publicEndpoints.some(path => path === req.path)) {
+  
+  if (publicEndpoints.some(path => path === req.path || req.path.includes(path))) {
     return next();
   }
 

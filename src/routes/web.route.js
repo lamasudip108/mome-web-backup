@@ -18,8 +18,8 @@ const router = express.Router();
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: token
- *         in: path
+ *       - in: path
+ *         name: token
  *         description: jwt token from email notification
  *         required: true
  *         type: string
@@ -52,8 +52,8 @@ router.route('/verification/:token')
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: token
- *         in: path
+ *       - in: path
+ *         name: token
  *         description: jwt token from email notification
  *         required: true
  *         type: string
