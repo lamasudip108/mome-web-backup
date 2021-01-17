@@ -1,11 +1,12 @@
 import HttpStatus from 'http-status-codes';
-import * as CustomerService from '../services/customer.service';
-import {notify} from '../config/mailer';
-import {successResponse, errorResponse} from '../utils/response';
-import bcrypt from 'bcrypt';
-import BankName from '../models/bank_name.model';
 import jwt from 'jsonwebtoken';
 import path from 'path';
+import bcrypt from 'bcrypt';
+
+import * as CustomerService from '@services/customer.service';
+import {notify} from '@config/mailer';
+import {successResponse, errorResponse} from '@utils/response';
+import BankName from '@models/bank_name.model';
 
 /**
  * Find all the customers
@@ -30,11 +31,10 @@ export function findAll(req, res, next) {
  * @param {Function} next
  */
 export function findById(req, res, next) {
-  CustomerService.getOne(req.params.id)
+  CustomerService.getOne({id:req.params.id})
     .then((data) => {
         successResponse(res, data);
-      }
-    )
+      })
     .catch((err) => next(err));
 }
 
@@ -47,26 +47,25 @@ export function findById(req, res, next) {
  */
 export function store(req, res, next) {
 
-  CustomerService.getCustomerByEmail(req.body.email)
+  CustomerService.getOne({email: req.body.email})
     .then(user => {
       if (user !== null) {
         errorResponse(res,req.body.email + ' is already in use.');
 
       } else {
-        CustomerService.getCustomerByPhone(req.body.phone)
+        CustomerService.getOne({phone: req.body.phone})
           .then(user => {
             if (user !== null) {
               errorResponse(res,req.body.phone + ' is already in use.');
 
             } else {
               CustomerService
-                .storeCustomer(req.body)
+                .store(req.body)
                 .then(data => {
-
                   const param = data.attributes;
                   param.template = 'welcome';
                   param.subject = 'Welcome to Mome';
-                  param.confirmationUrl = CustomerService.generateConfirmationUrl(param.token);
+                  param.confirmationUrl = CustomerService.generateVerificationURL(param.token);
 
                   notify(param);
 
@@ -119,7 +118,7 @@ export function destroy(req, res, next) {
 
 export function isUniqueEmail(req, res, next){
 
-  CustomerService.getCustomerByEmail(req.body.email)
+  CustomerService.getOne({email: req.body.email})
     .then(user => {
       if (user !== null) {
         successResponse(res, true);
@@ -143,7 +142,7 @@ export function updatePassword(req, res, next) {
   // eslint-disable-next-line camelcase
   const { old_password, new_password } = req.body;
 
-  CustomerService.getCustomer(req.params.id)
+  CustomerService.getOne({id:req.params.id})
     .then(user => {
 
       if (bcrypt.compareSync(old_password, user.get('password'))) {
@@ -180,7 +179,7 @@ export function forgotPasswordRequest(req, res, next) {
 
   const { email } = req.body;
 
-  CustomerService.getCustomerByEmail(email)
+  CustomerService.getOne({email:email})
     .then(user => {
 
       if (user === null) {
@@ -199,7 +198,7 @@ export function forgotPasswordRequest(req, res, next) {
           const param = user.attributes;
           param.subject = 'Reset Your Password';
           param.template = 'forgot-password';
-          param.forgotPasswordUrl = CustomerService.generateForgotPasswordUrl(param.token);
+          param.forgotPasswordUrl = CustomerService.generateForgotPasswordURL(param.token);
 
           notify(param);
 
@@ -212,78 +211,6 @@ export function forgotPasswordRequest(req, res, next) {
     });
 }
 
-/**
- * Render forgot password display page
- *
- * @param req
- * @param res
- * @param next
- */
-
-export function forgotPassword(req, res, next) {
-
-  const { token } = req.params;
-
-        jwt.verify(token, process.env.TOKEN_SECRET_KEY, ((err, decode) => {
-          if (err) {
-            res.sendFile(path.join(__dirname, '../../public/customer/account_verified.html'));
-          } else {
-            res.render('new-password-form', { data:{token: token}, layout: false });
-          }
-        }));
-}
-
-/**
- * Set new password for the user
- *
- * @param req
- * @param res
- * @param next
- */
-
-export function resetPassword(req, res, next) {
-
-  // eslint-disable-next-line camelcase
-  const { password, c_password, token } = req.body;
-
-  jwt.verify(token, process.env.TOKEN_SECRET_KEY, (err, decoded) => {
-    if (err) {
-     errorResponse(res,'Invalid Token',HttpStatus.FORBIDDEN);
-    } else {
-
-      // eslint-disable-next-line camelcase
-      if (password !== c_password) {
-
-        res.render('new-password-form', {
-          data: {
-            token: token,
-            message: 'Password does not match.',
-            color: 'red'
-          },
-          layout: false
-        });
-      } else {
-        const id = decoded.id;
-
-        CustomerService.updatePassword(id, password)
-          .then(user => {
-
-            const param = user.attributes;
-            param.subject = 'Password Changed Successfully';
-            param.template = 'password-change-success';
-
-            notify(param);
-
-            res.render('password-success', {
-              data: {
-                first_name: user.get('first_name'),
-              },
-              layout: false
-            });
-          });
-      }}
-  });
-}
 
 /**
  * Add a new bank for customer

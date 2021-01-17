@@ -289,39 +289,6 @@ router
 
   .put( validate(customerSchema.updatePassword), customerCtrl.updatePassword);
 
-router
-  .route('/forgot-password')
-
-  /**
-   * @swagger
-   * /customers/forgot-password:
-   *   post:
-   *     tags:
-   *       - customers
-   *     summary: "Forgot password for customers"
-   *     security:
-   *        - Bearer: []
-   *     operationId: forgot-password
-   *     consumes:
-   *       - application/json
-   *     produces:
-   *       - application/json
-   *     parameters:
-   *       - name: body
-   *         in: body
-   *         description: Update new password for logged in user
-   *         required: true
-   *         schema:
-   *           $ref: "#/definitions/Customer"
-   *     responses:
-   *       200:
-   *         description: OK
-   *         schema:
-   *           $ref: "#/definitions/Customer"
-   */
-
-  .post(validate(customerSchema.email), customerCtrl.forgotPassword);
-
 
 router
   .route('/:id/banks')

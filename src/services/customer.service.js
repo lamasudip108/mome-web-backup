@@ -16,13 +16,13 @@ export function getAll() {
 }
 
 /**
- * Get a customer.
+ * Get a customer based on the selection criteria.
  *
- * @param   {Number|String}  id
+ * @param   {Object}  criteria
  * @returns {Promise}
  */
-export function getOne(id) {
-  return new Customer({ id })
+export function getOne(criteria) {
+  return new Customer(criteria)
     .fetch({ require: true })
     .then((user) => user)
     .catch(Customer.NotFoundError, () => {
@@ -41,7 +41,9 @@ export function store(customer) {
   const { first_name, middle_name, last_name, email, phone } = customer;
   const password = bcrypt.hashSync(customer.password, 10);
   // eslint-disable-next-line camelcase
-  const token = confirmationToken(email);
+  const token = jwt.sign({ email: email },
+    process.env.TOKEN_SECRET_KEY,
+  );
 
   return new Customer({
     first_name,
@@ -104,55 +106,17 @@ export function destroy(id) {
 
 
 /**
- * Get a customer.
- *
- * @param   {String}  email
- * @returns {Promise}
- */
-export function getOneByEmail(email) {
-  return new Customer({ 'email': email })
-    .fetch({ require: false })
-    .then((user) => user)
-    .catch(Customer.NotFoundError, () => {
-      throw Boom.notFound('Customer not found.');
-    });
-}
-
-/**
- * Get a customer.
- *
- * @param   {Number|String}  phone
- * @returns {Promise}
- */
-export function getCustomerByPhone(phone) {
-  return new Customer({ 'phone': phone })
-    .fetch({ require: false })
-    .then((user) => user)
-    .catch(Customer.NotFoundError, () => {
-      throw Boom.notFound('Customer not found.');
-    });
-}
-
-/**
- * Generate Confirmation Url
+ * Generate verification email URL
  *
  * @param   {String}  token
- * @returns {string}
+ * @returns {String}
  */
-export function generateConfirmationUrl(token) {
-  return `${APP.HOST}/api/auths/confirmation/${token}`;
-}
-
-function confirmationToken(email) {
-  return jwt.sign({
-      email: email,
-    },
-    process.env.TOKEN_SECRET_KEY,
-  );
+export function generateVerificationURL(token) {
+  return `${APP.HOST}/api/web/auths/verification/${token}`;
 }
 
 /**
- * Verify User Account
+ * Verify customer account using token
  *
  * @param token
  * @returns {*}
@@ -162,9 +126,7 @@ export function verifyAccount(token) {
     .fetch({ require: false })
     .then((user) => {
       if (user !== null) {
-
         const id = user.attributes.id;
-
         return new Customer({ id })
           .save({
             'is_verified': 1,
@@ -178,20 +140,6 @@ export function verifyAccount(token) {
     .catch(Customer.NotFoundError, () => {
       throw Boom.notFound('Customer not found.');
     });
-  /*
-
-  // check with this code why not working, directly update by token
-
-   return new Customer
-      .where({ remember_token: token })
-      .save({ email: "bissssss@example.com" }, { patch: true })
-      .then((user) => {
-        console.log(user, "asdf");
-      })
-      .catch(Customer.NotFoundError, () => {
-        throw Boom.notFound("Customer not found.");
-      });
-  */
 
 }
 
@@ -204,7 +152,6 @@ export function verifyAccount(token) {
  */
 
 export function updatePassword(id, password) {
-
   const newPassword = bcrypt.hashSync(password, 10);
 
   return new Customer({ id })
@@ -216,6 +163,51 @@ export function updatePassword(id, password) {
       throw Boom.notFound('Customer not found.');
     });
 
+}
+
+/**
+ * Set forgot password token for customers
+ *
+ * @param email
+ * @returns {*}
+ */
+
+export function setForgotPasswordToken(email) {
+
+  return new Customer({ email: email })
+    .fetch({ require: false })
+    .then((user) => {
+      if (user !== null) {
+
+        const id = user.get('id');
+        const token = jwt.sign({
+            id: user.get('id'),
+            email: user.get('email'),
+          },
+          process.env.TOKEN_SECRET_KEY,
+        );
+
+        return new Customer({ id })
+          .save({
+            'token': token,
+          });
+      } else {
+        user = null;
+      }
+    })
+    .catch(Customer.NotFoundError, () => {
+      throw Boom.notFound('Customer not found.');
+    });
+}
+
+/**
+ * Generate forgot password email URL
+ *
+ * @param   {String}  token
+ * @returns {String}
+ */
+export function generateForgotPasswordURL(token) {
+  return `${APP.HOST}/api/web/auths/forgot-password/${token}`;
 }
 
 export function addBank(customer_id, bank) {
@@ -252,61 +244,4 @@ export function getCustomerByAccNumber(customer_id, account_number) {
     .catch(Customer.NotFoundError, () => {
       throw Boom.notFound('Customer not found.');
     });
-}
-
-/**
- * Set forgot password token for customers
- *
- * @param email
- * @returns {*}
- */
-
-export function setForgotPasswordToken(email) {
-
-  return new Customer({ email: email })
-    .fetch({ require: false })
-    .then((user) => {
-      if (user !== null) {
-
-        const id = user.get('id');
-        const token = generateForgotPasswordToken(user);
-
-        return new Customer({ id })
-          .save({
-            'token': token,
-          });
-      } else {
-        user = null;
-      }
-    })
-    .catch(Customer.NotFoundError, () => {
-      throw Boom.notFound('Customer not found.');
-    });
-}
-
-/**
- * Generate forgot password link
- *
- * @param user
- * @returns {*}
- */
-
-function generateForgotPasswordToken(user) {
-  return jwt.sign({
-      id: user.get('id'),
-      email: user.get('email'),
-    },
-    process.env.TOKEN_SECRET_KEY,
-  );
-}
-
-
-/**
- * Generate Forgot Password Url
- *
- * @param   {String}  token
- * @returns {string}
- */
-export function generateForgotPasswordUrl(token) {
-  return `${APP.HOST}/api/customers/forgot-password/${token}`;
 }

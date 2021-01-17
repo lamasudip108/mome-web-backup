@@ -10,10 +10,10 @@ import bankRoutes from './bank.route';
 
 const router = express.Router();
 
-// mount auth routes at /auth
+// mount auth routes at /auths
 router.use('/auths', authRoutes);
 
-// mount web auth routes at /auth
+// mount web auth routes at /web/auths
 router.use('/web/auths', webRoutes);
 
 // mount user routes at /users

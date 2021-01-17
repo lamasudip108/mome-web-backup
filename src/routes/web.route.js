@@ -1,8 +1,6 @@
 import express from 'express';
 
 import * as webCtrl from '@controllers/web.controller';
-import validate from '@config/joi.validate';
-import loginSchema from '@validators/login.validator';
 
 const router = express.Router();
 
