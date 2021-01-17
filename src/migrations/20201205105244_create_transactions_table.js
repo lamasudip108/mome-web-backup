@@ -7,6 +7,7 @@
 exports.up = function (knex) {
   return knex.schema.createTable('transactions', (table) => {
     table.increments('id').primary().unsigned();
+    table.integer('customer_id').unsigned().index().notNullable().references('id').inTable('customers');
     table.string('number').notNullable().unique();
     table.string('vendor_name').notNullable();
     table.double('amount', 10, 2).notNullable();
@@ -14,9 +15,7 @@ exports.up = function (knex) {
     table.string('type').nullable().comment('qr, contacts').defaultTo('qr');
     table.double('fees', 10, 2).notNullable();
     table.text('description').nullable();
-    table.integer('customer_id').unsigned().index().notNullable().references('id').inTable('customers');
     table.timestamp('created_at').defaultTo(knex.fn.now());
-    //table.timestamp('updated_at').defaultTo(knex.fn.now());
     table.timestamp('updated_at').nullable();
   });
 };

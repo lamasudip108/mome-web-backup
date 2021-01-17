@@ -1,4 +1,4 @@
-import * as CustomerService from "../services/customer.service";
+import * as CustomerService from "@services/customer.service";
 
 exports.seed = function(knex) {
 
@@ -9,7 +9,7 @@ exports.seed = function(knex) {
   return knex("wallets").del()
     .then(function() {
 
-      return CustomerService.getAllCustomer()
+      return CustomerService.getAll()
         .then((data) => {
             data.map(d => {
               ids.push(d.attributes.id);

@@ -1,8 +1,8 @@
 import express from 'express';
-import * as userCtrl from '../controllers/user.controller';
-import isAuthenticated from '../middlewares/authenticate';
-import validate from '../config/joi.validate';
-import userSchema from '../validators/user.validator';
+
+import * as userCtrl from '@controllers/user.controller';
+import validate from '@config/joi.validate';
+import userSchema from '@validators/user.validator';
 
 const router = express.Router();
 
@@ -22,6 +22,7 @@ const router = express.Router();
  *       id:
  *         type: integer
  *         description: Unique identifier representing a specific user
+ *         example: 1
  *       first_name:
  *         type: string
  *         description: first name of the user
@@ -52,14 +53,62 @@ const router = express.Router();
  *         type: string
  *         format: date-time
  *         description: User update datetime
- *   Error:
+ */
+
+/**
+ * @swagger
+ * definitions:
+ *   NewUserPayload:
  *     type: object
  *     properties:
- *        message:
- *           type: string
- *        error:
- *           type: boolean
- *           default: true
+ *       first_name:
+ *         type: string
+ *         description: first name of the user
+ *         example: Krishna
+ *       last_name:
+ *         type: string
+ *         description: last name of the user
+ *         example: Timilsina
+ *       email:
+ *         type: string
+ *         description: email of the user
+ *         required: true
+ *         example: test@gmail.com
+ *       password:
+ *         type: string
+ *         description: password of the user
+ *         required: true
+ *         example: "123456"
+ */
+
+/**
+ * @swagger
+ * definitions:
+ *   UpdateUserPayload:
+ *     type: object
+ *     properties:
+ *       first_name:
+ *         type: string
+ *         description: first name of the user
+ *         example: Krishna
+ *       last_name:
+ *         type: string
+ *         description: last name of the user
+ *         example: Timilsina
+ *       email:
+ *         type: string
+ *         description: email of the user
+ *         required: true
+ *         example: test@gmail.com
+ *       password:
+ *         type: string
+ *         description: password of the user
+ *         required: true
+ *         example: "123456"
+ *       status:
+ *         type: integer
+ *         description: status of the user
+ *         example: 1
  */
 
 router
@@ -85,18 +134,24 @@ router
    *         description: Created user object
    *         required: true
    *         schema:
-   *           $ref: "#/definitions/User"
+   *           $ref: "#/definitions/NewUserPayload"
    *     responses:
    *       200:
    *         description: OK
    *         schema:
-   *           $ref: "#/definitions/User"
+   *             type: object
+   *             properties:
+   *               success:
+   *                 type: boolean
+   *                 default: true
+   *               data:
+   *                 type: object
+   *                 $ref: "#/definitions/User"
    *       403:
    *          description: User not found
    *          schema:
    *             $ref: '#/definitions/Error'
    */
-
   .post(validate(userSchema.store), userCtrl.store)
 
   /**
@@ -118,10 +173,21 @@ router
    *       200:
    *         description: OK
    *         schema:
-   *            type: object
+   *             type: object
+   *             properties:
+   *               success:
+   *                 type: boolean
+   *                 default: true
+   *               data:
+   *                 type: array
+   *                 items:
+   *                   $ref: '#/definitions/User'
+   *       404:
+   *          description: User not found
+   *          schema:
+   *             $ref: '#/definitions/Error'
    */
-
-  .get(isAuthenticated, userCtrl.findAll);
+  .get(userCtrl.findAll);
 
 router
   .route('/:id')
@@ -150,14 +216,20 @@ router
    *       200:
    *         description: OK
    *         schema:
-   *           $ref: "#/definitions/User"
+   *             type: object
+   *             properties:
+   *               success:
+   *                 type: boolean
+   *                 default: true
+   *               data:
+   *                 type: object
+   *                 $ref: "#/definitions/User"
    *       404:
    *          description: User not found
    *          schema:
    *             $ref: '#/definitions/Error'
    */
-
-  .get(isAuthenticated, userCtrl.findById)
+  .get(userCtrl.findById)
 
   /**
    * @swagger
@@ -184,17 +256,25 @@ router
    *         description: Updated user object
    *         required: true
    *         schema:
-   *           $ref: "#/definitions/User"
+   *           $ref: "#/definitions/UpdateUserPayload"
    *     responses:
    *       200:
    *         description: OK
    *         schema:
-   *           $ref: "#/definitions/User"
+   *             type: object
+   *             properties:
+   *               success:
+   *                 type: boolean
+   *                 default: true
+   *               data:
+   *                 type: object
+   *                 $ref: "#/definitions/User"
    *       400:
-   *         description: Invalid user
+   *          description: Invalid user
+   *          schema:
+   *             $ref: '#/definitions/Error'
    */
-
-  .put(isAuthenticated, validate(userSchema.update), userCtrl.update)
+  .put(validate(userSchema.update), userCtrl.update)
 
   /**
    * @swagger
@@ -218,9 +298,10 @@ router
    *       200:
    *         description: OK
    *       400:
-   *          description: "Invalid ID"
+   *          description: Invalid ID
+   *          schema:
+   *             $ref: '#/definitions/Error'
    */
-
-  .delete(isAuthenticated, userCtrl.destroy);
+  .delete(userCtrl.destroy);
 
 export default router;

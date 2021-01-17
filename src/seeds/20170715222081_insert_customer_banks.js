@@ -1,4 +1,6 @@
-import * as CustomerService from '../services/customer.service';
+import 'module-alias/register';
+
+import * as CustomerService from '@services/customer.service';
 
 exports.seed = function(knex) {
 
@@ -6,10 +8,10 @@ exports.seed = function(knex) {
   let script = [];
 
   // Deletes ALL existing entries
-  return knex('banks').del()
+  return knex('customer_banks').del()
     .then(function() {
 
-      return CustomerService.getAllCustomer()
+      return CustomerService.getAll()
         .then((data) => {
             data.map(d => {
               ids.push(d.attributes.id);
@@ -72,7 +74,7 @@ exports.seed = function(knex) {
               }
             ];
 
-            return knex('banks').insert(script);
+            return knex('customer_banks').insert(script);
           }
         )
         .catch((err) => console.log(err, 'er'));

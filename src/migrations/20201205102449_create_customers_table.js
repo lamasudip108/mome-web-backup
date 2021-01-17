@@ -26,7 +26,6 @@ exports.up = function (knex) {
     table.string('state_province').nullable();
     table.string('po_box').nullable();
     table.timestamp('created_at').defaultTo(knex.fn.now());
-    //table.timestamp('updated_at').defaultTo(knex.fn.now());
     table.timestamp('updated_at').nullable();
   });
 };

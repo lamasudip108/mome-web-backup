@@ -1,13 +1,18 @@
+import 'module-alias/register';
+
 import path from 'path';
-import app from './config/express';
-import routes from './routes/index.route';
-import swagger from './config/swagger';
-import * as errorHandler from './middlewares/errorHandler';
-import joiErrorHandler from './middlewares/joiErrorHandler';
-import requestLogger from './middlewares/requestLogger';
-import jsonHandler from './middlewares/jsonHandler';
 import hbs from 'express-handlebars';
 import bodyParser from 'body-parser';
+
+import app from '@config/express';
+import routes from '@routes/index.route';
+import swagger from '@config/swagger';
+
+import tokenAuthentication from '@middlewares/tokenAuthentication';
+import * as errorHandler from '@middlewares/errorHandler';
+import joiErrorHandler from '@middlewares/joiErrorHandler';
+import requestLogger from '@middlewares/requestLogger';
+import jsonHandler from '@middlewares/jsonHandler';
 
 // Swagger API documentation
 app.get('/swagger.json', (req, res) => {
@@ -19,6 +24,9 @@ app.use(requestLogger);
 
 // JSON body validation
 app.use(jsonHandler);
+
+// JWT authentication
+app.use(tokenAuthentication);
 
 //set handlebar
 
