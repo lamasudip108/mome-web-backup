@@ -371,13 +371,12 @@ export function sendMoney(req, res, next) {
               (CustomerService.updateReceiverAmount(receiver, amount), { transacting: t }),
               (WalletService.sendMoney(sender, receiver, amount, description), { transacting: t })
             ]);
-          }).then(function() {
-           successResponse(res,'transfer completed.');
-          }).catch(function(err) {
-           errorResponse(res,'unsuccessful transfer', HttpStatus.BAD_REQUEST);
+          }).then(response => {
+            successResponse(res, 'transfer successful');
+          }).catch(err => {
+            errorResponse(res, 'unsuccessful transfer', HttpStatus.BAD_REQUEST);
           });
         });
     })
-    .catch(err => next(err));
-
+     .catch(err => next(err));
 }

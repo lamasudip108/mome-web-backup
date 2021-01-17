@@ -41,6 +41,6 @@ export function sendMoney(sender, receiver, amount,description,t){
     description: description,
     status: Constant.payment.status.success,
     customer_id: sender.get('id')
-  }).save({transacting: t});
+  }).save();
 
 }
