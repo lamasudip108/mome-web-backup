@@ -50,7 +50,7 @@ export default {
   sendMoney: Joi.object({
     email: Joi.string().email().required(),
     phone: Joi.string().min(10).max(10).required(),
-    amount: Joi.string().required(),
+    amount: Joi.number().required(),
     description : Joi.string().max(50),
   }),
 
