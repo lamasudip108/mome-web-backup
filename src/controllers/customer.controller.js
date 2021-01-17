@@ -1,6 +1,4 @@
 import HttpStatus from 'http-status-codes';
-import jwt from 'jsonwebtoken';
-import path from 'path';
 import bcrypt from 'bcrypt';
 
 import * as CustomerService from '@services/customer.service';
@@ -162,26 +160,23 @@ export function updatePassword(req, res, next) {
       }
 
     })
-    .catch(err => {
-      next(err);
-    });
+    .catch((err) => next(err));
 }
 
 /**
- * Send forgot password url to customers
+ * Send forgot password notification to customer email
  *
  * @param req
  * @param res
  * @param next
  */
 
-export function forgotPasswordRequest(req, res, next) {
+export function forgotPasswordNotification(req, res, next) {
 
   const { email } = req.body;
 
   CustomerService.getOne({email:email})
     .then(user => {
-
       if (user === null) {
         errorResponse(res, 'Customer not found.',HttpStatus.NOT_FOUND);
       }
@@ -194,7 +189,6 @@ export function forgotPasswordRequest(req, res, next) {
 
       CustomerService.setForgotPasswordToken(email)
         .then(user => {
-
           const param = user.attributes;
           param.subject = 'Reset Your Password';
           param.template = 'forgot-password';
@@ -202,13 +196,11 @@ export function forgotPasswordRequest(req, res, next) {
 
           notify(param);
 
-          successResponse(res, 'Reset password link send successfully in your email.');
+          successResponse(res, 'Reset password link sent successfully in your email address.');
         });
 
     })
-    .catch(err => {
-      next(err);
-    });
+    .catch((err) => next(err));
 }
 
 

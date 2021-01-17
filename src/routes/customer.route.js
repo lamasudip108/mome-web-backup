@@ -71,7 +71,7 @@ router
    *   post:
    *     tags:
    *       - customers
-   *     summary: "Create a new customer"
+   *     summary: "Create a new customer and send notification to customer email"
    *     security:
    *        - Bearer: []
    *     operationId: storeCustomer
@@ -289,6 +289,38 @@ router
 
   .put( validate(customerSchema.updatePassword), customerCtrl.updatePassword);
 
+router
+  .route('/forgot-password-notification')
+
+  /**
+   * @swagger
+   * /customers/forgot-password-notification:
+   *   post:
+   *     tags:
+   *       - customers
+   *     summary: "Send forgot password notification to customer email"
+   *     security:
+   *        - Bearer: []
+   *     operationId: forgot-password
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: body
+   *         in: body
+   *         description: Update new password for logged in user
+   *         required: true
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   */
+
+  .post(validate(customerSchema.email), customerCtrl.forgotPasswordNotification);
 
 router
   .route('/:id/banks')

@@ -6,11 +6,11 @@ const router = express.Router();
 
 /**
  * @swagger
- * /web/auths/confirmation/{token}:
+ * /web/auths/verification/{token}:
  *   get:
  *     tags:
  *       - webs
- *     summary: Verify user account using jwt
+ *     summary: Verify new  customer account using jwt token from email link
  *     description:
  *     operationId: account verification
  *     consumes:
@@ -20,9 +20,9 @@ const router = express.Router();
  *     parameters:
  *       - name: token
  *         in: path
- *         description: token of customer that needs to be fetched
+ *         description: jwt token from email notification
  *         required: true
- *         type: integer
+ *         type: string
  *     responses:
  *       200:
  *         description: OK
@@ -47,29 +47,34 @@ router.route('/verification/:token')
  *   get:
  *     tags:
  *       - webs
- *     summary: "Forgot password for customers"
- *     security:
- *        - Bearer: []
+ *     summary: "Display reset password form from email notification"
  *     operationId: forgot-password
  *     consumes:
  *       - application/json
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: body
- *         in: body
- *         description: Update new password for logged in user
+ *       - name: token
+ *         in: path
+ *         description: jwt token from email notification
  *         required: true
- *         schema:
- *           $ref: "#/definitions/Customer"
+ *         type: string
  *     responses:
  *       200:
  *         description: OK
  *         schema:
  *           $ref: "#/definitions/Customer"
+ *       400:
+ *         description: Invalid token
+ *         schema:
+ *            $ref: '#/definitions/Error'
+ *       404:
+ *         description: Token not found
+ *         schema:
+ *            $ref: '#/definitions/Error'
  */
 router.route('/forgot-password/:token')
-  .get(webCtrl.forgotPassword);
+  .get(webCtrl.forgotPasswordByToken);
 
 
 /**
@@ -78,10 +83,8 @@ router.route('/forgot-password/:token')
  *   get:
  *     tags:
  *       - webs
- *     summary: "Reset password for customers"
- *     security:
- *        - Bearer: []
- *     operationId: forgot-password
+ *     summary: "Reset password from email notification"
+ *     operationId: reset-password
  *     consumes:
  *       - application/json
  *     produces:
@@ -89,7 +92,7 @@ router.route('/forgot-password/:token')
  *     parameters:
  *       - name: body
  *         in: body
- *         description: Update new password for logged in user
+ *         description: Update customer password by new password
  *         required: true
  *         schema:
  *           $ref: "#/definitions/Customer"
@@ -98,6 +101,14 @@ router.route('/forgot-password/:token')
  *         description: OK
  *         schema:
  *           $ref: "#/definitions/Customer"
+ *       400:
+ *         description: Invalid token
+ *         schema:
+ *            $ref: '#/definitions/Error'
+ *       404:
+ *         description: Token not found
+ *         schema:
+ *            $ref: '#/definitions/Error'
  */
 router.route('/reset-password')
   .post(webCtrl.resetPassword);

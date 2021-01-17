@@ -3,12 +3,13 @@ import jwt from 'jsonwebtoken';
 import HttpStatus from 'http-status-codes';
 
 import * as CustomerService from '@services/customer.service';
+import {notify} from '@config/mailer';
 
 /**
  * Verify email link by jwt token
  *
- * @param {object} req
- * @param {object} res
+ * @param {Object} req
+ * @param {Object} res
  * @returns {*}
  */
 
@@ -30,16 +31,15 @@ export function verifyAccountByToken(req, res) {
 /**
  * Render forgot password based on email link click
  *
- * @param req
- * @param res
- * @param next
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
  */
 
-export function forgotPassword(req, res, next) {
-
+export function forgotPasswordByToken(req, res, next) {
   const { token } = req.params;
 
-  jwt.verify(token, process.env.TOKEN_SECRET_KEY, ((err, decode) => {
+  jwt.verify(token, process.env.TOKEN_SECRET_KEY, ((err) => {
     if (err) {
       res.sendFile(path.join(__dirname, '../../public/customer/account_verified.html'));
     } else {
@@ -50,11 +50,11 @@ export function forgotPassword(req, res, next) {
 
 
 /**
- * Set new password for the user
+ * Set new password
  *
- * @param req
- * @param res
- * @param next
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
  */
 
 export function resetPassword(req, res, next) {
@@ -64,7 +64,7 @@ export function resetPassword(req, res, next) {
 
   jwt.verify(token, process.env.TOKEN_SECRET_KEY, (err, decoded) => {
     if (err) {
-      errorResponse(res, 'Invalid Token', HttpStatus.FORBIDDEN);
+      return res.status(HttpStatus.FORBIDDEN).json({ 'success': false, 'message': 'Invalid Token' });
     } else {
 
       // eslint-disable-next-line camelcase
