@@ -13,6 +13,15 @@ export const Constant = {
       inactive: 'inactive',
       deleted: 'deleted'
     }
+  },
+  payment :{
+    status:{
+      pending:'pending',
+      success:'success',
+      failed:'failed',
+      cancelled :'cancelled',
+      server:'server'
+    }
   }
 };
 

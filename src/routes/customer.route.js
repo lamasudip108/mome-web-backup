@@ -420,7 +420,7 @@ router
    */
 
   .post(isAuthenticated, validate(customerSchema.addBank), customerCtrl.addBank)
-  
+
   /**
    * @swagger
    * /customers/{id}/banks:
@@ -450,5 +450,38 @@ router
    */
 
   .get(isAuthenticated, customerCtrl.findAllBankById);
+
+router
+  .route('/:id/send-money')
+
+  /**
+   * @swagger
+   * /customers/{id}/send-money:
+   *   post:
+   *     tags:
+   *       - customers
+   *     summary: "Send Money from ewallet to ewallet"
+   *     security:
+   *        - Bearer: []
+   *     operationId: banks
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: body
+   *         in: body
+   *         description: Send money from ewallet to ewallet
+   *         required: true
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   */
+
+  .post(validate(customerSchema.sendMoney), customerCtrl.sendMoney);
 
 export default router;

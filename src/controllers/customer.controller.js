@@ -1,11 +1,13 @@
 import HttpStatus from 'http-status-codes';
 import * as CustomerService from '../services/customer.service';
+import * as WalletService from "../services/wallet.service";
 import {notify} from '../config/mailer';
 import {successResponse, errorResponse} from '../utils/response';
 import bcrypt from 'bcrypt';
 import BankName from '../models/bank_name.model';
 import jwt from 'jsonwebtoken';
 import path from 'path';
+import Constant from "../utils/constants";
 
 /**
  * Find all the customers
@@ -330,4 +332,51 @@ export function findAllBankById(req, res, next) {
       successResponse(res, data);
     })
     .catch((err) => next(err));
+}
+
+/**
+ * Send money from ewallet to ewallet
+ *
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+export async function sendMoney(req, res, next) {
+
+  const cusId = req.params.id;
+
+  const { email, phone, amount, description } = req.body;
+
+  await CustomerService.getCustomer(cusId)
+    .then(sender => {
+
+      if (parseFloat(amount) > sender.get("wallet_amount")) {
+        errorResponse(res, "You don't have sufficient amount in your wallet.");
+      }
+
+      const param = {
+        "email": email,
+        "phone": phone,
+        "is_verified": 1
+      };
+
+      CustomerService.geCustomerByParams(param)
+        .then(receiver => {
+          CustomerService.updateSenderAmount(sender, amount)
+            .then(data => {
+              CustomerService.updateReceiverAmount(receiver, amount)
+                .then(data => {
+                  WalletService.sendMoney(sender, receiver, amount, description)
+                    .then(response => {
+                      if (response.get("status") === Constant.payment.status.success) {
+                        res.json({ response });
+                      }
+                    });
+                });
+            });
+        })
+        .catch(err => next(err));
+    });
+
 }
