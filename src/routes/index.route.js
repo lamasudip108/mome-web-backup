@@ -1,5 +1,7 @@
 import express from 'express';
+
 import authRoutes from './auth.route';
+import webRoutes from './web.route';
 import userRoutes from './user.route';
 import customerRoutes from './customer.route';
 import transactionRoutes from './transaction.route';
@@ -10,6 +12,9 @@ const router = express.Router();
 
 // mount auth routes at /auth
 router.use('/auths', authRoutes);
+
+// mount web auth routes at /auth
+router.use('/web/auths', webRoutes);
 
 // mount user routes at /users
 router.use('/users', userRoutes);

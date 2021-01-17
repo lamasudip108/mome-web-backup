@@ -2,17 +2,16 @@ import Boom from '@hapi/boom';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-import {APP, CUSTOMER} from '../constants';
-import Customer from '../models/customer.model';
-import Bank from '../models/bank.model';
-
+import { APP, CUSTOMER } from '@constants';
+import Customer from '@models/customer.model';
+import Bank from '@models/bank.model';
 
 /**
  * Get all customers.
  *
  * @returns {Promise}
  */
-export function getAllCustomer() {
+export function getAll() {
   return Customer.forge().fetchAll();
 }
 
@@ -22,7 +21,7 @@ export function getAllCustomer() {
  * @param   {Number|String}  id
  * @returns {Promise}
  */
-export function getCustomer(id) {
+export function getOne(id) {
   return new Customer({ id })
     .fetch({ require: true })
     .then((user) => user)
@@ -37,7 +36,7 @@ export function getCustomer(id) {
  * @param   {Object}  customer
  * @returns {Promise}
  */
-export function storeCustomer(customer) {
+export function store(customer) {
   // eslint-disable-next-line camelcase
   const { first_name, middle_name, last_name, email, phone } = customer;
   const password = bcrypt.hashSync(customer.password, 10);
@@ -51,8 +50,14 @@ export function storeCustomer(customer) {
     email,
     password,
     phone,
-    token
-  }).save();
+    token,
+  }).save().catch(function(err) {
+    if (err.code === 'ER_DUP_ENTRY' || err.errno === 1062) { // MySQL
+      throw Boom.badRequest('Customer already exists in our system.');
+    } else if (err.code === '23505') { // PostgreSQL
+      throw Boom.badRequest('Customer already exists in our system.');
+    }
+  });
 }
 
 /**
@@ -62,7 +67,7 @@ export function storeCustomer(customer) {
  * @param   {Object}         customer
  * @returns {Promise}
  */
-export function updateCustomer(id, customer) {
+export function update(id, customer) {
   // eslint-disable-next-line camelcase
   const { first_name, last_name, email, phone, street, city, state_province, po_box } = customer;
 
@@ -75,7 +80,7 @@ export function updateCustomer(id, customer) {
       street: street,
       city: city,
       state_province: state_province,
-      po_box: po_box
+      po_box: po_box,
     })
     .catch(Customer.NoRowsUpdatedError, () => {
       throw Boom.notFound('Customer not found.');
@@ -88,7 +93,7 @@ export function updateCustomer(id, customer) {
  * @param   {Number|String}  id
  * @returns {Promise}
  */
-export function deleteCustomer(id) {
+export function destroy(id) {
   return new Customer({ id })
     .fetch()
     .then((user) => user.destroy())
@@ -104,7 +109,7 @@ export function deleteCustomer(id) {
  * @param   {String}  email
  * @returns {Promise}
  */
-export function getCustomerByEmail(email) {
+export function getOneByEmail(email) {
   return new Customer({ 'email': email })
     .fetch({ require: false })
     .then((user) => user)
@@ -140,9 +145,9 @@ export function generateConfirmationUrl(token) {
 
 function confirmationToken(email) {
   return jwt.sign({
-      email: email
+      email: email,
     },
-    process.env.TOKEN_SECRET_KEY
+    process.env.TOKEN_SECRET_KEY,
   );
 }
 
@@ -164,7 +169,7 @@ export function verifyAccount(token) {
           .save({
             'is_verified': 1,
             'status': CUSTOMER.STATUS.ACTIVE,
-            'token': null
+            'token': null,
           });
       } else {
         user = null;
@@ -205,7 +210,7 @@ export function updatePassword(id, password) {
   return new Customer({ id })
     .save({
       password: newPassword,
-      token: null
+      token: null,
     })
     .catch(Customer.NoRowsUpdatedError, () => {
       throw Boom.notFound('Customer not found.');
@@ -223,7 +228,7 @@ export function addBank(customer_id, bank) {
     account_holder,
     account_number,
     customer_id,
-    bank_id
+    bank_id,
   }).save();
 }
 
@@ -240,7 +245,7 @@ export function findAllBankById(id) {
 
 
 // eslint-disable-next-line camelcase
-export function getCustomerByAccNumber(customer_id,account_number) {
+export function getCustomerByAccNumber(customer_id, account_number) {
   return new Bank({ 'customer_id': customer_id, 'account_number': account_number })
     .fetch({ require: false })
     .then((data) => data)
@@ -248,6 +253,7 @@ export function getCustomerByAccNumber(customer_id,account_number) {
       throw Boom.notFound('Customer not found.');
     });
 }
+
 /**
  * Set forgot password token for customers
  *
@@ -255,7 +261,7 @@ export function getCustomerByAccNumber(customer_id,account_number) {
  * @returns {*}
  */
 
-export function setForgotPasswordToken(email){
+export function setForgotPasswordToken(email) {
 
   return new Customer({ email: email })
     .fetch({ require: false })
@@ -267,10 +273,9 @@ export function setForgotPasswordToken(email){
 
         return new Customer({ id })
           .save({
-            'token': token
+            'token': token,
           });
-      }
-      else {
+      } else {
         user = null;
       }
     })
@@ -289,12 +294,11 @@ export function setForgotPasswordToken(email){
 function generateForgotPasswordToken(user) {
   return jwt.sign({
       id: user.get('id'),
-      email: user.get('email')
+      email: user.get('email'),
     },
-    process.env.TOKEN_SECRET_KEY
+    process.env.TOKEN_SECRET_KEY,
   );
 }
-
 
 
 /**
@@ -303,6 +307,6 @@ function generateForgotPasswordToken(user) {
  * @param   {String}  token
  * @returns {string}
  */
-export function generateForgotPasswordUrl(token){
+export function generateForgotPasswordUrl(token) {
   return `${APP.HOST}/api/customers/forgot-password/${token}`;
 }

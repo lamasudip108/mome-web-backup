@@ -30,7 +30,7 @@ export function login({ email, password }) {
       } else {
         throw Boom.unauthorized('Please verify your account email address to continue.');
       }
-    }).catch(User.NotFoundError, () => {
+    }).catch(Customer.NotFoundError, () => {
       throw Boom.notFound('User not found.');
     });
 }

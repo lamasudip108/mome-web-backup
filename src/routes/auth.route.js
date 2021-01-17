@@ -1,4 +1,5 @@
 import express from 'express';
+
 import * as authCtrl from '@controllers/auth.controller';
 import validate from '@config/joi.validate';
 import loginSchema from '@validators/login.validator';

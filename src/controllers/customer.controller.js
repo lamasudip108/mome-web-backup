@@ -15,7 +15,7 @@ import path from 'path';
  * @param {Function} next
  */
 export function findAll(req, res, next) {
-  CustomerService.getAllCustomer()
+  CustomerService.getAll()
     .then((data) => {
       successResponse(res, data);
     })
@@ -30,7 +30,7 @@ export function findAll(req, res, next) {
  * @param {Function} next
  */
 export function findById(req, res, next) {
-  CustomerService.getCustomer(req.params.id)
+  CustomerService.getOne(req.params.id)
     .then((data) => {
         successResponse(res, data);
       }
@@ -87,7 +87,7 @@ export function store(req, res, next) {
  * @param {Function} next
  */
 export function update(req, res, next) {
-  CustomerService.updateCustomer(req.params.id, req.body)
+  CustomerService.update(req.params.id, req.body)
     .then((data) => {
       successResponse(res, data);
     })
@@ -102,7 +102,7 @@ export function update(req, res, next) {
  * @param {Function} next
  */
 export function destroy(req, res, next) {
-  CustomerService.deleteCustomer(req.params.id)
+  CustomerService.destroy(req.params.id)
     .then((data) => {
       successResponse(res, data, HttpStatus.NO_CONTENT);
     })
@@ -332,26 +332,3 @@ export function findAllBankById(req, res, next) {
     .catch((err) => next(err));
 }
 
-
-/**
- * Returns jwt token if valid email and password is provided
- *
- * @param {object} req
- * @param {object} res
- * @returns {*}
- */
-
-export function accountConfirmation(req, res) {
-  const { token } = req.params;
-
-  CustomerService.verifyAccount(token)
-    .then((data) => {
-      if (undefined === data) {
-        res.sendFile(path.join(__dirname, '../../public/customer/link_expired.html'));
-      } else {
-        res.sendFile(path.join(__dirname, '../../public/customer/account_verified.html'));
-      }
-    })
-    .catch((err) => console.log(err));
-
-}

@@ -1,7 +1,7 @@
 import Boom from '@hapi/boom';
 import bcrypt from 'bcrypt';
 
-import User from '../models/user.model';
+import User from '@models/user.model';
 
 /**
  * Get all users.
