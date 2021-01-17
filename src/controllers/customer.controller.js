@@ -130,9 +130,9 @@ export function isUniqueEmail(req, res, next){
 /**
  * Update the password for logged in user
  *
- * @param req
- * @param res
- * @param next
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
  */
 
 export function updatePassword(req, res, next) {
@@ -166,9 +166,9 @@ export function updatePassword(req, res, next) {
 /**
  * Send forgot password notification to customer email
  *
- * @param req
- * @param res
- * @param next
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
  */
 
 export function forgotPasswordNotification(req, res, next) {
@@ -207,9 +207,9 @@ export function forgotPasswordNotification(req, res, next) {
 /**
  * Add a new bank for customer
  *
- * @param req
- * @param res
- * @param next
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
  */
 
 export function addBank(req, res, next) {
@@ -238,9 +238,9 @@ export function addBank(req, res, next) {
 /**
  * Find all bank for customers
  *
- * @param req
- * @param res
- * @param next
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
  */
 
 export function findAllBankById(req, res, next) {

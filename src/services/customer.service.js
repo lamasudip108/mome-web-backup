@@ -144,7 +144,7 @@ export function verifyAccount(token) {
 }
 
 /**
- * Update password for logged in user
+ * Update password with new one
  *
  * @param id
  * @param password
@@ -186,13 +186,9 @@ export function setForgotPasswordToken(email) {
           },
           process.env.TOKEN_SECRET_KEY,
         );
-
-        return new Customer({ id })
-          .save({
-            'token': token,
-          });
+        return new Customer({ id }).save({ 'token': token});
       } else {
-        user = null;
+        return user = null;
       }
     })
     .catch(Customer.NotFoundError, () => {
@@ -211,7 +207,6 @@ export function generateForgotPasswordURL(token) {
 }
 
 export function addBank(customer_id, bank) {
-
   // eslint-disable-next-line camelcase
   const { branch, account_holder, account_number, bank_id } = bank;
 

@@ -3,8 +3,8 @@ import * as authService from '../services/auth.service';
 /**
  * Login user by email and password
  *
- * @param {object} req
- * @param {object} res
+ * @param {Object} req
+ * @param {Object} res
  * @param {Function} next
  * @returns {*}
  */

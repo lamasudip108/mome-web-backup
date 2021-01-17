@@ -4,8 +4,9 @@ import {successResponse} from '../utils/response';
 /**
  * Returns all banks
  *
- * @param {object} req
- * @param {object} res
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
  * @returns {*}
  */
 
