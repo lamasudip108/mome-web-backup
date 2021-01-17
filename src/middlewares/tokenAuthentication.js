@@ -13,7 +13,13 @@ import Customer from '../models/customer.model';
  */
 
 export default (req, res, next) => {
-  const publicEndpoints = ['/api/auths/login', '/api/auths/forgot', '/api/auths/signup']; //List of endpoints that doesn't require auth
+  const publicEndpoints = [
+    '/api/auths/login',
+    '/api/customers/forgot-password-notification',
+    '/api/web/auths/verification',
+    '/web/auths/forgot-password',
+    '/web/auths/reset-password',
+  ]; //List of endpoints that doesn't require auth
 
   if (publicEndpoints.some(path => path === req.path)) {
     return next();
