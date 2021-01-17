@@ -8,6 +8,8 @@ import BankName from '../models/bank_name.model';
 import jwt from 'jsonwebtoken';
 import path from 'path';
 import Constant from "../utils/constants";
+import bookshelf from "../config/bookshelf";
+import Promise from 'bluebird';
 
 /**
  * Find all the customers
@@ -342,17 +344,17 @@ export function findAllBankById(req, res, next) {
  * @param res
  * @param next
  */
-export async function sendMoney(req, res, next) {
+export function sendMoney(req, res, next) {
 
   const cusId = req.params.id;
 
   const { email, phone, amount, description } = req.body;
 
-  await CustomerService.getCustomer(cusId)
+   CustomerService.getCustomer(cusId)
     .then(sender => {
 
-      if (parseFloat(amount) > sender.get("wallet_amount")) {
-        errorResponse(res, "You don't have sufficient amount in your wallet.");
+      if (parseFloat(amount) > sender.get('wallet_amount')) {
+        errorResponse(res, 'You don\'t have sufficient amount in your wallet.');
       }
 
       const param = {
@@ -363,20 +365,19 @@ export async function sendMoney(req, res, next) {
 
       CustomerService.geCustomerByParams(param)
         .then(receiver => {
-          CustomerService.updateSenderAmount(sender, amount)
-            .then(data => {
-              CustomerService.updateReceiverAmount(receiver, amount)
-                .then(data => {
-                  WalletService.sendMoney(sender, receiver, amount, description)
-                    .then(response => {
-                      if (response.get("status") === Constant.payment.status.success) {
-                        res.json({ response });
-                      }
-                    });
-                });
-            });
-        })
-        .catch(err => next(err));
-    });
+          bookshelf.transaction(function(t) {
+            return Promise.all([
+              (CustomerService.updateSenderAmount(sender, amount), { transacting: t }),
+              (CustomerService.updateReceiverAmount(receiver, amount), { transacting: t }),
+              (WalletService.sendMoney(sender, receiver, amount, description), { transacting: t })
+            ]);
+          }).then(function() {
+           successResponse(res,'transfer completed.');
+          }).catch(function(err) {
+           errorResponse(res,'unsuccessful transfer', HttpStatus.BAD_REQUEST);
+          });
+        });
+    })
+    .catch(err => next(err));
 
 }

@@ -26,9 +26,10 @@ export function getAll() {
  * @param receiver
  * @param amount
  * @param description
+ * @param t
  * @returns {*}
  */
-export function sendMoney(sender, receiver, amount,description){
+export function sendMoney(sender, receiver, amount,description,t){
 
   return new Wallet({
     number: uniqid(),
@@ -40,6 +41,6 @@ export function sendMoney(sender, receiver, amount,description){
     description: description,
     status: Constant.payment.status.success,
     customer_id: sender.get('id')
-  }).save();
+  }).save({transacting: t});
 
 }
