@@ -517,4 +517,70 @@ router
 
   .post(validate(customerSchema.sendMoney), customerCtrl.requestMoney);
 
+router
+  .route('/:id/sent-wallet-request')
+
+  /**
+   * @swagger
+   * /customers/{id}/sent-wallet-request:
+   *   post:
+   *     tags:
+   *       - customers
+   *     summary: "Show all sent wallet request"
+   *     security:
+   *        - Bearer: []
+   *     operationId: banks
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: body
+   *         in: body
+   *         description: Show all sent wallet request
+   *         required: true
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   */
+
+  .get(customerCtrl.sentWalletRequest);
+
+router
+  .route('/:id/receive-wallet-request')
+
+  /**
+   * @swagger
+   * /customers/{id}/receive-wallet-request:
+   *   post:
+   *     tags:
+   *       - customers
+   *     summary: "Show all receive wallet request"
+   *     security:
+   *        - Bearer: []
+   *     operationId: banks
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: body
+   *         in: body
+   *         description: Show all receive wallet request
+   *         required: true
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   */
+
+  .get(customerCtrl.receiveWalletRequest);
+
 export default router;

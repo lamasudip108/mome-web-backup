@@ -1,14 +1,14 @@
 import HttpStatus from 'http-status-codes';
 import * as CustomerService from '../services/customer.service';
-import * as WalletService from "../services/wallet.service";
+import * as WalletService from '../services/wallet.service';
 import {notify} from '../config/mailer';
 import {successResponse, errorResponse} from '../utils/response';
 import bcrypt from 'bcrypt';
 import BankName from '../models/bank_name.model';
 import jwt from 'jsonwebtoken';
 import path from 'path';
-import Constant from "../utils/constants";
-import bookshelf from "../config/bookshelf";
+import Constant from '../utils/constants';
+import bookshelf from '../config/bookshelf';
 import Promise from 'bluebird';
 
 /**
@@ -358,9 +358,9 @@ export function sendMoney(req, res, next) {
       }
 
       const param = {
-        "email": email,
-        "phone": phone,
-        "is_verified": 1
+        'email': email,
+        'phone': phone,
+        'is_verified': 1
       };
 
       CustomerService.geCustomerByParams(param)
@@ -395,12 +395,10 @@ export function requestMoney(req, res, next) {
 
   CustomerService.getCustomer(cusId)
     .then(requester => {
-
-
       const param = {
-        "email": email,
-        "phone": phone,
-        "is_verified": 1
+        'email': email,
+        'phone': phone,
+        'is_verified': 1
       };
 
       CustomerService.geCustomerByParams(param)
@@ -408,13 +406,54 @@ export function requestMoney(req, res, next) {
 
           WalletService.requestMoney(requester, sender, amount, description)
             .then(response => {
-              successResponse(res, "Request sent successfully.");
+              successResponse(res, 'Request sent successfully.');
             })
             .catch(err => {
-
+              errorResponse(res, err);
             });
         });
     })
     .catch(err => next(err));
+}
 
+/**
+ * Fetch all sent wallet request
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+
+export function sentWalletRequest(req, res, next) {
+
+  let cusId = req.params.id;
+
+  WalletService.getRequestWalletByCustomerId(cusId, 'sent')
+    .then(data => {
+     successResponse(res, data);
+    })
+    .catch(err => {
+      next(err);
+    });
+}
+
+/**
+ * Fetch all received wallet request
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+
+export function receiveWalletRequest(req, res, next) {
+
+  let cusId = req.params.id;
+
+  WalletService.getRequestWalletByCustomerId(cusId, 'receive')
+    .then(data => {
+      successResponse(res,data);
+    })
+    .catch(err => {
+      next(err);
+    });
 }

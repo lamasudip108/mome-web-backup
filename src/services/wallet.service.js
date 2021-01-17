@@ -1,6 +1,6 @@
 import Wallet from '../models/wallet.model';
 import uniqid from 'uniqid';
-import Constant from "../utils/constants";
+import Constant from '../utils/constants';
 
 /**
  * Get all wallet by customer id
@@ -66,4 +66,24 @@ export function requestMoney(requester, sender, amount,description){
     customer_id: requester.get('id')
   }).save();
 
+}
+
+/**
+ * Get all wallet by customer id
+ *
+ * @returns {Promise}
+ */
+export function getRequestWalletByCustomerId(id, type) {
+
+  let param;
+
+  // eslint-disable-next-line eqeqeq
+  if (type === 'sent') {
+    param = { customer_id: id, is_request: 1 };
+    // eslint-disable-next-line eqeqeq
+  } else if (type === 'receive') {
+    param = { sender: id, is_request: 1 };
+  }
+
+  return Wallet.forge().where(param).fetchAll();
 }
