@@ -365,7 +365,7 @@ export function sendMoney(req, res, next) {
 
       CustomerService.geCustomerByParams(param)
         .then(receiver => {
-          bookshelf.transaction(function(t) {
+          bookshelf.transaction(t=> {
             return Promise.all([
               (CustomerService.updateSenderAmount(sender, amount), { transacting: t }),
               (CustomerService.updateReceiverAmount(receiver, amount), { transacting: t }),
@@ -379,4 +379,42 @@ export function sendMoney(req, res, next) {
         });
     })
      .catch(err => next(err));
+}
+
+/**
+ * Request money from another ewallet user
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+export function requestMoney(req, res, next) {
+  const cusId = req.params.id;
+
+  const { email, phone, amount, description } = req.body;
+
+  CustomerService.getCustomer(cusId)
+    .then(requester => {
+
+
+      const param = {
+        "email": email,
+        "phone": phone,
+        "is_verified": 1
+      };
+
+      CustomerService.geCustomerByParams(param)
+        .then(sender => {
+
+          WalletService.requestMoney(requester, sender, amount, description)
+            .then(response => {
+              successResponse(res, "Request sent successfully.");
+            })
+            .catch(err => {
+
+            });
+        });
+    })
+    .catch(err => next(err));
+
 }

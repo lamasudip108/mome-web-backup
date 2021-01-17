@@ -26,10 +26,9 @@ export function getAll() {
  * @param receiver
  * @param amount
  * @param description
- * @param t
  * @returns {*}
  */
-export function sendMoney(sender, receiver, amount,description,t){
+export function sendMoney(sender, receiver, amount,description){
 
   return new Wallet({
     number: uniqid(),
@@ -41,6 +40,30 @@ export function sendMoney(sender, receiver, amount,description,t){
     description: description,
     status: Constant.payment.status.success,
     customer_id: sender.get('id')
+  }).save();
+
+}
+
+/**
+ *
+ * @param requester
+ * @param sender
+ * @param amount
+ * @param description
+ * @returns {*}
+ */
+export function requestMoney(requester, sender, amount,description){
+
+  return new Wallet({
+    number: uniqid(),
+    sender: sender.get("id"),
+    receiver: requester.get("id"),
+    amount: amount,
+    fees: 0.00,
+    is_request: 1,
+    description: description,
+    status: Constant.payment.status.pending,
+    customer_id: requester.get('id')
   }).save();
 
 }

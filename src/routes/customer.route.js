@@ -484,4 +484,37 @@ router
 
   .post(validate(customerSchema.sendMoney), customerCtrl.sendMoney);
 
+router
+  .route('/:id/request-money')
+
+  /**
+   * @swagger
+   * /customers/{id}/request-money:
+   *   post:
+   *     tags:
+   *       - customers
+   *     summary: "Request money from another ewallet user"
+   *     security:
+   *        - Bearer: []
+   *     operationId: banks
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: body
+   *         in: body
+   *         description: Request money from another ewallet user
+   *         required: true
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   */
+
+  .post(validate(customerSchema.sendMoney), customerCtrl.requestMoney);
+
 export default router;
