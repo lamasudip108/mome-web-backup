@@ -17,8 +17,8 @@ export default (req, res, next) => {
     '/api/auths/login',
     '/api/customers/forgot-password-notification',
     '/api/web/auths/verification',
-    '/web/auths/forgot-password',
-    '/web/auths/reset-password',
+    '/api/web/auths/forgot-password',
+    '/api/web/auths/reset-password',
   ]; //List of endpoints that doesn't require auth
 
   if (publicEndpoints.some(path => path === req.path)) {

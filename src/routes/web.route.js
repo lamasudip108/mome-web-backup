@@ -26,8 +26,6 @@ const router = express.Router();
  *     responses:
  *       200:
  *         description: OK
- *         schema:
- *            $ref: '#/definitions/Token'
  *       400:
  *         description: Invalid token
  *         schema:
@@ -62,8 +60,6 @@ router.route('/verification/:token')
  *     responses:
  *       200:
  *         description: OK
- *         schema:
- *           $ref: "#/definitions/Customer"
  *       400:
  *         description: Invalid token
  *         schema:
@@ -80,7 +76,7 @@ router.route('/forgot-password/:token')
 /**
  * @swagger
  * /web/auths/reset-password:
- *   get:
+ *   post:
  *     tags:
  *       - webs
  *     summary: "Reset password from email notification"
@@ -94,13 +90,19 @@ router.route('/forgot-password/:token')
  *         in: body
  *         description: Update customer password by new password
  *         required: true
- *         schema:
- *           $ref: "#/definitions/Customer"
+ *         properties:
+ *           token:
+ *             type: string
+ *             example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJhZG1pbkBhZG1pbi5jb20iLCJpYXQiOjE1MDk5ODg2NDZ9.1zTKAzXmuyQDHw4uJXa324fFS1yZwlriFSppvK6nOQY"
+ *           password:
+ *             type: string
+ *             example: "123456"
+ *           confirm_password:
+ *             type: string
+ *             example: "123456"
  *     responses:
  *       200:
  *         description: OK
- *         schema:
- *           $ref: "#/definitions/Customer"
  *       400:
  *         description: Invalid token
  *         schema:
