@@ -518,12 +518,12 @@ router
   .post(validate(customerSchema.sendMoney), customerCtrl.requestMoney);
 
 router
-  .route('/:id/sent-wallet-request')
+  .route('/:id/sent-wallet-requests')
 
   /**
    * @swagger
-   * /customers/{id}/sent-wallet-request:
-   *   post:
+   * /customers/{id}/sent-wallet-requests:
+   *   get:
    *     tags:
    *       - customers
    *     summary: "Show all sent wallet request"
@@ -551,12 +551,12 @@ router
   .get(customerCtrl.sentWalletRequest);
 
 router
-  .route('/:id/receive-wallet-request')
+  .route('/:id/receive-wallet-requests')
 
   /**
    * @swagger
-   * /customers/{id}/receive-wallet-request:
-   *   post:
+   * /customers/{id}/receive-wallet-requests:
+   *   get:
    *     tags:
    *       - customers
    *     summary: "Show all receive wallet request"
