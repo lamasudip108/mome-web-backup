@@ -3,7 +3,7 @@ import bookshelf from '../config/bookshelf';
 const TABLE_NAME = 'customers';
 
 /**
- * Customer model.
+ * Customer Model.
  */
 class Customer extends bookshelf.Model {
   /**

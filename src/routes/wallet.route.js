@@ -1,6 +1,5 @@
 import express from "express";
 import * as walletCtrl from "../controllers/wallet.controller";
-import isAuthenticated from "../middlewares/authenticate";
 
 const router = express.Router();
 
@@ -38,7 +37,7 @@ router
    *             $ref: '#/definitions/Error'
    */
 
-  .get(isAuthenticated, walletCtrl.findAllByCustomerId);
+  .get( walletCtrl.findAllByCustomerId);
 
 
 router
@@ -68,6 +67,6 @@ router
    *             $ref: '#/definitions/Error'
    */
 
-  .get(isAuthenticated, walletCtrl.findAll);
+  .get( walletCtrl.findAll);
 
 export default router;

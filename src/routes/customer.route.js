@@ -1,8 +1,8 @@
 import express from 'express';
-import * as customerCtrl from '../controllers/customer.controller';
-import isAuthenticated from '../middlewares/authenticate';
-import validate from '../config/joi.validate';
-import customerSchema from '../validators/customer.validator';
+
+import * as customerCtrl from '@controllers/customer.controller';
+import validate from '@config/joi.validate';
+import customerSchema from '@validators/customer.validator';
 
 const router = express.Router();
 
@@ -71,7 +71,7 @@ router
    *   post:
    *     tags:
    *       - customers
-   *     summary: "Create a new customer"
+   *     summary: "Create a new customer and send notification to customer email"
    *     security:
    *        - Bearer: []
    *     operationId: storeCustomer
@@ -121,7 +121,7 @@ router
    *            type: object
    */
 
-  .get(isAuthenticated, customerCtrl.findAll);
+  .get(customerCtrl.findAll);
 
 router
   .route('/:id')
@@ -157,7 +157,7 @@ router
    *             $ref: '#/definitions/Error'
    */
 
-  .get(isAuthenticated, customerCtrl.findById)
+  .get(customerCtrl.findById)
 
   /**
    * @swagger
@@ -194,7 +194,7 @@ router
    *         description: Invalid customer
    */
 
-  .put(isAuthenticated, validate(customerSchema.update), customerCtrl.update)
+  .put( validate(customerSchema.update), customerCtrl.update)
 
   /**
    * @swagger
@@ -221,7 +221,7 @@ router
    *          description: "Invalid ID"
    */
 
-  .delete(isAuthenticated, customerCtrl.destroy);
+  .delete( customerCtrl.destroy);
 
 router
   .route('/isUniqueEmail')
@@ -287,18 +287,18 @@ router
    *           $ref: "#/definitions/Customer"
    */
 
-  .put(isAuthenticated, validate(customerSchema.updatePassword), customerCtrl.updatePassword);
+  .put( validate(customerSchema.updatePassword), customerCtrl.updatePassword);
 
 router
-  .route('/forgot-password-request')
+  .route('/forgot-password-notification')
 
   /**
    * @swagger
-   * /customers/forgot-password-request:
+   * /customers/forgot-password-notification:
    *   post:
    *     tags:
    *       - customers
-   *     summary: "Forgot password for customers"
+   *     summary: "Send forgot password notification to customer email"
    *     security:
    *        - Bearer: []
    *     operationId: forgot-password
@@ -320,73 +320,7 @@ router
    *           $ref: "#/definitions/Customer"
    */
 
-  .post(validate(customerSchema.email), customerCtrl.forgotPasswordRequest);
-
-router
-  .route('/forgot-password/:token')
-
-  /**
-   * @swagger
-   * /customers/forgot-password/{token}:
-   *   get:
-   *     tags:
-   *       - customers
-   *     summary: "Forgot password for customers"
-   *     security:
-   *        - Bearer: []
-   *     operationId: forgot-password
-   *     consumes:
-   *       - application/json
-   *     produces:
-   *       - application/json
-   *     parameters:
-   *       - name: body
-   *         in: body
-   *         description: Update new password for logged in user
-   *         required: true
-   *         schema:
-   *           $ref: "#/definitions/Customer"
-   *     responses:
-   *       200:
-   *         description: OK
-   *         schema:
-   *           $ref: "#/definitions/Customer"
-   */
-
-  .get(customerCtrl.forgotPassword);
-
-router
-  .route('/reset-password')
-
-  /**
-   * @swagger
-   * /customers/forgot-password:
-   *   get:
-   *     tags:
-   *       - customers
-   *     summary: "Forgot password for customers"
-   *     security:
-   *        - Bearer: []
-   *     operationId: forgot-password
-   *     consumes:
-   *       - application/json
-   *     produces:
-   *       - application/json
-   *     parameters:
-   *       - name: body
-   *         in: body
-   *         description: Update new password for logged in user
-   *         required: true
-   *         schema:
-   *           $ref: "#/definitions/Customer"
-   *     responses:
-   *       200:
-   *         description: OK
-   *         schema:
-   *           $ref: "#/definitions/Customer"
-   */
-
-  .post(customerCtrl.resetPassword);
+  .post(validate(customerSchema.email), customerCtrl.forgotPasswordNotification);
 
 router
   .route('/:id/banks')
@@ -418,8 +352,7 @@ router
    *         schema:
    *           $ref: "#/definitions/Customer"
    */
-
-  .post(isAuthenticated, validate(customerSchema.addBank), customerCtrl.addBank)
+  .post( validate(customerSchema.addBank), customerCtrl.addBank)
 
   /**
    * @swagger
@@ -449,7 +382,7 @@ router
    *           $ref: "#/definitions/Customer"
    */
 
-  .get(isAuthenticated, customerCtrl.findAllBankById);
+  .get( customerCtrl.findAllBankById);
 
 router
   .route('/:id/send-money')
@@ -581,7 +514,7 @@ router
    *           $ref: "#/definitions/Customer"
    */
 
-  .get(customerCtrl.receiveWalletRequest);
+  .get(customerCtrl.receivedWalletRequest);
 
 router
   .route('/:id/respond-wallet-request')

@@ -1,10 +1,10 @@
 
 exports.seed = function(knex) {
   // Deletes ALL existing entries
-  return knex('bank_names').del()
+  return knex('banks').del()
     .then(function () {
       // Inserts seed entries
-      return knex('bank_names').insert([
+      return knex('banks').insert([
         {
           name: 'Qatar National Bank',
           created_at: new Date(),

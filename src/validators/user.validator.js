@@ -17,9 +17,4 @@ export default {
     password: Joi.string().min(6).required(),
     status: Joi.number().integer().required(),
   }),
-
-  login: Joi.object({
-    username: Joi.string().required(),
-    password: Joi.string().required(),
-  }),
 };
