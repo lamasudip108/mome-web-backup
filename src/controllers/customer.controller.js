@@ -499,7 +499,7 @@ export function respondWalletRequest(req, res, next) {
               .then(receiver => {
 
                 if (sender.get('id') === receiver.get('id')) {
-                  errorResponse(res, 'You can\'t send money to yourself ');
+                  errorResponse(res, 'You can\'t send money to yourself.');
                 }
 
                 let amount = wallet.get('amount');
