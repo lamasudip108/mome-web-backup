@@ -483,38 +483,38 @@ router
 
   .get(customerCtrl.sentWalletRequest);
 
-// router
-//   .route('/:id/receive-wallet-requests')
-//
-//   /**
-//    * @swagger
-//    * /customers/{id}/receive-wallet-requests:
-//    *   get:
-//    *     tags:
-//    *       - customers
-//    *     summary: "Show all receive wallet request"
-//    *     security:
-//    *        - Bearer: []
-//    *     operationId: banks
-//    *     consumes:
-//    *       - application/json
-//    *     produces:
-//    *       - application/json
-//    *     parameters:
-//    *       - name: body
-//    *         in: body
-//    *         description: Show all receive wallet request
-//    *         required: true
-//    *         schema:
-//    *           $ref: "#/definitions/Customer"
-//    *     responses:
-//    *       200:
-//    *         description: OK
-//    *         schema:
-//    *           $ref: "#/definitions/Customer"
-//    */
-//
-//   .get(customerCtrl.receivedWalletRequest);
+ router
+   .route('/:id/received-wallet-requests')
+
+   /**
+    * @swagger
+    * /customers/{id}/received-wallet-requests:
+    *   get:
+    *     tags:
+    *       - customers
+    *     summary: "Show all received wallet request"
+    *     security:
+    *        - Bearer: []
+    *     operationId: banks
+    *     consumes:
+    *       - application/json
+    *     produces:
+    *       - application/json
+    *     parameters:
+    *       - name: body
+    *         in: body
+    *         description: Show all received wallet request
+    *         required: true
+    *         schema:
+    *           $ref: "#/definitions/Customer"
+    *     responses:
+    *       200:
+    *         description: OK
+    *         schema:
+    *           $ref: "#/definitions/Customer"
+    */
+
+   .get(customerCtrl.receivedWalletRequest);
 
 router
   .route('/:id/respond-wallet-request')

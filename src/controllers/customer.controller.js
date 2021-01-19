@@ -445,7 +445,7 @@ export function sentWalletRequest(req, res, next) {
  * @param next
  */
 
-export function receiveWalletRequest(req, res, next) {
+export function receivedWalletRequest(req, res, next) {
 
   let cusId = req.params.id;
 
