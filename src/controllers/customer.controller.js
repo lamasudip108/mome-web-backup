@@ -1,10 +1,10 @@
 import HttpStatus from 'http-status-codes';
-import * as WalletService from '../services/wallet.service';
+import * as WalletService from '@services/wallet.service';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import path from 'path';
-import Constant from '../utils/constants';
-import bookshelf from '../config/bookshelf';
+import Constant from '@utils/constants';
+import bookshelf from '@config/bookshelf';
 import Promise from 'bluebird';
 import * as CustomerService from '@services/customer.service';
 import {notify} from '@config/mailer';
