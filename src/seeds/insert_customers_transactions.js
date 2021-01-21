@@ -77,6 +77,30 @@ exports.seed = function(knex) {
                 customer_id: ids[random],
                 created_at: new Date(),
                 updated_at: new Date()
+              },
+              {
+                number: "23424234234",
+                vendor_name: " channel",
+                amount: 43.64,
+                status: "success",
+                type: "qr",
+                fees: 0.56,
+                description: "I love bag",
+                customer_id: ids[random],
+                created_at: new Date(),
+                updated_at: new Date()
+              },
+              {
+                number: "23423423423",
+                vendor_name: " adidas",
+                amount: 49.64,
+                status: "success",
+                type: "qr",
+                fees: 0.56,
+                description: "I don't like it",
+                customer_id: ids[random],
+                created_at: new Date(),
+                updated_at: new Date()
               }
             ];
 

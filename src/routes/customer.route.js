@@ -352,7 +352,6 @@ router
    *         schema:
    *           $ref: "#/definitions/Customer"
    */
-
   .post( validate(customerSchema.addBank), customerCtrl.addBank)
 
   /**
@@ -384,5 +383,203 @@ router
    */
 
   .get( customerCtrl.findAllBankById);
+
+router
+  .route('/:id/send-money')
+
+  /**
+   * @swagger
+   * /customers/{id}/send-money:
+   *   post:
+   *     tags:
+   *       - customers
+   *     summary: "Send Money from ewallet to ewallet"
+   *     security:
+   *        - Bearer: []
+   *     operationId: banks
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: body
+   *         in: body
+   *         description: Send money from ewallet to ewallet
+   *         required: true
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   */
+
+  .post(validate(customerSchema.sendMoney), customerCtrl.sendMoney);
+
+router
+  .route('/:id/request-money')
+
+  /**
+   * @swagger
+   * /customers/{id}/request-money:
+   *   post:
+   *     tags:
+   *       - customers
+   *     summary: "Request money from another ewallet user"
+   *     security:
+   *        - Bearer: []
+   *     operationId: banks
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: body
+   *         in: body
+   *         description: Request money from another ewallet user
+   *         required: true
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   */
+
+  .post(validate(customerSchema.sendMoney), customerCtrl.requestMoney);
+
+router
+  .route('/:id/sent-wallet-requests')
+
+  /**
+   * @swagger
+   * /customers/{id}/sent-wallet-requests:
+   *   get:
+   *     tags:
+   *       - customers
+   *     summary: "Show all sent wallet request"
+   *     security:
+   *        - Bearer: []
+   *     operationId: banks
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: body
+   *         in: body
+   *         description: Show all sent wallet request
+   *         required: true
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   */
+
+  .get(customerCtrl.sentWalletRequest);
+
+ router
+   .route('/:id/received-wallet-requests')
+
+   /**
+    * @swagger
+    * /customers/{id}/received-wallet-requests:
+    *   get:
+    *     tags:
+    *       - customers
+    *     summary: "Show all received wallet request"
+    *     security:
+    *        - Bearer: []
+    *     operationId: banks
+    *     consumes:
+    *       - application/json
+    *     produces:
+    *       - application/json
+    *     parameters:
+    *       - name: body
+    *         in: body
+    *         description: Show all received wallet request
+    *         required: true
+    *         schema:
+    *           $ref: "#/definitions/Customer"
+    *     responses:
+    *       200:
+    *         description: OK
+    *         schema:
+    *           $ref: "#/definitions/Customer"
+    */
+
+   .get(customerCtrl.receivedWalletRequest);
+
+router
+  .route('/:id/respond-wallet-request')
+
+  /**
+   * @swagger
+   * /customers/{id}/receive-wallet-request:
+   *   post:
+   *     tags:
+   *       - customers
+   *     summary: "respond to to wallet request"
+   *     security:
+   *        - Bearer: []
+   *     operationId: banks
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: body
+   *         in: body
+   *         description: Respond to wallet request
+   *         required: true
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   */
+
+  .post(validate(customerSchema.respondRequest), customerCtrl.respondWalletRequest);
+
+router
+  .route('/:id/transactions')
+
+  /**
+   * @swagger
+   * /customers/{id}/transactions:
+   *   get:
+   *     tags:
+   *       - customers
+   *     summary: "Fetch customer transactions"
+   *     security:
+   *        - Bearer: []
+   *     operationId: banks
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: body
+   *         in: body
+   *         description: Show all received wallet request
+   *         required: true
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   */
+
+  .get(customerCtrl.findAllTransactionByCustomer);
 
 export default router;

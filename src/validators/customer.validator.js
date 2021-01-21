@@ -46,4 +46,17 @@ export default {
     account_holder: Joi.string().required(),
     account_number: Joi.string().required(),
   }),
+
+  sendMoney: Joi.object({
+    email: Joi.string().email().required(),
+    phone: Joi.string().min(10).max(10).required(),
+    amount: Joi.number().required(),
+    description : Joi.string().max(50),
+  }),
+
+  respondRequest:Joi.object({
+    request_id: Joi.number().required(),
+    status: Joi.number().required(),
+  })
+
 };

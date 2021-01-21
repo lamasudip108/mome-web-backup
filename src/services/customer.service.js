@@ -240,3 +240,47 @@ export function getCustomerByAccNumber(customer_id, account_number) {
       throw Boom.notFound('Customer not found.');
     });
 }
+
+/**
+ *
+ * @param param
+ * @returns {*}
+ */
+export function geCustomerByParams(param){
+  return new Customer(param)
+    .fetch({ require: true })
+    .then((user) => user)
+    .catch(Customer.NotFoundError, () => {
+      throw Boom.notFound('Customer not found.');
+    });
+}
+
+
+export function updateSenderAmount(sender, amount){
+
+  let id = sender.get('id');
+  let currentAmount = sender.get('wallet_amount');
+
+  return new Customer({ id })
+    .save({
+      wallet_amount: parseFloat(currentAmount) - parseFloat(amount),
+    })
+    .catch(Customer.NoRowsUpdatedError, () => {
+      throw Boom.notFound('Customer not found.');
+    });
+
+}
+
+export function updateReceiverAmount(receiver, amount){
+
+  let id = receiver.get('id');
+  let currentAmount = receiver.get('wallet_amount');
+
+  return new Customer({ id })
+    .save({
+      wallet_amount: parseFloat(currentAmount) + parseFloat(amount),
+    })
+    .catch(Customer.NoRowsUpdatedError, () => {
+      throw Boom.notFound('Customer not found.');
+    });
+}
