@@ -1,11 +1,13 @@
 import bookshelf from '../config/bookshelf';
+import CustomerBank from "./customer_bank.model";
+import Transaction from "./transaction.model";
 
-const TABLE_NAME = 'customers';
+const TABLE_NAME = 'merchants';
 
 /**
  * Customer Model.
  */
-class Customer extends bookshelf.Model {
+class Merchant extends bookshelf.Model {
   /**
    * Get table name.
    */
@@ -28,6 +30,15 @@ class Customer extends bookshelf.Model {
   get hidden(){
     return ['password', 'token', 'created_at', 'updated_at', 'template', 'otp_code', 'confirmationUrl'];
   }
+
+  /**
+   * Create relation with customers bank
+   *
+   * @returns {Collection}
+   */
+  transaction() {
+    return this.hasMany(Transaction, 'merchant_id');
+  }
 }
 
-export default Customer;
+export default Merchant;
