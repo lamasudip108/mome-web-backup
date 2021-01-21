@@ -23,7 +23,7 @@ export function getAll() {
  */
 export function getOne(criteria) {
   return new Customer(criteria)
-    .fetch({ require: true })
+    .fetch({ require: false })
     .then((user) => user)
     .catch(Customer.NotFoundError, () => {
       throw Boom.notFound('Customer not found.');
