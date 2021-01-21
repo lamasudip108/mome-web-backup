@@ -537,23 +537,23 @@ export function findAllTransactionByCustomer(req, res, next) {
 
         let date = moment(d.attributes.created_at).format("YYYY-MM-DD");
 
-        if(date === moment().format("YYYY-MM-DD")){
+/*        if(date === moment().format("YYYY-MM-DD")){
           date = 'today';
         }else if(date === moment().subtract(1,'days').format("YYYY-MM-DD")){
           date = 'yesterday';
-        }
+        }*/
 
-        d.attributes.created_at = date;
+        d.attributes.filter_date = date;
         delete d.attributes.updated_at;
         arr.push(d.attributes);
       });
 
-      const key = "created_at";
+      const key = "filter_date";
 
       const transactions = [...arr.reduce((acc, o) =>
          acc.set(o[key], (acc.get(o[key]) || []).concat(o))
         , new Map).values()];
-      
+
       successResponse(res, transactions);
 
     })
