@@ -5,7 +5,7 @@ import Transaction from '../models/transaction.model';
  *
  * @returns {Promise}
  */
-export function getAllByCustomerId(id) {
+export function findAllTransactionByCustomer(id) {
   return Transaction.forge().where({ customer_id: id }).fetchAll();
 }
 

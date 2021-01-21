@@ -525,7 +525,7 @@ router
    *   post:
    *     tags:
    *       - customers
-   *     summary: "Show all receive wallet request"
+   *     summary: "respond to to wallet request"
    *     security:
    *        - Bearer: []
    *     operationId: banks
@@ -536,7 +536,7 @@ router
    *     parameters:
    *       - name: body
    *         in: body
-   *         description: Show all receive wallet request
+   *         description: Respond to wallet request
    *         required: true
    *         schema:
    *           $ref: "#/definitions/Customer"
@@ -548,5 +548,38 @@ router
    */
 
   .post(validate(customerSchema.respondRequest), customerCtrl.respondWalletRequest);
+
+router
+  .route('/:id/transactions')
+
+  /**
+   * @swagger
+   * /customers/{id}/transactions:
+   *   get:
+   *     tags:
+   *       - customers
+   *     summary: "Fetch customer transactions"
+   *     security:
+   *        - Bearer: []
+   *     operationId: banks
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: body
+   *         in: body
+   *         description: Show all received wallet request
+   *         required: true
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   */
+
+  .get(customerCtrl.findAllTransactionByCustomer);
 
 export default router;

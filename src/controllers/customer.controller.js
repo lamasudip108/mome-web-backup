@@ -10,7 +10,8 @@ import * as CustomerService from '@services/customer.service';
 import {notify} from '@config/mailer';
 import {successResponse, errorResponse} from '@utils/response';
 import Bank from '@models/bank.model';
-
+import * as TransactionService from '@services/transaction.service';
+import moment from 'moment';
 
 /**
  * Find all the customers
@@ -516,3 +517,46 @@ export function respondWalletRequest(req, res, next) {
   }
 }
 
+/**
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+
+//code refactor needed
+
+export function findAllTransactionByCustomer(req, res, next) {
+
+  TransactionService.findAllTransactionByCustomer(req.params.id)
+    .then((data) => {
+
+      let arr = [];
+
+      data.map(d => {
+
+        let date = moment(d.attributes.created_at).format("YYYY-MM-DD");
+
+        if(date === moment().format("YYYY-MM-DD")){
+          date = 'today';
+        }else if(date === moment().subtract(1,'days').format("YYYY-MM-DD")){
+          date = 'yesterday';
+        }
+
+        d.attributes.created_at = date;
+        delete d.attributes.updated_at;
+        arr.push(d.attributes);
+      });
+
+      const key = "created_at";
+
+      const transactions = [...arr.reduce((acc, o) =>
+         acc.set(o[key], (acc.get(o[key]) || []).concat(o))
+        , new Map).values()];
+      
+      successResponse(res, transactions);
+
+    })
+    .catch((err) => next(err));
+
+}

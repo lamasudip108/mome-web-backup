@@ -12,7 +12,7 @@ import { successResponse } from '../utils/response';
 
 export function findAllByCustomerId(req, res, next) {
 
-  TransactionService.getAllByCustomerId(req.params.id)
+  TransactionService.findAllTransactionByCustomer(req.params.id)
     .then((data) => {
       successResponse(res, data);
     })
