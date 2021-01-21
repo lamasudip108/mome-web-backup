@@ -559,7 +559,7 @@ export function findAllTransactionByCustomer(req, res, next) {
 
         delete d.attributes.merchant_id;
         delete d.attributes.updated_at;
-        
+
         arr.push(d.attributes);
       });
 
