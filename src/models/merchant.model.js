@@ -28,7 +28,7 @@ class Merchant extends bookshelf.Model {
    * @returns {string[]}
    */
   get hidden(){
-    return ['password', 'token', 'created_at', 'updated_at', 'template', 'otp_code', 'confirmationUrl'];
+    return ['password', 'token', 'created_at', 'updated_at', 'template', 'otp_code'];
   }
 
   /**

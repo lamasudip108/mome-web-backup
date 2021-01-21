@@ -28,7 +28,7 @@ class Transaction extends bookshelf.Model {
    * @returns {string[]}
    */
   get hidden(){
-    return ['customer_id', 'created_at', 'updated_at'];
+    return ['merchant_id', 'customer_id', 'created_at', 'updated_at'];
   }
 
   /**
