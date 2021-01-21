@@ -4,7 +4,7 @@ Express and MySQL Application
 
 ### 1. Prerequisites
 
-- [NodeJs](https://nodejs.org/en/)
+- [NodeJs](https://nodejs.org/en/) - JavaScript runtime built on Chrome's V8 JavaScript engine
 - [NPM](https://npmjs.org/) - Node package manager
 - [MySQL](https://www.mysql.com/downloads/) - Relational database management system (RDBMS)
 
@@ -54,6 +54,7 @@ Navigate to http://localhost:3000/swagger/ for the API documentation.
 - JSON Web Tokens(jwt) - [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
 - Logging Library - [Winston](https://www.npmjs.com/package/winston)
 - Object schema validation  - [Joi](https://www.npmjs.com/package/joi)
+- Create aliases of directories  - [module-alias](https://www.npmjs.com/package/module-alias)
 - API documentation using [swagger-jsdoc](https://www.npmjs.com/package/swagger-jsdoc) and [swagger-ui](https://www.npmjs.com/package/swagger-ui)
 - Environment configuration - [dotenv](https://www.npmjs.com/package/dotenv)
 - Code linting tool - [ESLint](http://eslint.org/)

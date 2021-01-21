@@ -1,4 +1,4 @@
-import * as CustomerService from "../services/customer.service";
+import * as CustomerService from "@services/customer.service";
 
 exports.seed = function(knex) {
 
@@ -9,7 +9,7 @@ exports.seed = function(knex) {
   return knex("transactions").del()
     .then(function() {
 
-      return CustomerService.getAllCustomer()
+      return CustomerService.getAll()
         .then((data) => {
             data.map(d => {
               ids.push(d.attributes.id);
@@ -68,6 +68,30 @@ exports.seed = function(knex) {
               },
               {
                 number: "23452335353",
+                vendor_name: " adidas",
+                amount: 49.64,
+                status: "success",
+                type: "qr",
+                fees: 0.56,
+                description: "I don't like it",
+                customer_id: ids[random],
+                created_at: new Date(),
+                updated_at: new Date()
+              },
+              {
+                number: "23424234234",
+                vendor_name: " channel",
+                amount: 43.64,
+                status: "success",
+                type: "qr",
+                fees: 0.56,
+                description: "I love bag",
+                customer_id: ids[random],
+                created_at: new Date(),
+                updated_at: new Date()
+              },
+              {
+                number: "23423423423",
                 vendor_name: " adidas",
                 amount: 49.64,
                 status: "success",

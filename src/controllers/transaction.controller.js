@@ -1,17 +1,18 @@
 import * as TransactionService from '../services/transaction.service';
-import {successResponse} from '../utils/response';
+import { successResponse } from '../utils/response';
 
 /**
  * Returns all transaction record by customer id
  *
- * @param {object} req
- * @param {object} res
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
  * @returns {*}
  */
 
 export function findAllByCustomerId(req, res, next) {
 
-  TransactionService.getAllByCustomerId(req.params.id)
+  TransactionService.findAllTransactionByCustomer(req.params.id)
     .then((data) => {
       successResponse(res, data);
     })
@@ -21,8 +22,9 @@ export function findAllByCustomerId(req, res, next) {
 /**
  * Returns all transaction
  *
- * @param {object} req
- * @param {object} res
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
  * @returns {*}
  */
 

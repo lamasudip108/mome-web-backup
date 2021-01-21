@@ -1,5 +1,8 @@
 import express from 'express';
-import * as authCtrl from '../controllers/auth.controller';
+
+import * as authCtrl from '@controllers/auth.controller';
+import validate from '@config/joi.validate';
+import loginSchema from '@validators/login.validator';
 
 const router = express.Router();
 
@@ -25,20 +28,26 @@ const router = express.Router();
  *   Token:
  *    type: object
  *    properties:
- *      email:
- *        type: string
- *        example: test@gmail.com
- *      token:
- *        type: string
- *        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJhZG1pbkBhZG1pbi5jb20iLCJpYXQiOjE1MDk5ODg2NDZ9.1zTKAzXmuyQDHw4uJXa324fFS1yZwlriFSppvK6nOQY
+ *      success:
+ *        type: boolean
+ *        default: true
+ *      data:
+ *          type: object
+ *          properties:
+ *             email:
+ *               type: string
+ *               example: test@gmail.com
+ *             token:
+ *               type: string
+ *               example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJhZG1pbkBhZG1pbi5jb20iLCJpYXQiOjE1MDk5ODg2NDZ9.1zTKAzXmuyQDHw4uJXa324fFS1yZwlriFSppvK6nOQY
  *   Error:
  *      type: object
  *      properties:
+ *         success:
+ *            type: boolean
+ *            default: false
  *         message:
  *            type: string
- *         error:
- *            type: boolean
- *            default: true
  *
  */
 
@@ -77,47 +86,6 @@ const router = express.Router();
  */
 
 router.route('/login')
-    .post((req, res) => {
-        authCtrl.login(req, res);
-    });
+  .post(validate(loginSchema.login), authCtrl.login);
 
-
-/**
- * @swagger
- * /auths/confirmation/{token}:
- *   get:
- *     tags:
- *       - auths
- *     summary: Verify user account using jwt
- *     description:
- *     operationId: account verification
- *     consumes:
- *       - application/json
- *     produces:
- *       - application/json
- *     parameters:
- *       - name: token
- *         in: path
- *         description: token of customer that needs to be fetched
- *         required: true
- *         type: integer
- *     responses:
- *       200:
- *         description: OK
- *         schema:
- *            $ref: '#/definitions/Token'
- *       400:
- *         description: Invalid token
- *         schema:
- *            $ref: '#/definitions/Error'
- *       404:
- *         description: Token not found
- *         schema:
- *            $ref: '#/definitions/Error'
- */
-
-router.route('/confirmation/:token')
-  .get((req, res) => {
-    authCtrl.accountConfirmation(req, res);
-  });
 export default router;

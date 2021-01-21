@@ -48,6 +48,8 @@
     "knex": "^0.21.13",
     "lodash": "^4.17.20",
     "method-override": "^3.0.0",
+    "module-alias": "^2.2.2",
+    "moment": "^2.29.1",
     "morgan": "^1.9.1",
     "mysql": "^2.17.1",
     "nodemailer": "^6.4.17",
@@ -69,10 +71,40 @@
     "babel-eslint": "^10.0.3",
     "babel-loader": "^8.2.2",
     "cross-env": "^7.0.3",
-    "eslint": "^7.15.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
     "json-loader": "^0.5.7",
     "nodemon": "^2.0.6",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": " lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{css,html,json,md}": [
+      "prettier --write"
+    ]
+  },
+  "_moduleAliases": {
+    "@root": ".",
+    "@config": "src/config",
+    "@constants": "src/constants",
+    "@controllers": "src/controllers",
+    "@middlewares": "src/middlewares",
+    "@migrations": "src/migrations",
+    "@models": "src/models",
+    "@routes": "src/routes",
+    "@seeds": "src/seeds",
+    "@services": "src/services",
+    "@templates": "src/templates",
+    "@utils": "src/utils",
+    "@validators": "src/validators"
   }
 }

@@ -1,21 +1,18 @@
 import HttpStatus from 'http-status-codes';
 
-import * as userService from '../services/user.service';
-import {successResponse} from '../utils/response';
+import * as userService from '@services/user.service';
 
 /**
  * Find all the users
  *
  * @param {Object} req
  * @param {Object} res
- * @param {Function} nextuser.model
+ * @param {Function} next
  */
 export function findAll(req, res, next) {
   userService
-    .getAllUser()
-    .then((data) => {
-      successResponse(res, data);
-    })
+    .getAll()
+    .then((data) => res.json({ success: true, data }))
     .catch((err) => next(err));
 }
 
@@ -28,10 +25,8 @@ export function findAll(req, res, next) {
  */
 export function findById(req, res, next) {
   userService
-    .getUser(req.params.id)
-    .then((data) => {
-      successResponse(res, data);
-    })
+    .getOne(req.params.id)
+    .then((data) => res.json({ success: true, data }))
     .catch((err) => next(err));
 }
 
@@ -44,10 +39,8 @@ export function findById(req, res, next) {
  */
 export function store(req, res, next) {
   userService
-    .storeUser(req.body)
-    .then((data) => {
-      successResponse(res, data, HttpStatus.CREATED);
-    })
+    .store(req.body)
+    .then((data) => res.status(HttpStatus.CREATED).json({ success: true, data }))
     .catch((err) => next(err));
 }
 
@@ -60,10 +53,8 @@ export function store(req, res, next) {
  */
 export function update(req, res, next) {
   userService
-    .updateUser(req.params.id, req.body)
-    .then((data) => {
-      successResponse(res, data);
-    })
+    .update(req.params.id, req.body)
+    .then((data) => res.json({ success: true, data }))
     .catch((err) => next(err));
 }
 
@@ -76,9 +67,7 @@ export function update(req, res, next) {
  */
 export function destroy(req, res, next) {
   userService
-    .deleteUser(req.params.id)
-    .then((data) => {
-      successResponse(res, data, HttpStatus.NO_CONTENT);
-    })
+    .destroy(req.params.id)
+    .then((data) => res.status(HttpStatus.NO_CONTENT).json({ success: true, data }))
     .catch((err) => next(err));
 }
