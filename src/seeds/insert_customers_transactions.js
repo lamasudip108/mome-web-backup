@@ -20,13 +20,12 @@ exports.seed = function(knex) {
             script = [
               {
                 number: "2345335353",
-                vendor_name: " paradise",
-                amount: 45.64,
+                amount: " paradise",
                 status: "success",
-                type: "qr",
                 fees: 0.56,
                 description: "I love shopping",
                 customer_id: ids[random],
+                merchant_id: ids[random],
                 created_at: new Date(),
                 updated_at: new Date()
               },
@@ -39,6 +38,7 @@ exports.seed = function(knex) {
                 fees: 0.56,
                 description: "I am good",
                 customer_id: ids[random],
+                merchant_id: ids[random],
                 created_at: new Date(),
                 updated_at: new Date()
               },
@@ -51,6 +51,7 @@ exports.seed = function(knex) {
                 fees: 0.56,
                 description: "best product",
                 customer_id: ids[random],
+                merchant_id: ids[random],
                 created_at: new Date(),
                 updated_at: new Date()
               },
@@ -63,6 +64,7 @@ exports.seed = function(knex) {
                 fees: 0.56,
                 description: "I love bag",
                 customer_id: ids[random],
+                merchant_id: ids[random],
                 created_at: new Date(),
                 updated_at: new Date()
               },
@@ -75,6 +77,7 @@ exports.seed = function(knex) {
                 fees: 0.56,
                 description: "I don't like it",
                 customer_id: ids[random],
+                merchant_id: ids[random],
                 created_at: new Date(),
                 updated_at: new Date()
               },
@@ -87,6 +90,7 @@ exports.seed = function(knex) {
                 fees: 0.56,
                 description: "I love bag",
                 customer_id: ids[random],
+                merchant_id: ids[random],
                 created_at: new Date(),
                 updated_at: new Date()
               },
@@ -99,6 +103,7 @@ exports.seed = function(knex) {
                 fees: 0.56,
                 description: "I don't like it",
                 customer_id: ids[random],
+                merchant_id: ids[random],
                 created_at: new Date(),
                 updated_at: new Date()
               }
