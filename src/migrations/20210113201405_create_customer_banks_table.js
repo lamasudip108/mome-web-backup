@@ -9,7 +9,7 @@ exports.up = function(knex) {
     table.increments('id').primary().unsigned();
     table.integer('customer_id').unsigned().index().references('id').inTable('customers');
     table.integer('bank_id').unsigned().index().references('id').inTable('banks');
-    table.string('branch');
+    table.string('branch_name');
     table.string('account_holder').notNullable();
     table.string('account_number').notNullable().unique();
     table.timestamp('created_at').defaultTo(knex.fn.now());

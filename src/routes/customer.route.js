@@ -16,7 +16,7 @@ const router = express.Router();
 /**
  * @swagger
  * definitions:
- *   Customers:
+ *   Customer:
  *     type: object
  *     properties:
  *       id:
@@ -25,25 +25,75 @@ const router = express.Router();
  *       first_name:
  *         type: string
  *         description: first name of the customer
+ *         required: true
  *         example: Krishna
+ *       middle_name:
+ *         type: string
+ *         description: last name of the customer
+ *         example: Prasad
  *       last_name:
  *         type: string
  *         description: last name of the customer
+ *         required: true
  *         example: Timilsina
  *       email:
  *         type: string
  *         description: email of the customer
  *         required: true
  *         example: test@gmail.com
+ *       phone:
+ *         type: string
+ *         description: phone of the customer
+ *         required: true
+ *         example: "1234567891"
  *       password:
  *         type: string
  *         description: password of the customer
  *         required: true
  *         example: "123456"
+ *       profile_image:
+ *         type: string
+ *         description: photo of the customer
+ *       wallet_amount:
+ *         type: integer
+ *         description: current wallet amount of the customer
+ *         example: 123
+ *       total_purchase:
+ *         type: integer
+ *         description: current total purchase amount of the customer
+ *         example: 1234
+ *       total_purchase_qty:
+ *         type: integer
+ *         description: current total purchase quantity of the customer
+ *         example: 12
+ *       token:
+ *         type: string
+ *         description: token of the customer for forgot password
+ *         example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJhZG1pbkBhZG1pbi5jb20iLCJpYXQiOjE1MDk5ODg2NDZ9.1zTKAzXmuyQDHw4uJXa324fFS1yZwlriFSppvK6nOQY
+ *       otp:
+ *         type: integer
+ *         description: otp code of the customer
+ *         example: 1234
+ *       street:
+ *         type: string
+ *         description: street of the customer
+ *         example: Samakhusi
+ *       city:
+ *         type: string
+ *         description: city of the customer
+ *         example: Kathmandu
+ *       province:
+ *         type: string
+ *         description: province of the customer
+ *         example: Bagmati
+ *       post_box:
+ *         type: string
+ *         description: post box of the customer
+ *         example: "12"
  *       status:
  *         type: integer
  *         description: status of the customer
- *         example: 1
+ *         example: pending
  *       created_at:
  *         type: string
  *         format: date-time
@@ -52,15 +102,74 @@ const router = express.Router();
  *         type: string
  *         format: date-time
  *         description: customer update datetime
- *   Error:
+ */
+
+/**
+ * @swagger
+ * definitions:
+ *   NewCustomerPayload:
  *     type: object
  *     properties:
- *        message:
- *           type: string
- *        error:
- *           type: boolean
- *           default: true
+ *       first_name:
+ *         type: string
+ *         description: first name of the user
+ *         example: Krishna
+ *       last_name:
+ *         type: string
+ *         description: last name of the user
+ *         example: Timilsina
+ *       email:
+ *         type: string
+ *         description: email of the user
+ *         required: true
+ *         example: test@gmail.com
+ *       phone:
+ *         type: string
+ *         description: phone of the customer
+ *         required: true
+ *         example: "1234567891"
+ *       password:
+ *         type: string
+ *         description: password of the user
+ *         required: true
+ *         example: "123456"
  */
+
+/**
+ * @swagger
+ * definitions:
+ *   UpdateCustomerPayload:
+ *     type: object
+ *     properties:
+ *       first_name:
+ *         type: string
+ *         description: first name of the user
+ *         example: Krishna
+ *       last_name:
+ *         type: string
+ *         description: last name of the user
+ *         example: Timilsina
+ *       email:
+ *         type: string
+ *         description: email of the user
+ *         required: true
+ *         example: test@gmail.com
+ *       phone:
+ *         type: string
+ *         description: phone of the customer
+ *         required: true
+ *         example: "1234567891"
+ *       password:
+ *         type: string
+ *         description: password of the user
+ *         required: true
+ *         example: "123456"
+ *       status:
+ *         type: integer
+ *         description: status of the user
+ *         example: 1
+ */
+
 
 router
   .route('/')
@@ -85,14 +194,29 @@ router
    *         description: Created customer object
    *         required: true
    *         schema:
-   *           $ref: "#/definitions/Customer"
+   *           $ref: "#/definitions/NewCustomerPayload"
    *     responses:
    *       200:
    *         description: OK
    *         schema:
-   *           $ref: "#/definitions/Customer"
-   *       403:
-   *          description: customer not found
+   *             type: object
+   *             properties:
+   *               success:
+   *                 type: boolean
+   *                 default: true
+   *               data:
+   *                 type: object
+   *                 $ref: "#/definitions/Customer"
+   *       400:
+   *           description: ValidationError
+   *           schema:
+   *              $ref: '#/definitions/Error'
+   *       401:
+   *           description: Unauthorized
+   *           schema:
+   *              $ref: '#/definitions/Error'
+   *       404:
+   *          description: User not found
    *          schema:
    *             $ref: '#/definitions/Error'
    */
@@ -118,7 +242,23 @@ router
    *       200:
    *         description: OK
    *         schema:
-   *            type: object
+   *             type: object
+   *             properties:
+   *               success:
+   *                 type: boolean
+   *                 default: true
+   *               data:
+   *                 type: array
+   *                 items:
+   *                   $ref: '#/definitions/Customer'
+   *       401:
+   *           description: Unauthorized
+   *           schema:
+   *              $ref: '#/definitions/Error'
+   *       404:
+   *          description: User not found
+   *          schema:
+   *             $ref: '#/definitions/Error'
    */
 
   .get(customerCtrl.findAll);
@@ -150,9 +290,20 @@ router
    *       200:
    *         description: OK
    *         schema:
-   *           $ref: "#/definitions/customers"
+   *             type: object
+   *             properties:
+   *               success:
+   *                 type: boolean
+   *                 default: true
+   *               data:
+   *                 type: object
+   *                 $ref: "#/definitions/Customer"
+   *       401:
+   *           description: Unauthorized
+   *           schema:
+   *              $ref: '#/definitions/Error'
    *       404:
-   *          description: customer not found
+   *          description: User not found
    *          schema:
    *             $ref: '#/definitions/Error'
    */
@@ -184,17 +335,34 @@ router
    *         description: Updated customers object
    *         required: true
    *         schema:
-   *           $ref: "#/definitions/Customer"
+   *           $ref: "#/definitions/UpdateCustomerPayload"
    *     responses:
    *       200:
    *         description: OK
    *         schema:
-   *           $ref: "#/definitions/Customer"
+   *             type: object
+   *             properties:
+   *               success:
+   *                 type: boolean
+   *                 default: true
+   *               data:
+   *                 type: object
+   *                 $ref: "#/definitions/User"
    *       400:
-   *         description: Invalid customer
+   *           description: ValidationError
+   *           schema:
+   *              $ref: '#/definitions/Error'
+   *       401:
+   *           description: Unauthorized
+   *           schema:
+   *              $ref: '#/definitions/Error'
+   *       404:
+   *          description: User not found
+   *          schema:
+   *             $ref: '#/definitions/Error'
    */
 
-  .put( validate(customerSchema.update), customerCtrl.update)
+  .put(validate(customerSchema.update), customerCtrl.update)
 
   /**
    * @swagger
@@ -217,11 +385,21 @@ router
    *     responses:
    *       200:
    *         description: OK
+   *       401:
+   *           description: Unauthorized
+   *           schema:
+   *              $ref: '#/definitions/Error'
    *       400:
-   *          description: "Invalid ID"
+   *          description: Invalid ID
+   *          schema:
+   *             $ref: '#/definitions/Error'
+   *       404:
+   *          description: User not found
+   *          schema:
+   *             $ref: '#/definitions/Error'
    */
 
-  .delete( customerCtrl.destroy);
+  .delete(customerCtrl.destroy);
 
 router
   .route('/isUniqueEmail')
@@ -287,7 +465,7 @@ router
    *           $ref: "#/definitions/Customer"
    */
 
-  .put( validate(customerSchema.updatePassword), customerCtrl.updatePassword);
+  .put(validate(customerSchema.updatePassword), customerCtrl.updatePassword);
 
 router
   .route('/forgot-password-notification')
@@ -352,7 +530,7 @@ router
    *         schema:
    *           $ref: "#/definitions/Customer"
    */
-  .post( validate(customerSchema.addBank), customerCtrl.addBank)
+  .post(validate(customerSchema.addBank), customerCtrl.addBank)
 
   /**
    * @swagger
@@ -382,7 +560,7 @@ router
    *           $ref: "#/definitions/Customer"
    */
 
-  .get( customerCtrl.findAllBankById);
+  .get(customerCtrl.findAllBankById);
 
 router
   .route('/:id/send-money')
@@ -483,38 +661,38 @@ router
 
   .get(customerCtrl.sentWalletRequest);
 
- router
-   .route('/:id/received-wallet-requests')
+router
+  .route('/:id/received-wallet-requests')
 
-   /**
-    * @swagger
-    * /customers/{id}/received-wallet-requests:
-    *   get:
-    *     tags:
-    *       - customers
-    *     summary: "Show all received wallet request"
-    *     security:
-    *        - Bearer: []
-    *     operationId: banks
-    *     consumes:
-    *       - application/json
-    *     produces:
-    *       - application/json
-    *     parameters:
-    *       - name: body
-    *         in: body
-    *         description: Show all received wallet request
-    *         required: true
-    *         schema:
-    *           $ref: "#/definitions/Customer"
-    *     responses:
-    *       200:
-    *         description: OK
-    *         schema:
-    *           $ref: "#/definitions/Customer"
-    */
+  /**
+   * @swagger
+   * /customers/{id}/received-wallet-requests:
+   *   get:
+   *     tags:
+   *       - customers
+   *     summary: "Show all received wallet request"
+   *     security:
+   *        - Bearer: []
+   *     operationId: banks
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: body
+   *         in: body
+   *         description: Show all received wallet request
+   *         required: true
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *           $ref: "#/definitions/Customer"
+   */
 
-   .get(customerCtrl.receivedWalletRequest);
+  .get(customerCtrl.receivedWalletRequest);
 
 router
   .route('/:id/respond-wallet-request')

@@ -7,8 +7,8 @@ import Constant from '@utils/constants';
 import bookshelf from '@config/bookshelf';
 import Promise from 'bluebird';
 import * as CustomerService from '@services/customer.service';
-import {notify} from '@config/mailer';
-import {successResponse, errorResponse} from '@utils/response';
+import { notify } from '@config/mailer';
+import { successResponse, errorResponse } from '@utils/response';
 import Bank from '@models/bank.model';
 import * as TransactionService from '@services/transaction.service';
 import moment from 'moment';
@@ -36,10 +36,10 @@ export function findAll(req, res, next) {
  * @param {Function} next
  */
 export function findById(req, res, next) {
-  CustomerService.getOne({id:req.params.id})
+  CustomerService.getOne({ id: req.params.id })
     .then((data) => {
-        successResponse(res, data);
-      })
+      successResponse(res, data);
+    })
     .catch((err) => next(err));
 }
 
@@ -51,34 +51,17 @@ export function findById(req, res, next) {
  * @param {Function} next
  */
 export function store(req, res, next) {
+  CustomerService
+    .store(req.body)
+    .then(data => {
+      const param = data.attributes;
+      param.template = 'welcome';
+      param.subject = 'Welcome to Mome';
+      param.confirmationUrl = CustomerService.generateVerificationURL(param.token);
 
-  CustomerService.getOne({email: req.body.email})
-    .then(user => {
-      if (user !== null) {
-        errorResponse(res, req.body.email + ' is already in use.');
+      notify(param);
 
-      } else {
-        CustomerService.getOne({phone: req.body.phone})
-          .then(user => {
-            if (user !== null) {
-              errorResponse(res, req.body.phone + ' is already in use.');
-
-            } else {
-              CustomerService
-                .store(req.body)
-                .then(data => {
-                  const param = data.attributes;
-                  param.template = 'welcome';
-                  param.subject = 'Welcome to Mome';
-                  param.confirmationUrl = CustomerService.generateVerificationURL(param.token);
-
-                  notify(param);
-
-                  successResponse(res, data, HttpStatus.CREATED);
-                });
-            }
-          });
-      }
+      successResponse(res, data, HttpStatus.CREATED);
     })
     .catch((err) => next(err));
 }
@@ -123,7 +106,7 @@ export function destroy(req, res, next) {
 
 export function isUniqueEmail(req, res, next) {
 
-  CustomerService.getOne({email: req.body.email})
+  CustomerService.getOne({ email: req.body.email })
     .then(user => {
       if (user !== null) {
         successResponse(res, true);
@@ -147,7 +130,7 @@ export function updatePassword(req, res, next) {
   // eslint-disable-next-line camelcase
   const { old_password, new_password } = req.body;
 
-  CustomerService.getOne({id:req.params.id})
+  CustomerService.getOne({ id: req.params.id })
     .then(user => {
 
       if (bcrypt.compareSync(old_password, user.get('password'))) {
@@ -182,7 +165,7 @@ export function forgotPasswordNotification(req, res, next) {
 
   const { email } = req.body;
 
-  CustomerService.getOne({email:email})
+  CustomerService.getOne({ email: email })
     .then(user => {
       if (user === null) {
         errorResponse(res, 'Customer not found.', HttpStatus.NOT_FOUND);
@@ -256,9 +239,9 @@ export function resetPassword(req, res, next) {
           data: {
             token: token,
             message: 'Password does not match.',
-            color: 'red'
+            color: 'red',
           },
-          layout: false
+          layout: false,
         });
       } else {
         const id = decoded.id;
@@ -274,9 +257,9 @@ export function resetPassword(req, res, next) {
 
             res.render('password-success', {
               data: {
-                first_name: user.get('first_name')
+                first_name: user.get('first_name'),
               },
-              layout: false
+              layout: false,
             });
           });
       }
@@ -356,7 +339,7 @@ export function sendMoney(req, res, next) {
       const param = {
         'email': email,
         'phone': phone,
-        'is_verified': 1
+        'is_verified': 1,
       };
 
       CustomerService.geCustomerByParams(param)
@@ -370,7 +353,7 @@ export function sendMoney(req, res, next) {
             return Promise.all([
               (CustomerService.updateSenderAmount(sender, amount), { transacting: t }),
               (CustomerService.updateReceiverAmount(receiver, amount), { transacting: t }),
-              (WalletService.sendMoney(sender, receiver, amount, description), { transacting: t })
+              (WalletService.sendMoney(sender, receiver, amount, description), { transacting: t }),
             ]);
           }).then(response => {
             successResponse(res, 'transfer successful');
@@ -399,7 +382,7 @@ export function requestMoney(req, res, next) {
       const param = {
         'email': email,
         'phone': phone,
-        'is_verified': 1
+        'is_verified': 1,
       };
 
       CustomerService.geCustomerByParams(param)
@@ -503,7 +486,7 @@ export function respondWalletRequest(req, res, next) {
                   return Promise.all([
                     (CustomerService.updateSenderAmount(sender, amount), { transacting: t }),
                     (CustomerService.updateReceiverAmount(receiver, amount), { transacting: t }),
-                    (WalletService.updateWalletTransferStatus(request_id, Constant.payment.status.success), { transacting: t })
+                    (WalletService.updateWalletTransferStatus(request_id, Constant.payment.status.success), { transacting: t }),
                   ]);
                 }).then(response => {
                   successResponse(res, 'transfer successful');
@@ -535,13 +518,13 @@ export function findAllTransactionByCustomer(req, res, next) {
 
       data.map(d => {
 
-        let date = moment(d.attributes.created_at).format("YYYY-MM-DD");
+        let date = moment(d.attributes.created_at).format('YYYY-MM-DD');
 
-/*        if(date === moment().format("YYYY-MM-DD")){
-          date = 'today';
-        }else if(date === moment().subtract(1,'days').format("YYYY-MM-DD")){
-          date = 'yesterday';
-        }*/
+        /*        if(date === moment().format("YYYY-MM-DD")){
+                  date = 'today';
+                }else if(date === moment().subtract(1,'days').format("YYYY-MM-DD")){
+                  date = 'yesterday';
+                }*/
 
         //todo code refactor needed
 
@@ -563,10 +546,10 @@ export function findAllTransactionByCustomer(req, res, next) {
         arr.push(d.attributes);
       });
 
-      const key = "filter_date";
+      const key = 'filter_date';
 
       const transactions = [...arr.reduce((acc, o) =>
-         acc.set(o[key], (acc.get(o[key]) || []).concat(o))
+          acc.set(o[key], (acc.get(o[key]) || []).concat(o))
         , new Map).values()];
 
       successResponse(res, transactions);

@@ -147,7 +147,15 @@ router
    *               data:
    *                 type: object
    *                 $ref: "#/definitions/User"
-   *       403:
+   *       400:
+   *           description: ValidationError
+   *           schema:
+   *              $ref: '#/definitions/Error'
+   *       401:
+   *           description: Unauthorized
+   *           schema:
+   *              $ref: '#/definitions/Error'
+   *       404:
    *          description: User not found
    *          schema:
    *             $ref: '#/definitions/Error'
@@ -182,6 +190,10 @@ router
    *                 type: array
    *                 items:
    *                   $ref: '#/definitions/User'
+   *       401:
+   *           description: Unauthorized
+   *           schema:
+   *              $ref: '#/definitions/Error'
    *       404:
    *          description: User not found
    *          schema:
@@ -224,6 +236,10 @@ router
    *               data:
    *                 type: object
    *                 $ref: "#/definitions/User"
+   *       401:
+   *           description: Unauthorized
+   *           schema:
+   *              $ref: '#/definitions/Error'
    *       404:
    *          description: User not found
    *          schema:
@@ -270,7 +286,15 @@ router
    *                 type: object
    *                 $ref: "#/definitions/User"
    *       400:
-   *          description: Invalid user
+   *           description: ValidationError
+   *           schema:
+   *              $ref: '#/definitions/Error'
+   *       401:
+   *           description: Unauthorized
+   *           schema:
+   *              $ref: '#/definitions/Error'
+   *       404:
+   *          description: User not found
    *          schema:
    *             $ref: '#/definitions/Error'
    */
@@ -297,8 +321,16 @@ router
    *     responses:
    *       200:
    *         description: OK
+   *       401:
+   *           description: Unauthorized
+   *           schema:
+   *              $ref: '#/definitions/Error'
    *       400:
    *          description: Invalid ID
+   *          schema:
+   *             $ref: '#/definitions/Error'
+   *       404:
+   *          description: User not found
    *          schema:
    *             $ref: '#/definitions/Error'
    */
