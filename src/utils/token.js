@@ -26,7 +26,7 @@ export const generateToken = (userId, expires, secret = process.env.TOKEN_SECRET
 export const verifyToken = async (token) => {
   const payload = jwt.verify(token, config.jwt.secret);
   if (!payload) {
-    throw new Error('Token not found');
+    throw new Error('Token not found.');
   }
   return payload.sub;
 };
