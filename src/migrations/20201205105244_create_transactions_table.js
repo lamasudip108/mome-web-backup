@@ -13,7 +13,7 @@ exports.up = function (knex) {
     table.double('amount', 10, 2).notNullable();
     table.double('commission', 10, 2).default(0);
     table.text('notes').nullable();
-    table.string('status').notNullable().comment('pending, success, failed, cancelled, server');
+    table.string('status').notNullable().comment('pending, completed, failed, cancelled');
     table.timestamp('created_at').defaultTo(knex.fn.now());
     table.timestamp('updated_at').nullable();
   });
