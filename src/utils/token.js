@@ -4,11 +4,10 @@ import moment from 'moment';
 /**
  * Generate token
  * @param {String} userId
- * @param {Moment} expires
  * @param {string} [secret]
  * @returns {string}
  */
-export const generateToken = (userId, expires, secret = process.env.TOKEN_SECRET_KEY) => {
+export const generateToken = (userId, secret = process.env.TOKEN_SECRET_KEY) => {
   const payload = {
     sub: userId,
     iat: moment().unix(),

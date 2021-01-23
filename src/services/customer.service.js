@@ -43,7 +43,7 @@ export function store(customer) {
   const { first_name, middle_name, last_name, email, phone } = customer;
   const password = bcrypt.hashSync(customer.password, 10);
 
-  const token = generateToken(email, );
+  const token = generateToken(email);
 
   return new Customer({
     first_name,
