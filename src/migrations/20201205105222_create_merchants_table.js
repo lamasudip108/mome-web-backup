@@ -1,5 +1,5 @@
 /**
- * Create users table.
+ * Create merchants table.
  *
  * @param   {object} knex
  * @returns {Promise}
@@ -27,7 +27,7 @@ exports.up = function(knex) {
 };
 
 /**
- * Drop users table.
+ * Drop merchants table.
  *
  * @param   {object} knex
  * @returns {Promise}
