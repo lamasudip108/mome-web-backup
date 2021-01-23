@@ -45,7 +45,7 @@ export default (req, res, next) => {
           select: ['email', 'id'],
         }).fetch().then(user => {
           if (!user) {
-            res.status(HttpStatus.NOT_FOUND).json({ success: false, message: 'User not found.' });
+            res.status(HttpStatus.NOT_FOUND).json({ success: false, message: 'Customer not found.' });
           } else {
             req.currentUser = user;
             next();
