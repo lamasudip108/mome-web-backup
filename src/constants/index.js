@@ -4,9 +4,18 @@ export const APP = {
 
 export const CUSTOMER = {
   STATUS: {
-    INVITED: 'invited',
+    PENDING: 'pending',
     ACTIVE: 'active',
     INACTIVE: 'inactive',
     DELETED: 'deleted',
+  },
+};
+
+export const PAYMENT = {
+  STATUS: {
+    PENDING: 'pending',
+    COMPLETED: 'completed',
+    FAILED: 'failed',
+    CANCELLED: 'cancelled',
   },
 };

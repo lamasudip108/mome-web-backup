@@ -1,8 +1,8 @@
-import Wallet from '../models/wallet.model';
-import uniqid from 'uniqid';
-import Constant from '../utils/constants';
-import Customer from '../models/customer.model';
 import Boom from '@hapi/boom';
+import uniqid from 'uniqid';
+
+import { PAYMENT } from '@constants';
+import Wallet from '@models/wallet.model';
 
 /**
  * Get all wallet by customer id
@@ -40,7 +40,7 @@ export function sendMoney(sender, receiver, amount,description){
     fees: 0.00,
     is_request: 0,
     description: description,
-    status: Constant.payment.status.success,
+    status: PAYMENT.STATUS.COMPLETED,
     customer_id: sender.get('id')
   }).save();
 
@@ -64,7 +64,7 @@ export function requestMoney(requester, sender, amount,description){
     fees: 0.00,
     is_request: 1,
     description: description,
-    status: Constant.payment.status.pending,
+    status: PAYMENT.STATUS.PENDING,
     customer_id: requester.get('id')
   }).save();
 
@@ -81,10 +81,10 @@ export function getRequestWalletByCustomerId(id, type) {
 
   // eslint-disable-next-line eqeqeq
   if (type === 'sent') {
-    param = { customer_id: id, is_request: 1, status: Constant.payment.status.pending };
+    param = { customer_id: id, is_request: 1, status: PAYMENT.STATUS.PENDING };
     // eslint-disable-next-line eqeqeq
   } else if (type === 'receive') {
-    param = { sender: id, is_request: 1, status: Constant.payment.status.pending };
+    param = { sender: id, is_request: 1, status: PAYMENT.STATUS.PENDING };
   }
 
   return Wallet.forge().where(param).fetchAll();

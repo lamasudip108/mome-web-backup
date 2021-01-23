@@ -8,7 +8,7 @@ export default {
     email: Joi.string().email().required(),
     password: Joi.string().min(6).max(15).required(),
     phone: Joi.string().min(10).max(10).required(),
-    status: Joi.string().default('invited'),
+    status: Joi.string().default('pending'),
   }),
 
   update: Joi.object({
@@ -18,8 +18,8 @@ export default {
     phone: Joi.string().min(10).max(10).required(),
     street : Joi.string().required(),
     city: Joi.string().required(),
-    state_province: Joi.string().required(),
-    po_box: Joi.string().required()
+    province: Joi.string().required(),
+    post_box: Joi.string().required()
   }),
 
   login: Joi.object({
@@ -42,7 +42,7 @@ export default {
 
   addBank: Joi.object({
     bank_id: Joi.string().required(),
-    branch: Joi.string().required(),
+    branch_name: Joi.string().required(),
     account_holder: Joi.string().required(),
     account_number: Joi.string().required(),
   }),

@@ -40,10 +40,6 @@ export function store(customer) {
   // eslint-disable-next-line camelcase
   const { first_name, middle_name, last_name, email, phone } = customer;
   const password = bcrypt.hashSync(customer.password, 10);
-  // eslint-disable-next-line camelcase
-  const token = jwt.sign({ email: email },
-    process.env.TOKEN_SECRET_KEY,
-  );
 
   return new Customer({
     first_name,
@@ -52,7 +48,6 @@ export function store(customer) {
     email,
     password,
     phone,
-    token,
   }).save().catch(function(err) {
     if (err.code === 'ER_DUP_ENTRY' || err.errno === 1062) { // MySQL
       throw Boom.badRequest('Customer already exists in our system.');
@@ -71,7 +66,7 @@ export function store(customer) {
  */
 export function update(id, customer) {
   // eslint-disable-next-line camelcase
-  const { first_name, last_name, email, phone, street, city, state_province, po_box } = customer;
+  const { first_name, last_name, email, phone, street, city, province, post_box } = customer;
 
   return new Customer({ id })
     .save({
@@ -81,8 +76,8 @@ export function update(id, customer) {
       phone: phone,
       street: street,
       city: city,
-      state_province: state_province,
-      po_box: po_box,
+      province: province,
+      post_box: post_box,
     })
     .catch(Customer.NoRowsUpdatedError, () => {
       throw Boom.notFound('Customer not found.');
@@ -186,7 +181,7 @@ export function setForgotPasswordToken(email) {
           },
           process.env.TOKEN_SECRET_KEY,
         );
-        return new Customer({ id }).save({ 'token': token});
+        return new Customer({ id }).save({ 'token': token });
       } else {
         return user = null;
       }
@@ -246,7 +241,7 @@ export function getCustomerByAccNumber(customer_id, account_number) {
  * @param param
  * @returns {*}
  */
-export function geCustomerByParams(param){
+export function geCustomerByParams(param) {
   return new Customer(param)
     .fetch({ require: true })
     .then((user) => user)
@@ -256,7 +251,7 @@ export function geCustomerByParams(param){
 }
 
 
-export function updateSenderAmount(sender, amount){
+export function updateSenderAmount(sender, amount) {
 
   let id = sender.get('id');
   let currentAmount = sender.get('wallet_amount');
@@ -271,7 +266,7 @@ export function updateSenderAmount(sender, amount){
 
 }
 
-export function updateReceiverAmount(receiver, amount){
+export function updateReceiverAmount(receiver, amount) {
 
   let id = receiver.get('id');
   let currentAmount = receiver.get('wallet_amount');

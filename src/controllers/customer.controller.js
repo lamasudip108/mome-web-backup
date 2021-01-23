@@ -1,17 +1,18 @@
 import HttpStatus from 'http-status-codes';
-import * as WalletService from '@services/wallet.service';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import path from 'path';
-import Constant from '@utils/constants';
-import bookshelf from '@config/bookshelf';
 import Promise from 'bluebird';
-import * as CustomerService from '@services/customer.service';
-import { notify } from '@config/mailer';
-import { successResponse, errorResponse } from '@utils/response';
-import Bank from '@models/bank.model';
-import * as TransactionService from '@services/transaction.service';
 import moment from 'moment';
+
+import Bank from '@models/bank.model';
+import { PAYMENT } from '@constants';
+import bookshelf from '@config/bookshelf';
+import { notify } from '@config/mailer';
+import * as CustomerService from '@services/customer.service';
+import * as WalletService from '@services/wallet.service';
+import * as TransactionService from '@services/transaction.service';
+import { successResponse, errorResponse } from '@utils/response';
 
 /**
  * Find all the customers
@@ -455,7 +456,7 @@ export function respondWalletRequest(req, res, next) {
   const { request_id, status } = req.body;
 
   if (status === 0) {
-    WalletService.updateWalletTransferStatus(request_id, Constant.payment.status.cancelled)
+    WalletService.updateWalletTransferStatus(request_id, PAYMENT.STATUS.CANCELLED)
       .then(response => {
         successResponse(res, response);
       })
@@ -486,7 +487,7 @@ export function respondWalletRequest(req, res, next) {
                   return Promise.all([
                     (CustomerService.updateSenderAmount(sender, amount), { transacting: t }),
                     (CustomerService.updateReceiverAmount(receiver, amount), { transacting: t }),
-                    (WalletService.updateWalletTransferStatus(request_id, Constant.payment.status.success), { transacting: t }),
+                    (WalletService.updateWalletTransferStatus(request_id, PAYMENT.STATUS.CANCELLED), { transacting: t }),
                   ]);
                 }).then(response => {
                   successResponse(res, 'transfer successful');
