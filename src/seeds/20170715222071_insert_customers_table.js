@@ -16,7 +16,6 @@ exports.seed = function(knex) {
           password: '$2b$10$Kl3EhYqci30qaGiKL1sQJ..XAoXwE9VAuFHKotA/sovK3krg7uHFO',
           phone: '9841765345',
           status: 'active',
-          language:'en',
           wallet_amount:'7640.90',
           total_purchase: '654.85',
           created_at: new Date(),
