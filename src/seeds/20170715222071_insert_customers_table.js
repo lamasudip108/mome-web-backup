@@ -39,7 +39,7 @@ exports.seed = function(knex) {
           email: 'sudip@gmail.com',
           password: '$2b$10$Kl3EhYqci30qaGiKL1sQJ..XAoXwE9VAuFHKotA/sovK3krg7uHFO',
           phone: '1234567893',
-          status:'invited',
+          status:'pending',
           created_at: new Date(),
           updated_at: new Date(),
         },

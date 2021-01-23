@@ -1,6 +1,5 @@
 import Bank from '@models/bank.model';
 
-
 /**
  * Get all banks
  *

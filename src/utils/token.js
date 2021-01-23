@@ -12,7 +12,7 @@ export const generateToken = (userId, expires, secret = process.env.TOKEN_SECRET
   const payload = {
     sub: userId,
     iat: moment().unix(),
-    exp: expires.unix(),
+    exp: moment().add(30, 'minutes').unix(),
   };
   return jwt.sign(payload, secret);
 };

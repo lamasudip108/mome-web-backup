@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 import { APP, CUSTOMER } from '@constants';
+import { generateToken } from '@utils/token';
 import Customer from '@models/customer.model';
 import Bank from '@models/bank.model';
 
@@ -19,6 +20,7 @@ export function getAll() {
  * Get a customer based on the selection criteria.
  *
  * @param   {Object}  criteria
+ * @throws  {Model.NotFoundError}
  * @returns {Promise}
  */
 export function getOne(criteria) {
@@ -41,6 +43,8 @@ export function store(customer) {
   const { first_name, middle_name, last_name, email, phone } = customer;
   const password = bcrypt.hashSync(customer.password, 10);
 
+  const token = generateToken(email, );
+
   return new Customer({
     first_name,
     middle_name,
@@ -48,6 +52,7 @@ export function store(customer) {
     email,
     password,
     phone,
+    token
   }).save().catch(function(err) {
     if (err.code === 'ER_DUP_ENTRY' || err.errno === 1062) { // MySQL
       throw Boom.badRequest('Customer already exists in our system.');
@@ -99,6 +104,16 @@ export function destroy(id) {
     });
 }
 
+/**
+ * Get a customer based on the selection criteria.
+ *
+ * @param   {Object}  criteria
+ * @returns {Promise<Model|null>}
+ */
+export function getOneByCriteria(criteria) {
+  return new Customer(criteria)
+    .fetch({ require: false })
+}
 
 /**
  * Generate verification email URL
