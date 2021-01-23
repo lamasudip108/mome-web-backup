@@ -1,4 +1,5 @@
 import bookshelf from '../config/bookshelf';
+import Merchant from "./merchant.model";
 
 const TABLE_NAME = 'transactions';
 
@@ -27,7 +28,16 @@ class Transaction extends bookshelf.Model {
    * @returns {string[]}
    */
   get hidden(){
-    return ['customer_id', 'created_at', 'updated_at'];
+    return ['merchant_id', 'customer_id', 'created_at', 'updated_at'];
+  }
+
+  /**
+   * Create relation with Bank
+   *
+   * @returns {Bookshelf.Model}
+   */
+  merchant () {
+    return this.belongsTo(Merchant, 'merchant_id');
   }
 
 }

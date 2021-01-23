@@ -494,7 +494,7 @@ export function respondWalletRequest(req, res, next) {
               .then(receiver => {
 
                 if (sender.get('id') === receiver.get('id')) {
-                  errorResponse(res, 'You can\'t send money to yourself ');
+                  errorResponse(res, 'You can\'t send money to yourself.');
                 }
 
                 let amount = wallet.get('amount');
@@ -543,8 +543,23 @@ export function findAllTransactionByCustomer(req, res, next) {
           date = 'yesterday';
         }*/
 
+        //todo code refactor needed
+
         d.attributes.filter_date = date;
+        d.attributes.merchant = d.relations.merchant.attributes;
+
+        delete d.relations.merchant.attributes.password;
+        delete d.relations.merchant.attributes.language;
+        delete d.relations.merchant.attributes.total_sales;
+        delete d.relations.merchant.attributes.is_verified;
+        delete d.relations.merchant.attributes.token;
+        delete d.relations.merchant.attributes.otp_code;
+        delete d.relations.merchant.attributes.created_at;
+        delete d.relations.merchant.attributes.updated_at;
+
+        delete d.attributes.merchant_id;
         delete d.attributes.updated_at;
+
         arr.push(d.attributes);
       });
 

@@ -34,10 +34,10 @@ List of NPM Commands:
   $ npm run clean      # remove dist and node_modules folder and install dependencies
  ```
 
-MailTrap Setup
+Gmail smtp Setup
 
   ```
-  Create an account on mailtrap
+  Create an account on gmail
   Copy the config params in the .env file
   ```
 
@@ -59,4 +59,4 @@ Navigate to http://localhost:3000/swagger/ for the API documentation.
 - Environment configuration - [dotenv](https://www.npmjs.com/package/dotenv)
 - Code linting tool - [ESLint](http://eslint.org/)
 - Code formatter - [Prettier](https://www.npmjs.com/package/prettier)
-- Fake SMPT - [Mailtrap](https://mailtrap.io/r)
+- Gmail SMPT - [Gmail](https://console.developers.google.com/)
