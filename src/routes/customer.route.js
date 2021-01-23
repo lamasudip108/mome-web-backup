@@ -242,7 +242,23 @@ router
    *       200:
    *         description: OK
    *         schema:
-   *            type: object
+   *             type: object
+   *             properties:
+   *               success:
+   *                 type: boolean
+   *                 default: true
+   *               data:
+   *                 type: array
+   *                 items:
+   *                   $ref: '#/definitions/Customer'
+   *       401:
+   *           description: Unauthorized
+   *           schema:
+   *              $ref: '#/definitions/Error'
+   *       404:
+   *          description: User not found
+   *          schema:
+   *             $ref: '#/definitions/Error'
    */
 
   .get(customerCtrl.findAll);
@@ -274,9 +290,20 @@ router
    *       200:
    *         description: OK
    *         schema:
-   *           $ref: "#/definitions/customers"
+   *             type: object
+   *             properties:
+   *               success:
+   *                 type: boolean
+   *                 default: true
+   *               data:
+   *                 type: object
+   *                 $ref: "#/definitions/Customer"
+   *       401:
+   *           description: Unauthorized
+   *           schema:
+   *              $ref: '#/definitions/Error'
    *       404:
-   *          description: customer not found
+   *          description: User not found
    *          schema:
    *             $ref: '#/definitions/Error'
    */
@@ -308,14 +335,31 @@ router
    *         description: Updated customers object
    *         required: true
    *         schema:
-   *           $ref: "#/definitions/Customer"
+   *           $ref: "#/definitions/UpdateCustomerPayload"
    *     responses:
    *       200:
    *         description: OK
    *         schema:
-   *           $ref: "#/definitions/Customer"
+   *             type: object
+   *             properties:
+   *               success:
+   *                 type: boolean
+   *                 default: true
+   *               data:
+   *                 type: object
+   *                 $ref: "#/definitions/User"
    *       400:
-   *         description: Invalid customer
+   *           description: ValidationError
+   *           schema:
+   *              $ref: '#/definitions/Error'
+   *       401:
+   *           description: Unauthorized
+   *           schema:
+   *              $ref: '#/definitions/Error'
+   *       404:
+   *          description: User not found
+   *          schema:
+   *             $ref: '#/definitions/Error'
    */
 
   .put(validate(customerSchema.update), customerCtrl.update)
@@ -341,8 +385,18 @@ router
    *     responses:
    *       200:
    *         description: OK
+   *       401:
+   *           description: Unauthorized
+   *           schema:
+   *              $ref: '#/definitions/Error'
    *       400:
-   *          description: "Invalid ID"
+   *          description: Invalid ID
+   *          schema:
+   *             $ref: '#/definitions/Error'
+   *       404:
+   *          description: User not found
+   *          schema:
+   *             $ref: '#/definitions/Error'
    */
 
   .delete(customerCtrl.destroy);
