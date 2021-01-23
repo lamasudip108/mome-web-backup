@@ -16,6 +16,7 @@ export function getAll() {
  * Get a user.
  *
  * @param   {Number|String}  id
+ * @throws  {Model.NotFoundError}
  * @returns {Promise}
  */
 export function getOne(id) {

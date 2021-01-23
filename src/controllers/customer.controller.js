@@ -52,17 +52,31 @@ export function findById(req, res, next) {
  * @param {Function} next
  */
 export function store(req, res, next) {
-  CustomerService
-    .store(req.body)
-    .then(data => {
-      const param = data.attributes;
-      param.template = 'welcome';
-      param.subject = 'Welcome to Mome';
-      param.confirmationUrl = CustomerService.generateVerificationURL(param.token);
+  CustomerService.getOneByCriteria({ email: req.body.email })
+    .then(customer => {
+      if (customer !== null) {
+        errorResponse(res, req.body.email + ' is already in use.');
+      } else {
+        CustomerService.getOneByCriteria({ phone: req.body.phone })
+          .then(customer => {
+            if (customer !== null) {
+              errorResponse(res, req.body.email + ' is already in use.');
+            } else {
+              CustomerService
+                .store(req.body)
+                .then(data => {
+                  const param = data.attributes;
+                  param.template = 'welcome';
+                  param.subject = 'Welcome to Mome';
+                  param.confirmationUrl = CustomerService.generateVerificationURL(param.token);
 
-      notify(param);
+                  notify(param);
 
-      successResponse(res, data, HttpStatus.CREATED);
+                  successResponse(res, data, HttpStatus.CREATED);
+                });
+            }
+          });
+      }
     })
     .catch((err) => next(err));
 }
@@ -107,9 +121,9 @@ export function destroy(req, res, next) {
 
 export function isUniqueEmail(req, res, next) {
 
-  CustomerService.getOne({ email: req.body.email })
-    .then(user => {
-      if (user !== null) {
+  CustomerService.getOneByCriteria({ email: req.body.email })
+    .then(customer => {
+      if (customer !== null) {
         successResponse(res, true);
       } else {
         successResponse(res, false);
@@ -131,10 +145,10 @@ export function updatePassword(req, res, next) {
   // eslint-disable-next-line camelcase
   const { old_password, new_password } = req.body;
 
-  CustomerService.getOne({ id: req.params.id })
-    .then(user => {
+  CustomerService.getOneByCriteria({ id: req.params.id })
+    .then(customer => {
 
-      if (bcrypt.compareSync(old_password, user.get('password'))) {
+      if (bcrypt.compareSync(old_password, customer.get('password'))) {
 
         // eslint-disable-next-line camelcase
         if (old_password === new_password) {
@@ -142,7 +156,7 @@ export function updatePassword(req, res, next) {
         }
 
         CustomerService.updatePassword(req.params.id, new_password)
-          .then(user => {
+          .then(customer => {
             successResponse(res, 'Password changed successfully.');
           });
 
@@ -166,21 +180,21 @@ export function forgotPasswordNotification(req, res, next) {
 
   const { email } = req.body;
 
-  CustomerService.getOne({ email: email })
-    .then(user => {
-      if (user === null) {
+  CustomerService.getOneByCriteria({ email: email })
+    .then(customer => {
+      if (customer === null) {
         errorResponse(res, 'Customer not found.', HttpStatus.NOT_FOUND);
       }
 
-      let isVerified = user.get('is_verified');
+      let isVerified = customer.get('is_verified');
 
       if (0 === isVerified) {
         errorResponse(res, 'Your account is not verified.', HttpStatus.FORBIDDEN);
       }
 
       CustomerService.setForgotPasswordToken(email)
-        .then(user => {
-          const param = user.attributes;
+        .then(customer => {
+          const param = customer.attributes;
           param.subject = 'Reset Your Password';
           param.template = 'forgot-password';
           param.forgotPasswordUrl = CustomerService.generateForgotPasswordURL(param.token);
