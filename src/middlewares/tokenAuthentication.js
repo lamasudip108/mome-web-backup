@@ -20,7 +20,7 @@ export default (req, res, next) => {
     '/api/web/auths/forgot-password',
     '/api/web/auths/reset-password',
   ]; //List of endpoints that doesn't require auth
-  
+
   if (publicEndpoints.some(path => path === req.path || req.path.includes(path))) {
     return next();
   }
@@ -35,14 +35,17 @@ export default (req, res, next) => {
   if (token) {
     jwt.verify(token, process.env.TOKEN_SECRET_KEY, (err, decoded) => {
       if (err) {
-        res.status(HttpStatus.UNAUTHORIZED).json({ error: 'You are not authorized to perform this operation!' });
+        res.status(HttpStatus.UNAUTHORIZED).json({
+          success: false,
+          message: 'You are not authorized to perform this operation!',
+        });
       } else {
         Customer.query({
           where: { id: decoded.id },
           select: ['email', 'id'],
         }).fetch().then(user => {
           if (!user) {
-            res.status(HttpStatus.NOT_FOUND).json({ error: 'Customer not found.' });
+            res.status(HttpStatus.NOT_FOUND).json({ success: false, message: 'User not found.' });
           } else {
             req.currentUser = user;
             next();
@@ -53,7 +56,7 @@ export default (req, res, next) => {
     });
   } else {
     res.status(HttpStatus.FORBIDDEN).json({
-      error: 'No token provided',
+      success: false, message: 'No token provided',
     });
   }
 };

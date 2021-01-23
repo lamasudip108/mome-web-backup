@@ -15,6 +15,7 @@ export function notFound(req, res, next) {
     .json({
       error: {
         code: HttpStatus.NOT_FOUND,
+        success: false,
         message: HttpStatus.getStatusText(HttpStatus.NOT_FOUND),
       },
     });
@@ -31,6 +32,7 @@ export function methodNotAllowed(req, res) {
   res.status(HttpStatus.METHOD_NOT_ALLOWED).json({
     error: {
       code: HttpStatus.METHOD_NOT_ALLOWED,
+      success: false,
       message: HttpStatus.getStatusText(HttpStatus.METHOD_NOT_ALLOWED),
     },
   });
@@ -48,5 +50,5 @@ export function genericErrorHandler(err, req, res, next) {
   logger.error(err);
   const error = joiError(err);
 
-  res.status(error.code || HttpStatus.INTERNAL_SERVER_ERROR).json({ error });
+  res.status(error.code || HttpStatus.INTERNAL_SERVER_ERROR).json(error);
 }
