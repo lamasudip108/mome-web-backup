@@ -52,18 +52,18 @@ export function findById(req, res, next) {
  */
 export function store(req, res, next) {
 
-  CustomerService.getOne({email: req.body.email})
-    .then(user => {
-      if (user !== null) {
-        errorResponse(res, req.body.email + ' is already in use.');
-
-      } else {
-        CustomerService.getOne({phone: req.body.phone})
-          .then(user => {
-            if (user !== null) {
-              errorResponse(res, req.body.phone + ' is already in use.');
-
-            } else {
+  // CustomerService.getOne({email: req.body.email})
+  //   .then(user => {
+  //     if (user !== null) {
+  //       errorResponse(res, req.body.email + ' is already in use.');
+  //
+  //     } else {
+  //       CustomerService.getOne({phone: req.body.phone})
+  //         .then(user => {
+  //           if (user !== null) {
+  //             errorResponse(res, req.body.phone + ' is already in use.');
+  //
+  //           } else {
               CustomerService
                 .store(req.body)
                 .then(data => {
@@ -76,10 +76,10 @@ export function store(req, res, next) {
 
                   successResponse(res, data, HttpStatus.CREATED);
                 });
-            }
-          });
-      }
-    })
+      //       }
+      //     });
+      // }
+    // })
     .catch((err) => next(err));
 }
 
