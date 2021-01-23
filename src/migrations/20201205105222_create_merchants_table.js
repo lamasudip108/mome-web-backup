@@ -14,14 +14,13 @@ exports.up = function(knex) {
     table.string('password').notNullable();
     table.string('phone').notNullable().unique('merchant_phone');
     table.string('logo').nullable();
-    table.bool('is_verified').default(0).comment('0: pending, 1: verified');
-    table.string('status').default('invited').comment('active, inactive, deleted');
+    table.string('status').default('pending').comment('pending, active, inactive, deleted');
     table.string('street').nullable();
     table.string('city').nullable();
-    table.string('state_province').nullable();
-    table.string('po_box').nullable();
+    table.string('province').nullable();
+    table.string('post_box').nullable();
     table.string('token').nullable();
-    table.string('otp_code').nullable();
+    table.string('otp').nullable();
     table.timestamp('created_at').defaultTo(knex.fn.now());
     table.timestamp('updated_at').nullable();
   });

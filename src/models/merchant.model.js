@@ -1,5 +1,4 @@
 import bookshelf from '../config/bookshelf';
-import CustomerBank from "./customer_bank.model";
 import Transaction from "./transaction.model";
 
 const TABLE_NAME = 'merchants';
@@ -28,7 +27,7 @@ class Merchant extends bookshelf.Model {
    * @returns {string[]}
    */
   get hidden(){
-    return ['password', 'token', 'created_at', 'updated_at', 'template', 'otp_code'];
+    return ['password', 'token', 'created_at', 'updated_at', 'otp'];
   }
 
   /**
