@@ -154,6 +154,11 @@ const router = express.Router();
  *         description: email of the user
  *         required: true
  *         example: test@gmail.com
+ *       phone:
+ *         type: string
+ *         description: phone of the customer
+ *         required: true
+ *         example: "1234567891"
  *       password:
  *         type: string
  *         description: password of the user
