@@ -5,6 +5,7 @@ export default function joiError(err) {
   if (err.isJoi) {
     return {
       code: HttpStatus.BAD_REQUEST,
+      success: false,
       message: HttpStatus.getStatusText(HttpStatus.BAD_REQUEST),
       details:
         err.details &&
@@ -21,6 +22,7 @@ export default function joiError(err) {
   if (err.isBoom) {
     return {
       code: err.output.statusCode,
+      success: false,
       message: err.output.payload.message || err.output.payload.error,
     };
   }
@@ -28,6 +30,7 @@ export default function joiError(err) {
   // INTERNAL_SERVER_ERROR for all other cases
   return {
     code: HttpStatus.INTERNAL_SERVER_ERROR,
+    success: false,
     message: HttpStatus.getStatusText(HttpStatus.INTERNAL_SERVER_ERROR),
   };
 }
