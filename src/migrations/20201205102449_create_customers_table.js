@@ -17,14 +17,13 @@ exports.up = function (knex) {
     table.double('wallet_amount', 10, 2).default(0);
     table.double('total_purchase', 10, 2).default(0);
     table.double('total_purchase_qty', 10, 2).default(0);
-    table.bool('is_verified').default(0).comment('0: not verified, 1: verified');
-    table.string('status').default('invited').comment('invited, inactive, active, deleted');
     table.string('token').nullable();
-    table.string('otp_code').nullable();
+    table.string('otp').nullable();
     table.string('street').nullable();
     table.string('city').nullable();
-    table.string('state_province').nullable();
-    table.string('po_box').nullable();
+    table.string('province').nullable();
+    table.string('post_box').nullable();
+    table.string('status').default('pending').comment('pending, inactive, active, deleted');
     table.timestamp('created_at').defaultTo(knex.fn.now());
     table.timestamp('updated_at').nullable();
   });

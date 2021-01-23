@@ -16,30 +16,6 @@ const router = express.Router();
 /**
  * @swagger
  * definitions:
- *   Login:
- *     type: object
- *     properties:
- *       email:
- *         type: string
- *         example: test@gmail.com
- *       password:
- *         type: string
- *         example: "123456"
- *   Token:
- *    type: object
- *    properties:
- *      success:
- *        type: boolean
- *        default: true
- *      data:
- *          type: object
- *          properties:
- *             email:
- *               type: string
- *               example: test@gmail.com
- *             token:
- *               type: string
- *               example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJhZG1pbkBhZG1pbi5jb20iLCJpYXQiOjE1MDk5ODg2NDZ9.1zTKAzXmuyQDHw4uJXa324fFS1yZwlriFSppvK6nOQY
  *   Error:
  *      type: object
  *      properties:
@@ -69,12 +45,32 @@ const router = express.Router();
  *         in: body
  *         required: true
  *         schema:
- *           $ref: '#/definitions/Login'
+ *            type: object
+ *            properties:
+ *              email:
+ *                type: string
+ *                example: test@gmail.com
+ *              password:
+ *                type: string
+ *                example: "123456"
  *     responses:
  *       200:
  *         description: OK
  *         schema:
- *            $ref: '#/definitions/Token'
+ *            type: object
+ *            properties:
+ *              success:
+ *                type: boolean
+ *                default: true
+ *              data:
+ *                type: object
+ *                properties:
+ *                  email:
+ *                    type: string
+ *                    example: test@gmail.com
+ *                  token:
+ *                    type: string
+ *                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJhZG1pbkBhZG1pbi5jb20iLCJpYXQiOjE1MDk5ODg2NDZ9.1zTKAzXmuyQDHw4uJXa324fFS1yZwlriFSppvK6nOQY
  *       400:
  *         description: Invalid username/password
  *         schema:
