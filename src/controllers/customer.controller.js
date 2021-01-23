@@ -487,7 +487,7 @@ export function respondWalletRequest(req, res, next) {
                   return Promise.all([
                     (CustomerService.updateSenderAmount(sender, amount), { transacting: t }),
                     (CustomerService.updateReceiverAmount(receiver, amount), { transacting: t }),
-                    (WalletService.updateWalletTransferStatus(request_id, PAYMENT.STATUS.CANCELLED), { transacting: t }),
+                    (WalletService.updateWalletTransferStatus(request_id, PAYMENT.STATUS.COMPLETED), { transacting: t }),
                   ]);
                 }).then(response => {
                   successResponse(res, 'transfer successful');
