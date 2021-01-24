@@ -11,6 +11,7 @@ import bookshelf from '@config/bookshelf';
 import { notify } from '@config/mailer';
 import * as CustomerService from '@services/customer.service';
 import * as WalletService from '@services/wallet.service';
+import * as RequestService from '@services/request.service';
 import * as TransactionService from '@services/transaction.service';
 import { successResponse, errorResponse } from '@utils/response';
 
@@ -186,9 +187,7 @@ export function forgotPasswordNotification(req, res, next) {
         errorResponse(res, 'Customer not found.', HttpStatus.NOT_FOUND);
       }
 
-      let isVerified = customer.get('is_verified');
-
-      if (0 === isVerified) {
+      if ('pending' === customer.get('status')) {
         errorResponse(res, 'Your account is not verified.', HttpStatus.FORBIDDEN);
       }
 
@@ -338,9 +337,9 @@ export function sendMoney(req, res, next) {
 
   const cusId = req.params.id;
 
-  const { email, phone, amount, description } = req.body;
+  const { email, phone, amount, note } = req.body;
 
-  CustomerService.getCustomer(cusId)
+  CustomerService.getOne({ id: cusId })
     .then(sender => {
 
       if (parseFloat(amount) > sender.get('wallet_amount')) {
@@ -350,21 +349,21 @@ export function sendMoney(req, res, next) {
       const param = {
         'email': email,
         'phone': phone,
-        'is_verified': 1,
+        'status': 'active',
       };
 
-      CustomerService.geCustomerByParams(param)
+      CustomerService.getOne(param)
         .then(receiver => {
 
           if (sender.get('id') === receiver.get('id')) {
-            errorResponse(res, 'You can\'t send money to yourself ');
+            errorResponse(res, 'You can\'t send money to yourself.');
           }
 
           bookshelf.transaction(t => {
             return Promise.all([
               (CustomerService.updateSenderAmount(sender, amount), { transacting: t }),
               (CustomerService.updateReceiverAmount(receiver, amount), { transacting: t }),
-              (WalletService.sendMoney(sender, receiver, amount, description), { transacting: t }),
+              (RequestService.sendMoney(sender, receiver, amount, note), { transacting: t }),
             ]);
           }).then(response => {
             successResponse(res, 'transfer successful');
@@ -386,20 +385,21 @@ export function sendMoney(req, res, next) {
 export function requestMoney(req, res, next) {
   const cusId = req.params.id;
 
-  const { email, phone, amount, description } = req.body;
+  const { email, phone, amount, note } = req.body;
 
-  CustomerService.getCustomer(cusId)
+  CustomerService.getOne({ id: cusId })
     .then(requester => {
+
       const param = {
         'email': email,
         'phone': phone,
-        'is_verified': 1,
+        'status': 'active',
       };
 
-      CustomerService.geCustomerByParams(param)
+      CustomerService.getOne(param)
         .then(sender => {
 
-          WalletService.requestMoney(requester, sender, amount, description)
+          RequestService.requestMoney(requester, sender, amount, note)
             .then(response => {
               successResponse(res, 'Request sent successfully.');
             })
@@ -421,9 +421,9 @@ export function requestMoney(req, res, next) {
 
 export function sentWalletRequest(req, res, next) {
 
-  let cusId = req.params.id;
+  let criteria = {'sender_customer_id': req.params.id,'type':'request'};
 
-  WalletService.getRequestWalletByCustomerId(cusId, 'sent')
+  RequestService.getRequestByCustomerId(criteria)
     .then(data => {
       successResponse(res, data);
     })
@@ -442,9 +442,9 @@ export function sentWalletRequest(req, res, next) {
 
 export function receivedWalletRequest(req, res, next) {
 
-  let cusId = req.params.id;
+  let criteria = {'receiver_customer_id': req.params.id,'type':'request'};
 
-  WalletService.getRequestWalletByCustomerId(cusId, 'receive')
+  RequestService.getRequestByCustomerId(criteria)
     .then(data => {
       successResponse(res, data);
     })

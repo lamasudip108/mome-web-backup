@@ -751,6 +751,34 @@ router
 
   /**
    * @swagger
+   * definitions:
+   *   SendMoneyPayload:
+   *     type: object
+   *     properties:
+   *       email:
+   *         type: string
+   *         description: email of receiver
+   *         required: true
+   *         example: sundarban007@gmail.com
+   *       phone:
+   *         type: string
+   *         description: phone no of receiver
+   *         required: true
+   *         example: 0410265725
+   *       amount:
+   *         type: string
+   *         description: amount to send
+   *         required: true
+   *         example: 500
+   *       note:
+   *         type: string
+   *         description: example note
+   *         required: true
+   *         example: example note
+   */
+
+  /**
+   * @swagger
    * /customers/{id}/send-money:
    *   post:
    *     tags:
@@ -769,12 +797,16 @@ router
    *         description: Send money from ewallet to ewallet
    *         required: true
    *         schema:
-   *           $ref: "#/definitions/Customer"
+   *           $ref: "#/definitions/SendMoneyPayload"
    *     responses:
    *       200:
    *         description: OK
    *         schema:
-   *           $ref: "#/definitions/Customer"
+   *           $ref: "#/definitions/SuccessTrueMessage"
+   *       403:
+   *         description: Forbidden
+   *         schema:
+   *           $ref: "#/definitions/SuccessFalseMessage"
    */
 
   .post(validate(customerSchema.sendMoney), customerCtrl.sendMoney);
@@ -788,7 +820,7 @@ router
    *   post:
    *     tags:
    *       - customers
-   *     summary: "Request money from another ewallet user"
+   *     summary: "Request money from another ewallet customer"
    *     security:
    *        - Bearer: []
    *     operationId: banks
@@ -799,15 +831,19 @@ router
    *     parameters:
    *       - name: body
    *         in: body
-   *         description: Request money from another ewallet user
+   *         description: Request money from ewallet to ewallet
    *         required: true
    *         schema:
-   *           $ref: "#/definitions/Customer"
+   *           $ref: "#/definitions/SendMoneyPayload"
    *     responses:
    *       200:
    *         description: OK
    *         schema:
-   *           $ref: "#/definitions/Customer"
+   *           $ref: "#/definitions/SuccessTrueMessage"
+   *       403:
+   *         description: Forbidden
+   *         schema:
+   *           $ref: "#/definitions/SuccessFalseMessage"
    */
 
   .post(validate(customerSchema.sendMoney), customerCtrl.requestMoney);
