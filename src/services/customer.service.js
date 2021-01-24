@@ -1,11 +1,11 @@
-import Boom from '@hapi/boom';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import Boom from "@hapi/boom";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
-import { APP, CUSTOMER } from '@constants';
-import { generateToken } from '@utils/token';
-import Customer from '@models/customer.model';
-import Bank from '@models/bank.model';
+import { APP, CUSTOMER } from "@constants";
+import { generateToken } from "@utils/token";
+import Customer from "@models/customer.model";
+import CustomerBank from "@models/customer_bank.model";
 
 /**
  * Get all customers.
@@ -28,7 +28,7 @@ export function getOne(criteria) {
     .fetch({ require: true })
     .then((user) => user)
     .catch(Customer.NotFoundError, () => {
-      throw Boom.notFound('Customer not found.');
+      throw Boom.notFound("Customer not found.");
     });
 }
 
@@ -54,10 +54,10 @@ export function store(customer) {
     phone,
     token
   }).save().catch(function(err) {
-    if (err.code === 'ER_DUP_ENTRY' || err.errno === 1062) { // MySQL
-      throw Boom.badRequest('Customer already exists in our system.');
-    } else if (err.code === '23505') { // PostgreSQL
-      throw Boom.badRequest('Customer already exists in our system.');
+    if (err.code === "ER_DUP_ENTRY" || err.errno === 1062) { // MySQL
+      throw Boom.badRequest("Customer already exists in our system.");
+    } else if (err.code === "23505") { // PostgreSQL
+      throw Boom.badRequest("Customer already exists in our system.");
     }
   });
 }
@@ -82,10 +82,10 @@ export function update(id, customer) {
       street: street,
       city: city,
       province: province,
-      post_box: post_box,
+      post_box: post_box
     })
     .catch(Customer.NoRowsUpdatedError, () => {
-      throw Boom.notFound('Customer not found.');
+      throw Boom.notFound("Customer not found.");
     });
 }
 
@@ -100,7 +100,7 @@ export function destroy(id) {
     .fetch()
     .then((user) => user.destroy())
     .catch(Customer.NotFoundError, () => {
-      throw Boom.notFound('Customer not found.');
+      throw Boom.notFound("Customer not found.");
     });
 }
 
@@ -112,7 +112,7 @@ export function destroy(id) {
  */
 export function getOneByCriteria(criteria) {
   return new Customer(criteria)
-    .fetch({ require: false })
+    .fetch({ require: false });
 }
 
 /**
@@ -139,16 +139,15 @@ export function verifyAccount(token) {
         const id = user.attributes.id;
         return new Customer({ id })
           .save({
-            'is_verified': 1,
-            'status': CUSTOMER.STATUS.ACTIVE,
-            'token': null,
+            "status": CUSTOMER.STATUS.ACTIVE,
+            "token": null
           });
       } else {
         user = null;
       }
     })
     .catch(Customer.NotFoundError, () => {
-      throw Boom.notFound('Customer not found.');
+      throw Boom.notFound("Customer not found.");
     });
 
 }
@@ -167,10 +166,10 @@ export function updatePassword(id, password) {
   return new Customer({ id })
     .save({
       password: newPassword,
-      token: null,
+      token: null
     })
     .catch(Customer.NoRowsUpdatedError, () => {
-      throw Boom.notFound('Customer not found.');
+      throw Boom.notFound("Customer not found.");
     });
 
 }
@@ -189,20 +188,20 @@ export function setForgotPasswordToken(email) {
     .then((user) => {
       if (user !== null) {
 
-        const id = user.get('id');
+        const id = user.get("id");
         const token = jwt.sign({
-            id: user.get('id'),
-            email: user.get('email'),
+            id: user.get("id"),
+            email: user.get("email")
           },
-          process.env.TOKEN_SECRET_KEY,
+          process.env.TOKEN_SECRET_KEY
         );
-        return new Customer({ id }).save({ 'token': token });
+        return new Customer({ id }).save({ "token": token });
       } else {
         return user = null;
       }
     })
     .catch(Customer.NotFoundError, () => {
-      throw Boom.notFound('Customer not found.');
+      throw Boom.notFound("Customer not found.");
     });
 }
 
@@ -218,14 +217,14 @@ export function generateForgotPasswordURL(token) {
 
 export function addBank(customer_id, bank) {
   // eslint-disable-next-line camelcase
-  const { branch, account_holder, account_number, bank_id } = bank;
+  const { branch_name, account_holder, account_number, bank_id } = bank;
 
-  return new Bank({
-    branch,
+  return new CustomerBank({
+    branch_name,
     account_holder,
     account_number,
     customer_id,
-    bank_id,
+    bank_id
   }).save();
 }
 
@@ -237,17 +236,17 @@ export function addBank(customer_id, bank) {
  */
 
 export function findAllBankById(id) {
-  return Bank.forge().where({ customer_id: id }).fetchAll({ withRelated: ['bank'] });
+  return CustomerBank.forge().where({ customer_id: id }).fetchAll({ withRelated: ["bank"] });
 }
 
 
 // eslint-disable-next-line camelcase
 export function getCustomerByAccNumber(customer_id, account_number) {
-  return new Bank({ 'customer_id': customer_id, 'account_number': account_number })
+  return new CustomerBank({ "customer_id": customer_id, "account_number": account_number })
     .fetch({ require: false })
     .then((data) => data)
     .catch(Customer.NotFoundError, () => {
-      throw Boom.notFound('Customer not found.');
+      throw Boom.notFound("Customer not found.");
     });
 }
 
@@ -261,36 +260,36 @@ export function geCustomerByParams(param) {
     .fetch({ require: true })
     .then((user) => user)
     .catch(Customer.NotFoundError, () => {
-      throw Boom.notFound('Customer not found.');
+      throw Boom.notFound("Customer not found.");
     });
 }
 
 
 export function updateSenderAmount(sender, amount) {
 
-  let id = sender.get('id');
-  let currentAmount = sender.get('wallet_amount');
+  let id = sender.get("id");
+  let currentAmount = sender.get("wallet_amount");
 
   return new Customer({ id })
     .save({
-      wallet_amount: parseFloat(currentAmount) - parseFloat(amount),
+      wallet_amount: parseFloat(currentAmount) - parseFloat(amount)
     })
     .catch(Customer.NoRowsUpdatedError, () => {
-      throw Boom.notFound('Customer not found.');
+      throw Boom.notFound("Customer not found.");
     });
 
 }
 
 export function updateReceiverAmount(receiver, amount) {
 
-  let id = receiver.get('id');
-  let currentAmount = receiver.get('wallet_amount');
+  let id = receiver.get("id");
+  let currentAmount = receiver.get("wallet_amount");
 
   return new Customer({ id })
     .save({
-      wallet_amount: parseFloat(currentAmount) + parseFloat(amount),
+      wallet_amount: parseFloat(currentAmount) + parseFloat(amount)
     })
     .catch(Customer.NoRowsUpdatedError, () => {
-      throw Boom.notFound('Customer not found.');
+      throw Boom.notFound("Customer not found.");
     });
 }

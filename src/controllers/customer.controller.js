@@ -1,18 +1,19 @@
-import HttpStatus from 'http-status-codes';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import path from 'path';
-import Promise from 'bluebird';
-import moment from 'moment';
+import HttpStatus from "http-status-codes";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import path from "path";
+import Promise from "bluebird";
+import moment from "moment";
 
-import Bank from '@models/bank.model';
-import { PAYMENT } from '@constants';
-import bookshelf from '@config/bookshelf';
-import { notify } from '@config/mailer';
-import * as CustomerService from '@services/customer.service';
-import * as WalletService from '@services/wallet.service';
-import * as TransactionService from '@services/transaction.service';
-import { successResponse, errorResponse } from '@utils/response';
+import Bank from "@models/bank.model";
+import { PAYMENT } from "@constants";
+import bookshelf from "@config/bookshelf";
+import { notify } from "@config/mailer";
+import * as CustomerService from "@services/customer.service";
+import * as WalletService from "@services/wallet.service";
+import * as RequestService from "@services/request.service";
+import * as TransactionService from "@services/transaction.service";
+import { successResponse, errorResponse } from "@utils/response";
 
 /**
  * Find all the customers
@@ -55,19 +56,19 @@ export function store(req, res, next) {
   CustomerService.getOneByCriteria({ email: req.body.email })
     .then(customer => {
       if (customer !== null) {
-        errorResponse(res, req.body.email + ' is already in use.');
+        errorResponse(res, req.body.email + " is already in use.");
       } else {
         CustomerService.getOneByCriteria({ phone: req.body.phone })
           .then(customer => {
             if (customer !== null) {
-              errorResponse(res, req.body.email + ' is already in use.');
+              errorResponse(res, req.body.email + " is already in use.");
             } else {
               CustomerService
                 .store(req.body)
                 .then(data => {
                   const param = data.attributes;
-                  param.template = 'welcome';
-                  param.subject = 'Welcome to Mome';
+                  param.template = "welcome";
+                  param.subject = "Welcome to Mome";
                   param.confirmationUrl = CustomerService.generateVerificationURL(param.token);
 
                   notify(param);
@@ -145,23 +146,23 @@ export function updatePassword(req, res, next) {
   // eslint-disable-next-line camelcase
   const { old_password, new_password } = req.body;
 
-  CustomerService.getOneByCriteria({ id: req.params.id })
+  CustomerService.getOne({ id: req.params.id })
     .then(customer => {
 
-      if (bcrypt.compareSync(old_password, customer.get('password'))) {
+      if (bcrypt.compareSync(old_password, customer.get("password"))) {
 
         // eslint-disable-next-line camelcase
         if (old_password === new_password) {
-          errorResponse(res, 'Old password and New password is same.', HttpStatus.FORBIDDEN);
+          errorResponse(res, "Old password and New password is same.", HttpStatus.FORBIDDEN);
         }
 
         CustomerService.updatePassword(req.params.id, new_password)
           .then(customer => {
-            successResponse(res, 'Password changed successfully.');
+            successResponse(res, "Password changed successfully.");
           });
 
       } else {
-        errorResponse(res, 'Your old password does not match.', HttpStatus.FORBIDDEN);
+        errorResponse(res, "Your old password does not match.", HttpStatus.FORBIDDEN);
       }
 
     })
@@ -183,25 +184,23 @@ export function forgotPasswordNotification(req, res, next) {
   CustomerService.getOneByCriteria({ email: email })
     .then(customer => {
       if (customer === null) {
-        errorResponse(res, 'Customer not found.', HttpStatus.NOT_FOUND);
+        errorResponse(res, "Customer not found.", HttpStatus.NOT_FOUND);
       }
 
-      let isVerified = customer.get('is_verified');
-
-      if (0 === isVerified) {
-        errorResponse(res, 'Your account is not verified.', HttpStatus.FORBIDDEN);
+      if ("pending" === customer.get("status")) {
+        errorResponse(res, "Your account is not verified.", HttpStatus.FORBIDDEN);
       }
 
       CustomerService.setForgotPasswordToken(email)
         .then(customer => {
           const param = customer.attributes;
-          param.subject = 'Reset Your Password';
-          param.template = 'forgot-password';
+          param.subject = "Reset Your Password";
+          param.template = "forgot-password";
           param.forgotPasswordUrl = CustomerService.generateForgotPasswordURL(param.token);
 
           notify(param);
 
-          successResponse(res, 'Reset password link sent successfully in your email address.');
+          successResponse(res, "Reset password link sent successfully in your email address.");
         });
 
     })
@@ -222,9 +221,9 @@ export function forgotPassword(req, res, next) {
 
   jwt.verify(token, process.env.TOKEN_SECRET_KEY, ((err, decode) => {
     if (err) {
-      res.sendFile(path.join(__dirname, '../../public/customer/account_verified.html'));
+      res.sendFile(path.join(__dirname, "../../public/customer/account_verified.html"));
     } else {
-      res.render('new-password-form', { data: { token: token }, layout: false });
+      res.render("new-password-form", { data: { token: token }, layout: false });
     }
   }));
 }
@@ -244,19 +243,19 @@ export function resetPassword(req, res, next) {
 
   jwt.verify(token, process.env.TOKEN_SECRET_KEY, (err, decoded) => {
     if (err) {
-      errorResponse(res, 'Invalid Token', HttpStatus.FORBIDDEN);
+      errorResponse(res, "Invalid Token", HttpStatus.FORBIDDEN);
     } else {
 
       // eslint-disable-next-line camelcase
       if (password !== c_password) {
 
-        res.render('new-password-form', {
+        res.render("new-password-form", {
           data: {
             token: token,
-            message: 'Password does not match.',
-            color: 'red',
+            message: "Password does not match.",
+            color: "red"
           },
-          layout: false,
+          layout: false
         });
       } else {
         const id = decoded.id;
@@ -265,16 +264,16 @@ export function resetPassword(req, res, next) {
           .then(user => {
 
             const param = user.attributes;
-            param.subject = 'Password Changed Successfully';
-            param.template = 'password-change-success';
+            param.subject = "Password Changed Successfully";
+            param.template = "password-change-success";
 
             notify(param);
 
-            res.render('password-success', {
+            res.render("password-success", {
               data: {
-                first_name: user.get('first_name'),
+                first_name: user.get("first_name")
               },
-              layout: false,
+              layout: false
             });
           });
       }
@@ -297,16 +296,12 @@ export function addBank(req, res, next) {
     .then(account => {
 
       if (account !== null) {
-        errorResponse(res, req.body.account_number + ' is already in use.');
+        errorResponse(res, req.body.account_number + " is already in use.");
       } else {
 
         CustomerService.addBank(req.params.id, req.body)
           .then((data) => {
-            Bank.getNameById(data.attributes.bank_id)
-              .then(customer => {
-                data.attributes.bank = customer;
-                successResponse(res, data);
-              });
+            successResponse(res, "Bank added successfully.");
           });
       }
     })
@@ -342,38 +337,38 @@ export function sendMoney(req, res, next) {
 
   const cusId = req.params.id;
 
-  const { email, phone, amount, description } = req.body;
+  const { email, phone, amount, note } = req.body;
 
-  CustomerService.getCustomer(cusId)
+  CustomerService.getOne({ id: cusId })
     .then(sender => {
 
-      if (parseFloat(amount) > sender.get('wallet_amount')) {
-        errorResponse(res, 'You don\'t have sufficient amount in your wallet.');
+      if (parseFloat(amount) > sender.get("wallet_amount")) {
+        errorResponse(res, "You don't have sufficient amount in your wallet.");
       }
 
       const param = {
-        'email': email,
-        'phone': phone,
-        'is_verified': 1,
+        "email": email,
+        "phone": phone,
+        "status": "active"
       };
 
-      CustomerService.geCustomerByParams(param)
+      CustomerService.getOne(param)
         .then(receiver => {
 
-          if (sender.get('id') === receiver.get('id')) {
-            errorResponse(res, 'You can\'t send money to yourself ');
+          if (sender.get("id") === receiver.get("id")) {
+            errorResponse(res, "You can't send money to yourself.");
           }
 
           bookshelf.transaction(t => {
             return Promise.all([
               (CustomerService.updateSenderAmount(sender, amount), { transacting: t }),
               (CustomerService.updateReceiverAmount(receiver, amount), { transacting: t }),
-              (WalletService.sendMoney(sender, receiver, amount, description), { transacting: t }),
+              (RequestService.sendMoney(sender, receiver, amount, note), { transacting: t })
             ]);
           }).then(response => {
-            successResponse(res, 'transfer successful');
+            successResponse(res, "transfer successful");
           }).catch(err => {
-            errorResponse(res, 'unsuccessful transfer', HttpStatus.BAD_REQUEST);
+            errorResponse(res, "unsuccessful transfer", HttpStatus.BAD_REQUEST);
           });
         });
     })
@@ -390,22 +385,23 @@ export function sendMoney(req, res, next) {
 export function requestMoney(req, res, next) {
   const cusId = req.params.id;
 
-  const { email, phone, amount, description } = req.body;
+  const { email, phone, amount, note } = req.body;
 
-  CustomerService.getCustomer(cusId)
+  CustomerService.getOne({ id: cusId })
     .then(requester => {
+
       const param = {
-        'email': email,
-        'phone': phone,
-        'is_verified': 1,
+        "email": email,
+        "phone": phone,
+        "status": "active"
       };
 
-      CustomerService.geCustomerByParams(param)
+      CustomerService.getOne(param)
         .then(sender => {
 
-          WalletService.requestMoney(requester, sender, amount, description)
+          RequestService.requestMoney(requester, sender, amount, note)
             .then(response => {
-              successResponse(res, 'Request sent successfully.');
+              successResponse(res, "Request sent successfully.");
             })
             .catch(err => {
               errorResponse(res, err);
@@ -425,9 +421,9 @@ export function requestMoney(req, res, next) {
 
 export function sentWalletRequest(req, res, next) {
 
-  let cusId = req.params.id;
+  let criteria = { "sender_customer_id": req.params.id, "type": "request" };
 
-  WalletService.getRequestWalletByCustomerId(cusId, 'sent')
+  RequestService.getRequestByCustomerId(criteria)
     .then(data => {
       successResponse(res, data);
     })
@@ -446,9 +442,9 @@ export function sentWalletRequest(req, res, next) {
 
 export function receivedWalletRequest(req, res, next) {
 
-  let cusId = req.params.id;
+  let criteria = { "receiver_customer_id": req.params.id, "type": "request" };
 
-  WalletService.getRequestWalletByCustomerId(cusId, 'receive')
+  RequestService.getRequestByCustomerId(criteria)
     .then(data => {
       successResponse(res, data);
     })
@@ -467,10 +463,10 @@ export function receivedWalletRequest(req, res, next) {
 export function respondWalletRequest(req, res, next) {
 
   let cusId = req.params.id;
-  const { request_id, status } = req.body;
+  const { id, status } = req.body;
 
   if (status === 0) {
-    WalletService.updateWalletTransferStatus(request_id, PAYMENT.STATUS.CANCELLED)
+    RequestService.updateWalletTransferStatus(id, PAYMENT.STATUS.CANCELLED)
       .then(response => {
         successResponse(res, response);
       })
@@ -478,35 +474,35 @@ export function respondWalletRequest(req, res, next) {
         next(err);
       });
   } else {
-    CustomerService.getCustomer(cusId)
+    CustomerService.getOne({ id: cusId })
       .then(sender => {
 
-        WalletService.getWalletRequestById(request_id)
-          .then(wallet => {
+        RequestService.getWalletRequestById(id)
+          .then(request => {
 
-            if (wallet.get('amount') > sender.get('wallet_amount')) {
-              errorResponse(res, 'You don\'t have sufficient amount in your wallet.');
+            if (request.get("amount") > sender.get("wallet_amount")) {
+              errorResponse(res, "You don't have sufficient amount in your wallet.");
             }
 
-            CustomerService.getCustomer(wallet.get('receiver'))
+            CustomerService.getOne({ id: request.get("receiver_customer_id") })
               .then(receiver => {
 
-                if (sender.get('id') === receiver.get('id')) {
-                  errorResponse(res, 'You can\'t send money to yourself.');
+                if (sender.get("id") === receiver.get("id")) {
+                  errorResponse(res, "You can't send money to yourself.");
                 }
 
-                let amount = wallet.get('amount');
+                let amount = request.get("amount");
 
                 bookshelf.transaction(t => {
                   return Promise.all([
                     (CustomerService.updateSenderAmount(sender, amount), { transacting: t }),
                     (CustomerService.updateReceiverAmount(receiver, amount), { transacting: t }),
-                    (WalletService.updateWalletTransferStatus(request_id, PAYMENT.STATUS.COMPLETED), { transacting: t }),
+                    (RequestService.updateWalletTransferStatus(id, PAYMENT.STATUS.COMPLETED), { transacting: t })
                   ]);
                 }).then(response => {
-                  successResponse(res, 'transfer successful');
+                  successResponse(res, "transfer successful");
                 }).catch(err => {
-                  errorResponse(res, 'unsuccessful transfer', HttpStatus.BAD_REQUEST);
+                  errorResponse(res, "unsuccessful transfer", HttpStatus.BAD_REQUEST);
                 });
               });
           });
@@ -533,7 +529,7 @@ export function findAllTransactionByCustomer(req, res, next) {
 
       data.map(d => {
 
-        let date = moment(d.attributes.created_at).format('YYYY-MM-DD');
+        let date = moment(d.attributes.created_at).format("YYYY-MM-DD");
 
         /*        if(date === moment().format("YYYY-MM-DD")){
                   date = 'today';
@@ -561,7 +557,7 @@ export function findAllTransactionByCustomer(req, res, next) {
         arr.push(d.attributes);
       });
 
-      const key = 'filter_date';
+      const key = "filter_date";
 
       const transactions = [...arr.reduce((acc, o) =>
           acc.set(o[key], (acc.get(o[key]) || []).concat(o))

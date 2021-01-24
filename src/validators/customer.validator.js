@@ -51,11 +51,11 @@ export default {
     email: Joi.string().email().required(),
     phone: Joi.string().min(10).max(10).required(),
     amount: Joi.number().required(),
-    description : Joi.string().max(50),
+    note : Joi.string().max(50),
   }),
 
   respondRequest:Joi.object({
-    request_id: Joi.number().required(),
+    id: Joi.number().required(),
     status: Joi.number().required(),
   })
 
