@@ -678,7 +678,7 @@ router
   /**
    * @swagger
    * definitions:
-   *   FetchCustomerBankPayload:
+   *   CustomerBankPayload:
    *     type: object
    *     properties:
    *       id:
@@ -745,7 +745,7 @@ router
    *       200:
    *         description: OK
    *         schema:
-   *           $ref: "#/definitions/FetchCustomerBankPayload"
+   *           $ref: "#/definitions/CustomerBankPayload"
    */
 
   .get(customerCtrl.findAllBankById);
@@ -954,12 +954,12 @@ router
   .get(customerCtrl.receivedWalletRequest);
 
 router
-  .route('/:id/respond-wallet-request')
+  .route('/:id/pay-request-money')
 
   /**
    * @swagger
    * definitions:
-   *   RespondRequestPayload:
+   *   PayRequestPayload:
    *     type: object
    *     properties:
    *       id:
@@ -976,14 +976,14 @@ router
 
   /**
    * @swagger
-   * /customers/{id}/respond-wallet-request:
+   * /customers/{id}/pay-request-money:
    *   post:
    *     tags:
    *       - customers
-   *     summary: "respond to to wallet request"
+   *     summary: "Pay request money from receiver customer to sender customer"
    *     security:
    *        - Bearer: []
-   *     operationId: respondWalletRequests
+   *     operationId: payRequestMoney
    *     consumes:
    *       - application/json
    *     produces:
@@ -991,10 +991,45 @@ router
    *     parameters:
    *       - name: body
    *         in: body
-   *         description: Respond to wallet request
    *         required: true
    *         schema:
-   *           $ref: "#/definitions/RespondRequestPayload"
+   *           $ref: "#/definitions/PayRequestPayload"
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *           $ref: "#/definitions/SuccessTrueMessage"
+   *       403:
+   *         description: Forbidden
+   *         schema:
+   *           $ref: "#/definitions/SuccessFalseMessage"
+   */
+
+  .post(validate(customerSchema.respondRequest), customerCtrl.respondWalletRequest);
+
+router
+  .route('/:id/cancel-request-money')
+
+  /**
+   * @swagger
+   * /customers/{id}/cancel-request-money:
+   *   post:
+   *     tags:
+   *       - customers
+   *     summary: "Cancel request money from receiver customer"
+   *     security:
+   *        - Bearer: []
+   *     operationId: cancelRequestMoney
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: body
+   *         in: body
+   *         required: true
+   *         schema:
+   *           $ref: "#/definitions/PayRequestPayload"
    *     responses:
    *       200:
    *         description: OK
