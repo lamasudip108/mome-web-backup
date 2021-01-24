@@ -178,8 +178,6 @@ router
    *     tags:
    *       - customers
    *     summary: "Create a new customer and send notification to customer email"
-   *     security:
-   *        - Bearer: []
    *     operationId: storeCustomer
    *     consumes:
    *       - application/json
@@ -452,18 +450,6 @@ router
 router
   .route('/isUniqueEmail')
 
-  /**
-   * @swagger
-   * definitions:
-   *   CheckUniqueEmailPayload:
-   *     type: object
-   *     properties:
-   *       email:
-   *         type: string
-   *         description: email of the customer
-   *         required: true
-   *         example: sunarban007@gmail.com
-   */
 
   /**
    * @swagger
@@ -471,7 +457,7 @@ router
    *   post:
    *     tags:
    *       - customers
-   *     summary: "Check email existence for customer if  exist return true"
+   *     summary: "Check customer duplicate email on application"
    *     security:
    *        - Bearer: []
    *     operationId: isUniqueEmail
@@ -485,10 +471,28 @@ router
    *         description: Enter the email to check
    *         required: true
    *         schema:
-   *           $ref: "#/definitions/CheckUniqueEmailPayload"
+   *            type: object
+   *            properties:
+   *              email:
+   *                type: string
+   *                description: email of the customer
+   *                required: true
+   *                example: sunarban007@gmail.com
    *     responses:
    *       200:
    *         description: OK
+   *         schema:
+   *            type: object
+   *            properties:
+   *              success:
+   *                type: boolean
+   *                default: true
+   *              data:
+   *                type: object
+   *                properties:
+   *                  duplicate:
+   *                    type: boolean
+   *                    example: true
    */
 
   .post(validate(customerSchema.email), customerCtrl.isUniqueEmail);
@@ -524,7 +528,7 @@ router
    *   put:
    *     tags:
    *       - customers
-   *     summary: "Update new password for logged in user"
+   *     summary: "Update customer password"
    *     security:
    *        - Bearer: []
    *     operationId: updatePassword
@@ -535,7 +539,7 @@ router
    *     parameters:
    *       - name: body
    *         in: body
-   *         description: Update new password for logged in user
+   *         description: Update new password
    *         required: true
    *         schema:
    *           $ref: "#/definitions/UpdatePasswordPayload"
@@ -553,7 +557,7 @@ router
   .put(validate(customerSchema.updatePassword), customerCtrl.updatePassword);
 
 router
-  .route('/forgot-password-notification')
+  .route('/forgot-password')
 
   /**
    * @swagger
@@ -570,7 +574,7 @@ router
 
   /**
    * @swagger
-   * /customers/forgot-password-notification:
+   * /customers/forgot-password:
    *   post:
    *     tags:
    *       - customers
@@ -604,7 +608,7 @@ router
    *             $ref: '#/definitions/Error'
    */
 
-  .post(validate(customerSchema.email), customerCtrl.forgotPasswordNotification);
+  .post(validate(customerSchema.email), customerCtrl.forgotPassword);
 
 router
   .route('/:id/banks')
@@ -783,7 +787,7 @@ router
    *   post:
    *     tags:
    *       - customers
-   *     summary: "Send Money from ewallet to ewallet"
+   *     summary: "Send money from sender wallet to receiver wallet"
    *     security:
    *        - Bearer: []
    *     operationId: sendMoney
@@ -794,7 +798,6 @@ router
    *     parameters:
    *       - name: body
    *         in: body
-   *         description: Send money from ewallet to ewallet
    *         required: true
    *         schema:
    *           $ref: "#/definitions/SendMoneyPayload"
@@ -812,44 +815,7 @@ router
   .post(validate(customerSchema.sendMoney), customerCtrl.sendMoney);
 
 router
-  .route('/:id/request-money')
-
-  /**
-   * @swagger
-   * /customers/{id}/request-money:
-   *   post:
-   *     tags:
-   *       - customers
-   *     summary: "Request money from another ewallet customer"
-   *     security:
-   *        - Bearer: []
-   *     operationId: requestMoney
-   *     consumes:
-   *       - application/json
-   *     produces:
-   *       - application/json
-   *     parameters:
-   *       - name: body
-   *         in: body
-   *         description: Request money from ewallet to ewallet
-   *         required: true
-   *         schema:
-   *           $ref: "#/definitions/SendMoneyPayload"
-   *     responses:
-   *       200:
-   *         description: OK
-   *         schema:
-   *           $ref: "#/definitions/SuccessTrueMessage"
-   *       403:
-   *         description: Forbidden
-   *         schema:
-   *           $ref: "#/definitions/SuccessFalseMessage"
-   */
-
-  .post(validate(customerSchema.sendMoney), customerCtrl.requestMoney);
-
-router
-  .route('/:id/sent-wallet-requests')
+  .route('/:id/send-money')
 
   /**
    * @swagger
@@ -891,11 +857,11 @@ router
 
   /**
    * @swagger
-   * /customers/{id}/sent-wallet-requests:
+   * /customers/{id}/send-money:
    *   get:
    *     tags:
    *       - customers
-   *     summary: "Show all sent wallet request"
+   *     summary: "Fetch all wallet sent money records"
    *     security:
    *        - Bearer: []
    *     operationId: sentWalletRequests
@@ -919,15 +885,52 @@ router
   .get(customerCtrl.sentWalletRequest);
 
 router
-  .route('/:id/received-wallet-requests')
+  .route('/:id/request-money')
 
   /**
    * @swagger
-   * /customers/{id}/received-wallet-requests:
+   * /customers/{id}/request-money:
+   *   post:
+   *     tags:
+   *       - customers
+   *     summary: "Request money from receiver wallet to sender wallet"
+   *     security:
+   *        - Bearer: []
+   *     operationId: requestMoney
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: body
+   *         in: body
+   *         required: true
+   *         schema:
+   *           $ref: "#/definitions/SendMoneyPayload"
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *           $ref: "#/definitions/SuccessTrueMessage"
+   *       403:
+   *         description: Forbidden
+   *         schema:
+   *           $ref: "#/definitions/SuccessFalseMessage"
+   */
+
+  .post(validate(customerSchema.sendMoney), customerCtrl.requestMoney);
+
+
+router
+  .route('/:id/request-money')
+
+  /**
+   * @swagger
+   * /customers/{id}/request-money:
    *   get:
    *     tags:
    *       - customers
-   *     summary: "Show all received wallet request"
+   *     summary: "Fetch all wallet request money records"
    *     security:
    *        - Bearer: []
    *     operationId: receivedWalletRequests
