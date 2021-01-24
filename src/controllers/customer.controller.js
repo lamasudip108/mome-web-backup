@@ -144,9 +144,8 @@ export function updatePassword(req, res, next) {
 
   // eslint-disable-next-line camelcase
   const { old_password, new_password } = req.body;
-  
 
-  CustomerService.getOneByCriteria({ id: req.params.id })
+  CustomerService.getOne({ id: req.params.id })
     .then(customer => {
 
       if (bcrypt.compareSync(old_password, customer.get('password'))) {
@@ -303,11 +302,7 @@ export function addBank(req, res, next) {
 
         CustomerService.addBank(req.params.id, req.body)
           .then((data) => {
-            Bank.getNameById(data.attributes.bank_id)
-              .then(customer => {
-                data.attributes.bank = customer;
-                successResponse(res, data);
-              });
+            successResponse(res, 'Bank added successfully.');
           });
       }
     })

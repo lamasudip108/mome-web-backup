@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import { APP, CUSTOMER } from '@constants';
 import { generateToken } from '@utils/token';
 import Customer from '@models/customer.model';
-import Bank from '@models/bank.model';
+import CustomerBank from '@models/customer_bank.model';
 
 /**
  * Get all customers.
@@ -217,10 +217,10 @@ export function generateForgotPasswordURL(token) {
 
 export function addBank(customer_id, bank) {
   // eslint-disable-next-line camelcase
-  const { branch, account_holder, account_number, bank_id } = bank;
+  const { branch_name, account_holder, account_number, bank_id } = bank;
 
-  return new Bank({
-    branch,
+  return new CustomerBank({
+    branch_name,
     account_holder,
     account_number,
     customer_id,
@@ -236,13 +236,13 @@ export function addBank(customer_id, bank) {
  */
 
 export function findAllBankById(id) {
-  return Bank.forge().where({ customer_id: id }).fetchAll({ withRelated: ['bank'] });
+  return CustomerBank.forge().where({ customer_id: id }).fetchAll({ withRelated: ['bank'] });
 }
 
 
 // eslint-disable-next-line camelcase
 export function getCustomerByAccNumber(customer_id, account_number) {
-  return new Bank({ 'customer_id': customer_id, 'account_number': account_number })
+  return new CustomerBank({ 'customer_id': customer_id, 'account_number': account_number })
     .fetch({ require: false })
     .then((data) => data)
     .catch(Customer.NotFoundError, () => {

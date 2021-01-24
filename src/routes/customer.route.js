@@ -105,6 +105,38 @@ const router = express.Router();
  */
 
 
+/**
+ * @swagger
+ * definitions:
+ *   SuccessTrueMessage:
+ *     type: object
+ *     properties:
+ *       success:
+ *         type: string
+ *         description: status of api
+ *         example: true
+ *       data:
+ *         type: string
+ *         description: message
+ *         example: message
+ */
+
+/**
+ * @swagger
+ * definitions:
+ *   SuccessFalseMessage:
+ *     type: object
+ *     properties:
+ *       success:
+ *         type: string
+ *         description: status of api
+ *         example: false
+ *       data:
+ *         type: string
+ *         description: message
+ *         example: message
+ */
+
 router
   .route('/')
 
@@ -466,6 +498,28 @@ router
 
   /**
    * @swagger
+   * definitions:
+   *   UpdatePasswordPayload:
+   *     type: object
+   *     properties:
+   *       old_password:
+   *         type: string
+   *         description: first name of the customer
+   *         example: oldpwd
+   *       new_password:
+   *         type: string
+   *         description: last name of the customer
+   *         example: newpwd
+   *       confirm_password:
+   *         type: string
+   *         description: email of the customer
+   *         required: true
+   *         example: newpwd
+   */
+
+
+  /**
+   * @swagger
    * /customers/{id}/update-password:
    *   put:
    *     tags:
@@ -484,19 +538,35 @@ router
    *         description: Update new password for logged in user
    *         required: true
    *         schema:
-   *           $ref: "#/definitions/Customer"
+   *           $ref: "#/definitions/UpdatePasswordPayload"
    *     responses:
    *       200:
    *         description: OK
    *         schema:
-   *           $ref: "#/definitions/Customer"
+   *           $ref: "#/definitions/SuccessTrueMessage"
+   *       403:
+   *         description: Forbidden
+   *         schema:
+   *           $ref: "#/definitions/SuccessFalseMessage"
    */
-
 
   .put(validate(customerSchema.updatePassword), customerCtrl.updatePassword);
 
 router
   .route('/forgot-password-notification')
+
+  /**
+   * @swagger
+   * definitions:
+   *   ForgotPasswordPayload:
+   *     type: object
+   *     properties:
+   *       email:
+   *         type: string
+   *         description: email of the customer
+   *         required: true
+   *         example: sunarban007@gmail.com
+   */
 
   /**
    * @swagger
@@ -515,15 +585,23 @@ router
    *     parameters:
    *       - name: body
    *         in: body
-   *         description: Update new password for logged in user
+   *         description: Forgot password for customer
    *         required: true
    *         schema:
-   *           $ref: "#/definitions/Customer"
+   *           $ref: "#/definitions/ForgotPasswordPayload"
    *     responses:
    *       200:
    *         description: OK
    *         schema:
-   *           $ref: "#/definitions/Customer"
+   *           $ref: "#/definitions/SuccessTrueMessage"
+   *       403:
+   *         description: Forbidden
+   *         schema:
+   *           $ref: "#/definitions/SuccessFalseMessage"
+   *       404:
+   *          description: Customer not found
+   *          schema:
+   *             $ref: '#/definitions/Error'
    */
 
   .post(validate(customerSchema.email), customerCtrl.forgotPasswordNotification);
@@ -533,32 +611,32 @@ router
 
   /**
    * @swagger
-   * /customers/{id}/banks:
-   *   post:
-   *     tags:
-   *       - customers
-   *     summary: "Create a bank for customer"
-   *     security:
-   *        - Bearer: []
-   *     operationId: banks
-   *     consumes:
-   *       - application/json
-   *     produces:
-   *       - application/json
-   *     parameters:
-   *       - name: body
-   *         in: body
-   *         description: Create a new bank for customer
+   * definitions:
+   *   AddBankPayload:
+   *     type: object
+   *     properties:
+   *       bank_id:
+   *         type: string
+   *         description: id of the bank
    *         required: true
-   *         schema:
-   *           $ref: "#/definitions/Customer"
-   *     responses:
-   *       200:
-   *         description: OK
-   *         schema:
-   *           $ref: "#/definitions/Customer"
+   *         example: 2
+   *       branch_name:
+   *         type: string
+   *         description: bank's branch name
+   *         required: true
+   *         example: Doha
+   *       account_holder:
+   *         type: string
+   *         description: account holder name
+   *         required: true
+   *         example: Sundar Ban
+   *       account_number:
+   *         type: string
+   *         description: bank's account number
+   *         required: true
+   *         example: 23425354354
    */
-  .post(validate(customerSchema.addBank), customerCtrl.addBank)
+
 
   /**
    * @swagger
@@ -580,12 +658,90 @@ router
    *         description: Create a new bank for customer
    *         required: true
    *         schema:
-   *           $ref: "#/definitions/Customer"
+   *           $ref: "#/definitions/AddBankPayload"
    *     responses:
    *       200:
    *         description: OK
    *         schema:
-   *           $ref: "#/definitions/Customer"
+   *           $ref: "#/definitions/SuccessTrueMessage"
+   *       403:
+   *         description: Forbidden
+   *         schema:
+   *           $ref: "#/definitions/SuccessFalseMessage"
+   */
+  .post(validate(customerSchema.addBank), customerCtrl.addBank)
+
+  /**
+   * @swagger
+   * definitions:
+   *   FetchCustomerBankPayload:
+   *     type: object
+   *     properties:
+   *       id:
+   *         type: string
+   *         description: id of the bank
+   *         required: true
+   *         example: 2
+   *       customer_id:
+   *         type: string
+   *         description: bank's branch name
+   *         required: true
+   *         example: Doha
+   *       branch_name:
+   *         type: string
+   *         description: account holder name
+   *         required: true
+   *         example: Sundar Ban
+   *       account_holder:
+   *         type: string
+   *         description: bank's account number
+   *         required: true
+   *         example: 04102524736
+   *       account_number:
+   *         type: string
+   *         description: account holder name
+   *         required: true
+   *         example: Sundar Ban
+   *       bank:
+   *          type: object
+   *          properties:
+   *            id:
+   *              type: string
+   *              description: id of the bank
+   *              required: true
+   *              example: 2
+   *            name:
+   *              type: string
+   *              description: name of the bank
+   *              required: true
+   *              example: Qatar International Islamic Bank
+   */
+
+  /**
+   * @swagger
+   * /customers/{id}/banks:
+   *   get:
+   *     tags:
+   *       - customers
+   *     summary: "Fetch all customer's bank"
+   *     security:
+   *        - Bearer: []
+   *     operationId: banks
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: id
+   *         in: path
+   *         description: fetch all customer's bank
+   *         required: true
+   *         type: integer
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *           $ref: "#/definitions/FetchCustomerBankPayload"
    */
 
   .get(customerCtrl.findAllBankById);
