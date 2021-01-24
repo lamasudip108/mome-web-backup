@@ -5,12 +5,10 @@ import path from "path";
 import Promise from "bluebird";
 import moment from "moment";
 
-import Bank from "@models/bank.model";
 import { PAYMENT } from "@constants";
 import bookshelf from "@config/bookshelf";
 import { notify } from "@config/mailer";
 import * as CustomerService from "@services/customer.service";
-import * as WalletService from "@services/wallet.service";
 import * as RequestService from "@services/request.service";
 import * as TransactionService from "@services/transaction.service";
 import { successResponse, errorResponse } from "@utils/response";
@@ -113,7 +111,7 @@ export function destroy(req, res, next) {
 }
 
 /**
- * Check customer email existence
+ * Check customer duplicate email on application
  *
  * @param {Object} req
  * @param {Object} res
@@ -134,7 +132,7 @@ export function isUniqueEmail(req, res, next) {
 }
 
 /**
- * Update the password for logged in user
+ * Update customer password
  *
  * @param {Object} req
  * @param {Object} res
@@ -177,7 +175,7 @@ export function updatePassword(req, res, next) {
  * @param {Function} next
  */
 
-export function forgotPasswordNotification(req, res, next) {
+export function forgotPassword(req, res, next) {
 
   const { email } = req.body;
 
@@ -207,26 +205,26 @@ export function forgotPasswordNotification(req, res, next) {
     .catch((err) => next(err));
 }
 
-/**
- * Render forgot password display page
- *
- * @param req
- * @param res
- * @param next
- */
-
-export function forgotPassword(req, res, next) {
-
-  const { token } = req.params;
-
-  jwt.verify(token, process.env.TOKEN_SECRET_KEY, ((err, decode) => {
-    if (err) {
-      res.sendFile(path.join(__dirname, "../../public/customer/account_verified.html"));
-    } else {
-      res.render("new-password-form", { data: { token: token }, layout: false });
-    }
-  }));
-}
+// /**
+//  * Render forgot password display page
+//  *
+//  * @param req
+//  * @param res
+//  * @param next
+//  */
+//
+// export function forgotPassword(req, res, next) {
+//
+//   const { token } = req.params;
+//
+//   jwt.verify(token, process.env.TOKEN_SECRET_KEY, ((err, decode) => {
+//     if (err) {
+//       res.sendFile(path.join(__dirname, "../../public/customer/account_verified.html"));
+//     } else {
+//       res.render("new-password-form", { data: { token: token }, layout: false });
+//     }
+//   }));
+// }
 
 /**
  * Set new password for the user
