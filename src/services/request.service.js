@@ -90,7 +90,7 @@ export function updateWalletTransferStatus(id,status){
       status: status,
     })
     .catch(Request.NoRowsUpdatedError, () => {
-      throw Boom.notFound('Wallet not found.');
+      throw Boom.notFound('Request not found.');
     });
 
 }

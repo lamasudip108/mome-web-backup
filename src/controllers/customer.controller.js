@@ -463,10 +463,10 @@ export function receivedWalletRequest(req, res, next) {
 export function respondWalletRequest(req, res, next) {
 
   let cusId = req.params.id;
-  const { request_id, status } = req.body;
+  const { id, status } = req.body;
 
   if (status === 0) {
-    WalletService.updateWalletTransferStatus(request_id, PAYMENT.STATUS.CANCELLED)
+    RequestService.updateWalletTransferStatus(id, PAYMENT.STATUS.CANCELLED)
       .then(response => {
         successResponse(res, response);
       })
@@ -474,30 +474,30 @@ export function respondWalletRequest(req, res, next) {
         next(err);
       });
   } else {
-    CustomerService.getCustomer(cusId)
+    CustomerService.getOne({ id: cusId })
       .then(sender => {
 
-        WalletService.getWalletRequestById(request_id)
-          .then(wallet => {
+        RequestService.getWalletRequestById(id)
+          .then(request => {
 
-            if (wallet.get('amount') > sender.get('wallet_amount')) {
+            if (request.get('amount') > sender.get('wallet_amount')) {
               errorResponse(res, 'You don\'t have sufficient amount in your wallet.');
             }
 
-            CustomerService.getCustomer(wallet.get('receiver'))
+            CustomerService.getOne({id:request.get('receiver_customer_id')})
               .then(receiver => {
 
                 if (sender.get('id') === receiver.get('id')) {
                   errorResponse(res, 'You can\'t send money to yourself.');
                 }
 
-                let amount = wallet.get('amount');
+                let amount = request.get('amount');
 
                 bookshelf.transaction(t => {
                   return Promise.all([
                     (CustomerService.updateSenderAmount(sender, amount), { transacting: t }),
                     (CustomerService.updateReceiverAmount(receiver, amount), { transacting: t }),
-                    (WalletService.updateWalletTransferStatus(request_id, PAYMENT.STATUS.COMPLETED), { transacting: t }),
+                    (RequestService.updateWalletTransferStatus(id, PAYMENT.STATUS.COMPLETED), { transacting: t }),
                   ]);
                 }).then(response => {
                   successResponse(res, 'transfer successful');

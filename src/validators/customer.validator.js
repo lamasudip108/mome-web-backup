@@ -55,7 +55,7 @@ export default {
   }),
 
   respondRequest:Joi.object({
-    request_id: Joi.number().required(),
+    id: Joi.number().required(),
     status: Joi.number().required(),
   })
 

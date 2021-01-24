@@ -726,7 +726,7 @@ router
    *     summary: "Fetch all customer's bank"
    *     security:
    *        - Bearer: []
-   *     operationId: banks
+   *     operationId: finaAllBankById
    *     consumes:
    *       - application/json
    *     produces:
@@ -786,7 +786,7 @@ router
    *     summary: "Send Money from ewallet to ewallet"
    *     security:
    *        - Bearer: []
-   *     operationId: banks
+   *     operationId: sendMoney
    *     consumes:
    *       - application/json
    *     produces:
@@ -823,7 +823,7 @@ router
    *     summary: "Request money from another ewallet customer"
    *     security:
    *        - Bearer: []
-   *     operationId: banks
+   *     operationId: requestMoney
    *     consumes:
    *       - application/json
    *     produces:
@@ -853,6 +853,44 @@ router
 
   /**
    * @swagger
+   * definitions:
+   *   WalletRequestPayload:
+   *     type: object
+   *     properties:
+   *       id:
+   *         type: string
+   *         description: id of the request
+   *         required: true
+   *         example: 2
+   *       sender_customer_id:
+   *         type: string
+   *         description: sender id
+   *         required: true
+   *         example: 3
+   *       receiver_customer_id:
+   *         type: string
+   *         description: receiver id
+   *         required: true
+   *         example: 4
+   *       amount:
+   *         type: string
+   *         description: request amount
+   *         required: true
+   *         example: 500
+   *       note:
+   *         type: string
+   *         description: example note
+   *         required: true
+   *         example: example note
+   *       status:
+   *         type: string
+   *         description: request status
+   *         required: true
+   *         example: pending
+   */
+
+  /**
+   * @swagger
    * /customers/{id}/sent-wallet-requests:
    *   get:
    *     tags:
@@ -860,23 +898,22 @@ router
    *     summary: "Show all sent wallet request"
    *     security:
    *        - Bearer: []
-   *     operationId: banks
+   *     operationId: sentWalletRequests
    *     consumes:
    *       - application/json
    *     produces:
    *       - application/json
    *     parameters:
-   *       - name: body
-   *         in: body
-   *         description: Show all sent wallet request
+   *       - name: id
+   *         in: path
+   *         description: id of customer that needs to be fetched
    *         required: true
-   *         schema:
-   *           $ref: "#/definitions/Customer"
+   *         type: integer
    *     responses:
    *       200:
    *         description: OK
    *         schema:
-   *           $ref: "#/definitions/Customer"
+   *           $ref: "#/definitions/WalletRequestPayload"
    */
 
   .get(customerCtrl.sentWalletRequest);
@@ -893,23 +930,22 @@ router
    *     summary: "Show all received wallet request"
    *     security:
    *        - Bearer: []
-   *     operationId: banks
+   *     operationId: receivedWalletRequests
    *     consumes:
    *       - application/json
    *     produces:
    *       - application/json
    *     parameters:
-   *       - name: body
-   *         in: body
-   *         description: Show all received wallet request
+   *       - name: id
+   *         in: path
+   *         description: id of customer that needs to be fetched
    *         required: true
-   *         schema:
-   *           $ref: "#/definitions/Customer"
+   *         type: integer
    *     responses:
    *       200:
    *         description: OK
    *         schema:
-   *           $ref: "#/definitions/Customer"
+   *           $ref: "#/definitions/WalletRequestPayload"
    */
 
   .get(customerCtrl.receivedWalletRequest);
@@ -919,14 +955,32 @@ router
 
   /**
    * @swagger
-   * /customers/{id}/receive-wallet-request:
+   * definitions:
+   *   RespondRequestPayload:
+   *     type: object
+   *     properties:
+   *       id:
+   *         type: string
+   *         description: id of the request
+   *         required: true
+   *         example: 2
+   *       status:
+   *         type: string
+   *         description: 1(accept) or 0(cancel)
+   *         required: true
+   *         example: 1
+   */
+
+  /**
+   * @swagger
+   * /customers/{id}/respond-wallet-request:
    *   post:
    *     tags:
    *       - customers
    *     summary: "respond to to wallet request"
    *     security:
    *        - Bearer: []
-   *     operationId: banks
+   *     operationId: respondWalletRequests
    *     consumes:
    *       - application/json
    *     produces:
@@ -937,18 +991,98 @@ router
    *         description: Respond to wallet request
    *         required: true
    *         schema:
-   *           $ref: "#/definitions/Customer"
+   *           $ref: "#/definitions/RespondRequestPayload"
    *     responses:
    *       200:
    *         description: OK
    *         schema:
-   *           $ref: "#/definitions/Customer"
+   *           $ref: "#/definitions/SuccessTrueMessage"
+   *       403:
+   *         description: Forbidden
+   *         schema:
+   *           $ref: "#/definitions/SuccessFalseMessage"
    */
 
   .post(validate(customerSchema.respondRequest), customerCtrl.respondWalletRequest);
 
 router
   .route('/:id/transactions')
+
+  /**
+   * @swagger
+   * definitions:
+   *   CustomerTransactionPayload:
+   *     type: object
+   *     properties:
+   *       id:
+   *         type: string
+   *         description: id of the bank
+   *         required: true
+   *         example: 2
+   *       customer_id:
+   *         type: string
+   *         description: id of customer
+   *         required: true
+   *         example: 2
+   *       product_name:
+   *         type: string
+   *         description: account holder name
+   *         required: true
+   *         example: Shoes
+   *       amount:
+   *         type: string
+   *         description: bank's account number
+   *         required: true
+   *         example: 32
+   *       commissions:
+   *         type: string
+   *         description: transaction commission
+   *         required: true
+   *         example: 2
+   *       notes:
+   *         type: string
+   *         description: Transaction note
+   *         required: true
+   *         example: test note
+   *       status:
+   *         type: string
+   *         description: transaction status
+   *         required: true
+   *         example: success
+   *       merchant:
+   *          type: object
+   *          properties:
+   *            id:
+   *              type: string
+   *              description: id of the merchant
+   *              required: true
+   *              example: 2
+   *            cr_number:
+   *              type: string
+   *              description: merchant register number
+   *              required: true
+   *              example: 242425345465
+   *            name:
+   *              type: string
+   *              description: name of the merchant
+   *              required: true
+   *              example: Addidas
+   *            description:
+   *              type: string
+   *              description: name of the bank
+   *              required: true
+   *              example: Merchant Description
+   *            email:
+   *              type: string
+   *              description: email of the merchant
+   *              required: true
+   *              example: merchant@gmail.com
+   *            phone:
+   *              type: string
+   *              description: phone of the merchant
+   *              required: true
+   *              example: 564646354
+   */
 
   /**
    * @swagger
@@ -959,23 +1093,22 @@ router
    *     summary: "Fetch customer transactions"
    *     security:
    *        - Bearer: []
-   *     operationId: banks
+   *     operationId: customerTransactions
    *     consumes:
    *       - application/json
    *     produces:
    *       - application/json
    *     parameters:
-   *       - name: body
-   *         in: body
-   *         description: Show all received wallet request
+   *       - name: id
+   *         in: path
+   *         description: fetch all transaction by customer id
    *         required: true
-   *         schema:
-   *           $ref: "#/definitions/Customer"
+   *         type: integer
    *     responses:
    *       200:
    *         description: OK
    *         schema:
-   *           $ref: "#/definitions/Customer"
+   *           $ref: "#/definitions/CustomerTransactionPayload"
    */
 
   .get(customerCtrl.findAllTransactionByCustomer);
