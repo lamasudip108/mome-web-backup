@@ -1,8 +1,8 @@
-import Boom from '@hapi/boom';
-import uniqid from 'uniqid';
+import Boom from "@hapi/boom";
+import uniqid from "uniqid";
 
-import { PAYMENT } from '@constants';
-import Request from '@models/request.model';
+import { PAYMENT } from "@constants";
+import Request from "@models/request.model";
 
 /**
  * Get all wallet by customer id
@@ -30,15 +30,15 @@ export function getAll() {
  * @param description
  * @returns {*}
  */
-export function sendMoney(sender, receiver, amount,note){
+export function sendMoney(sender, receiver, amount, note) {
 
   return new Request({
-    sender_customer_id: sender.get('id'),
-    receiver_customer_id: receiver.get('id'),
+    sender_customer_id: sender.get("id"),
+    receiver_customer_id: receiver.get("id"),
     amount: amount,
-    type :'send',
+    type: "send",
     notes: note,
-    status: PAYMENT.STATUS.COMPLETED,
+    status: PAYMENT.STATUS.COMPLETED
   }).save();
 
 }
@@ -51,15 +51,15 @@ export function sendMoney(sender, receiver, amount,note){
  * @param description
  * @returns {*}
  */
-export function requestMoney(requester, sender, amount,note){
+export function requestMoney(requester, sender, amount, note) {
 
   return new Request({
-    sender_customer_id: sender.get('id'),
-    receiver_customer_id: requester.get('id'),
+    sender_customer_id: sender.get("id"),
+    receiver_customer_id: requester.get("id"),
     amount: amount,
-    type :'request',
+    type: "request",
     notes: note,
-    status: PAYMENT.STATUS.PENDING,
+    status: PAYMENT.STATUS.PENDING
   }).save();
 
 }
@@ -83,14 +83,14 @@ export function getRequestByCustomerId(criteria) {
  * @returns {*}
  */
 
-export function updateWalletTransferStatus(id,status){
+export function updateWalletTransferStatus(id, status) {
 
   return new Request({ id })
     .save({
-      status: status,
+      status: status
     })
     .catch(Request.NoRowsUpdatedError, () => {
-      throw Boom.notFound('Request not found.');
+      throw Boom.notFound("Request not found.");
     });
 
 }
@@ -102,6 +102,6 @@ export function updateWalletTransferStatus(id,status){
  * @returns {*}
  */
 
-export function getWalletRequestById(id){
+export function getWalletRequestById(id) {
   return Request.forge().where({ id: id }).fetch();
 }
