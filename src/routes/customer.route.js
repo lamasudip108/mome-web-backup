@@ -104,75 +104,40 @@ const router = express.Router();
  *         description: customer update datetime
  */
 
-/**
- * @swagger
- * definitions:
- *   NewCustomerPayload:
- *     type: object
- *     properties:
- *       first_name:
- *         type: string
- *         description: first name of the user
- *         example: Krishna
- *       last_name:
- *         type: string
- *         description: last name of the user
- *         example: Timilsina
- *       email:
- *         type: string
- *         description: email of the user
- *         required: true
- *         example: test@gmail.com
- *       phone:
- *         type: string
- *         description: phone of the customer
- *         required: true
- *         example: "1234567891"
- *       password:
- *         type: string
- *         description: password of the user
- *         required: true
- *         example: "123456"
- */
-
-/**
- * @swagger
- * definitions:
- *   UpdateCustomerPayload:
- *     type: object
- *     properties:
- *       first_name:
- *         type: string
- *         description: first name of the user
- *         example: Krishna
- *       last_name:
- *         type: string
- *         description: last name of the user
- *         example: Timilsina
- *       email:
- *         type: string
- *         description: email of the user
- *         required: true
- *         example: test@gmail.com
- *       phone:
- *         type: string
- *         description: phone of the customer
- *         required: true
- *         example: "1234567891"
- *       password:
- *         type: string
- *         description: password of the user
- *         required: true
- *         example: "123456"
- *       status:
- *         type: integer
- *         description: status of the user
- *         example: 1
- */
-
 
 router
   .route('/')
+
+  /**
+   * @swagger
+   * definitions:
+   *   NewCustomerPayload:
+   *     type: object
+   *     properties:
+   *       first_name:
+   *         type: string
+   *         description: first name of the customer
+   *         example: Krishna
+   *       last_name:
+   *         type: string
+   *         description: last name of the customer
+   *         example: Timilsina
+   *       email:
+   *         type: string
+   *         description: email of the customer
+   *         required: true
+   *         example: test@gmail.com
+   *       phone:
+   *         type: string
+   *         description: phone of the customer
+   *         required: true
+   *         example: "1234567891"
+   *       password:
+   *         type: string
+   *         description: password of the customer
+   *         required: true
+   *         example: "123456"
+   */
 
   /**
    * @swagger
@@ -216,7 +181,7 @@ router
    *           schema:
    *              $ref: '#/definitions/Error'
    *       404:
-   *          description: User not found
+   *          description: Customer not found
    *          schema:
    *             $ref: '#/definitions/Error'
    */
@@ -303,12 +268,63 @@ router
    *           schema:
    *              $ref: '#/definitions/Error'
    *       404:
-   *          description: User not found
+   *          description: Customer not found
    *          schema:
    *             $ref: '#/definitions/Error'
    */
 
   .get(customerCtrl.findById)
+
+
+  /**
+   * @swagger
+   * definitions:
+   *   UpdateCustomerPayload:
+   *     type: object
+   *     properties:
+   *       first_name:
+   *         type: string
+   *         description: first name of the customer
+   *         example: Krishna
+   *       last_name:
+   *         type: string
+   *         description: last name of the customer
+   *         example: Timilsina
+   *       email:
+   *         type: string
+   *         description: email of the customer
+   *         required: true
+   *         example: test@gmail.com
+   *       phone:
+   *         type: string
+   *         description: phone of the customer
+   *         required: true
+   *         example: "1234567891"
+   *       password:
+   *         type: string
+   *         description: password of the customer
+   *         required: true
+   *         example: "123456"
+   *       street:
+   *         street: string
+   *         description: street name of the customer
+   *         example: 40 Fourth Avenue
+   *       city:
+   *         type: string
+   *         description: city of the customer
+   *         required: true
+   *         example: Sydney
+   *       province:
+   *         type: string
+   *         description: province of the customer
+   *         required: New South Wales
+   *         example: New South Wales
+   *       post_box:
+   *         type: string
+   *         description: post box of the customer
+   *         required: true
+   *         example: "4342"
+   */
 
   /**
    * @swagger
@@ -347,7 +363,7 @@ router
    *                 default: true
    *               data:
    *                 type: object
-   *                 $ref: "#/definitions/User"
+   *                 $ref: "#/definitions/Customer"
    *       400:
    *           description: ValidationError
    *           schema:
@@ -357,7 +373,7 @@ router
    *           schema:
    *              $ref: '#/definitions/Error'
    *       404:
-   *          description: User not found
+   *          description: Customer not found
    *          schema:
    *             $ref: '#/definitions/Error'
    */
@@ -406,11 +422,24 @@ router
 
   /**
    * @swagger
+   * definitions:
+   *   CheckUniqueEmailPayload:
+   *     type: object
+   *     properties:
+   *       email:
+   *         type: string
+   *         description: email of the customer
+   *         required: true
+   *         example: sunarban007@gmail.com
+   */
+
+  /**
+   * @swagger
    * /customers/isUniqueEmail:
    *   post:
    *     tags:
    *       - customers
-   *     summary: "Check email existence for customer"
+   *     summary: "Check email existence for customer if  exist return true"
    *     security:
    *        - Bearer: []
    *     operationId: isUniqueEmail
@@ -421,15 +450,13 @@ router
    *     parameters:
    *       - name: body
    *         in: body
-   *         description: Check email existence
+   *         description: Enter the email to check
    *         required: true
    *         schema:
-   *           $ref: "#/definitions/Customer"
+   *           $ref: "#/definitions/CheckUniqueEmailPayload"
    *     responses:
    *       200:
    *         description: OK
-   *         schema:
-   *           $ref: "#/definitions/Customer"
    */
 
   .post(validate(customerSchema.email), customerCtrl.isUniqueEmail);
@@ -464,6 +491,7 @@ router
    *         schema:
    *           $ref: "#/definitions/Customer"
    */
+
 
   .put(validate(customerSchema.updatePassword), customerCtrl.updatePassword);
 

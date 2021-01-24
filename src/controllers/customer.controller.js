@@ -144,6 +144,7 @@ export function updatePassword(req, res, next) {
 
   // eslint-disable-next-line camelcase
   const { old_password, new_password } = req.body;
+  
 
   CustomerService.getOneByCriteria({ id: req.params.id })
     .then(customer => {

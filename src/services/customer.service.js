@@ -139,7 +139,6 @@ export function verifyAccount(token) {
         const id = user.attributes.id;
         return new Customer({ id })
           .save({
-            'is_verified': 1,
             'status': CUSTOMER.STATUS.ACTIVE,
             'token': null,
           });
