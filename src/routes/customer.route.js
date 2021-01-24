@@ -131,7 +131,7 @@ const router = express.Router();
  *         type: string
  *         description: status of api
  *         example: false
- *       data:
+ *       message:
  *         type: string
  *         description: message
  *         example: message
