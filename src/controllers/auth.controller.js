@@ -12,5 +12,4 @@ export function login(req, res, next) {
   authService.login(req.body)
     .then((data) => res.json({ success: true, data }))
     .catch((err) => next(err));
-
 }
