@@ -87,7 +87,8 @@ export function resetPassword(req, res, next) {
               data: { first_name: user.get('first_name') },
               layout: false,
             });
-          });
+          })
+          .catch(err => next(err));
       }
     }
   });

@@ -72,9 +72,11 @@ export function store(req, res, next) {
                   notify(param);
 
                   successResponse(res, data, HttpStatus.CREATED);
-                });
+                })
+                .catch((err) => next(err));
             }
-          });
+          })
+          .catch((err) => next(err));
       }
     })
     .catch((err) => next(err));
@@ -157,7 +159,8 @@ export function updatePassword(req, res, next) {
         CustomerService.updatePassword(req.params.id, new_password)
           .then(customer => {
             successResponse(res, "Password changed successfully.");
-          });
+          })
+          .catch(err => next(err));
 
       } else {
         errorResponse(res, "Your old password does not match.", HttpStatus.FORBIDDEN);
@@ -199,7 +202,8 @@ export function forgotPassword(req, res, next) {
           notify(param);
 
           successResponse(res, "Reset password link sent successfully in your email address.");
-        });
+        })
+        .catch(err => next(err));
 
     })
     .catch((err) => next(err));
@@ -273,7 +277,8 @@ export function resetPassword(req, res, next) {
               },
               layout: false
             });
-          });
+          })
+          .catch(err => next(err));
       }
     }
   });
@@ -300,7 +305,8 @@ export function addBank(req, res, next) {
         CustomerService.addBank(req.params.id, req.body)
           .then((data) => {
             successResponse(res, "Bank added successfully.");
-          });
+          })
+          .catch(err => next(err));
       }
     })
     .catch((err) => next(err));
@@ -339,7 +345,6 @@ export function sendMoney(req, res, next) {
 
   CustomerService.getOne({ id: cusId })
     .then(sender => {
-
       if (parseFloat(amount) > sender.get("wallet_amount")) {
         errorResponse(res, "You don't have sufficient amount in your wallet.");
       }
@@ -368,7 +373,8 @@ export function sendMoney(req, res, next) {
           }).catch(err => {
             errorResponse(res, "unsuccessful transfer", HttpStatus.BAD_REQUEST);
           });
-        });
+        })
+        .catch(err => next(err));
     })
     .catch(err => next(err));
 }
@@ -404,7 +410,8 @@ export function requestMoney(req, res, next) {
             .catch(err => {
               errorResponse(res, err);
             });
-        });
+        })
+        .catch(err => next(err));
     })
     .catch(err => next(err));
 }
@@ -502,8 +509,10 @@ export function respondWalletRequest(req, res, next) {
                 }).catch(err => {
                   errorResponse(res, "unsuccessful transfer", HttpStatus.BAD_REQUEST);
                 });
-              });
-          });
+              })
+              .catch(err => next(err));
+          })
+          .catch(err => next(err));
       })
       .catch(err => next(err));
   }
