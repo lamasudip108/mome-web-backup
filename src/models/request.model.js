@@ -1,4 +1,6 @@
 import bookshelf from '../config/bookshelf';
+import Merchant from "./merchant.model";
+import Customer from "./customer.model";
 
 const TABLE_NAME = 'requests';
 
@@ -27,8 +29,17 @@ class Request extends bookshelf.Model {
    * @returns {string[]}
    */
   get hidden(){
-    return ['customer_id', 'created_at', 'updated_at'];
+    return ['created_at', 'updated_at'];
   }
+
+  sender () {
+    return this.belongsTo(Customer, 'sender_customer_id');
+  }
+
+  receiver () {
+    return this.belongsTo(Customer, 'receiver_customer_id');
+  }
+
 
 }
 

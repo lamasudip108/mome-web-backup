@@ -1,6 +1,4 @@
 import Boom from "@hapi/boom";
-import uniqid from "uniqid";
-
 import { PAYMENT } from "@constants";
 import Request from "@models/request.model";
 
@@ -27,7 +25,7 @@ export function getAll() {
  * @param sender
  * @param receiver
  * @param amount
- * @param description
+ * @param note
  * @returns {*}
  */
 export function sendMoney(sender, receiver, amount, note) {
@@ -48,7 +46,7 @@ export function sendMoney(sender, receiver, amount, note) {
  * @param requester
  * @param sender
  * @param amount
- * @param description
+ * @param note
  * @returns {*}
  */
 export function requestMoney(requester, sender, amount, note) {
@@ -70,8 +68,7 @@ export function requestMoney(requester, sender, amount, note) {
  * @returns {Promise}
  */
 export function getRequestByCustomerId(criteria) {
-
-  return Request.forge().where(criteria).fetchAll();
+  return Request.forge().where(criteria).fetchAll({ withRelated: ['sender', 'receiver'] });
 }
 
 /**

@@ -546,6 +546,7 @@ export function findAllTransactionByCustomer(req, res, next) {
 
         //todo code refactor needed
 
+        d.attributes.created_at = moment(d.attributes.created_at).format("YYYY-MM-DD HH:mm:ss");
         d.attributes.filter_date = date;
         d.attributes.merchant = d.relations.merchant.attributes;
 
