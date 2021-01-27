@@ -1,7 +1,6 @@
 import HttpStatus from "http-status-codes";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import path from "path";
 import Promise from "bluebird";
 import moment from "moment";
 
@@ -575,5 +574,28 @@ export function findAllTransactionByCustomer(req, res, next) {
 
     })
     .catch((err) => next(err));
+
+}
+
+/**
+ * Fetch particular transaction of customer by id
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+export function findCustomerTransactionById(req, res, next) {
+
+  const { id, tid } = req.params;
+
+  let criteria = { customer_id: id, id: tid };
+
+  TransactionService.findCustomerTransactionById(criteria)
+    .then(data => {
+      successResponse(res, data);
+    })
+    .catch(err => {
+      next(err);
+    });
 
 }

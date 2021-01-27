@@ -1057,11 +1057,6 @@ router
    *         description: id of the bank
    *         required: true
    *         example: 2
-   *       customer_id:
-   *         type: string
-   *         description: id of customer
-   *         required: true
-   *         example: 2
    *       product_name:
    *         type: string
    *         description: account holder name
@@ -1120,6 +1115,34 @@ router
    *              description: phone of the merchant
    *              required: true
    *              example: 564646354
+   *       customer:
+   *          type: object
+   *          properties:
+   *            id:
+   *              type: string
+   *              description: id of the merchant
+   *              required: true
+   *              example: 2
+   *            first_name:
+   *              type: string
+   *              description: merchant register number
+   *              required: true
+   *              example: sundar
+   *            last_name:
+   *              type: string
+   *              description: name of the merchant
+   *              required: true
+   *              example: Addidas
+   *            email:
+   *              type: string
+   *              description: email of the merchant
+   *              required: true
+   *              example: merchant@gmail.com
+   *            phone:
+   *              type: string
+   *              description: phone of the merchant
+   *              required: true
+   *              example: 564646354
    */
 
   /**
@@ -1150,5 +1173,42 @@ router
    */
 
   .get(customerCtrl.findAllTransactionByCustomer);
+
+router
+  .route('/:id/transactions/:tid')
+
+  /**
+   * @swagger
+   * /customers/{id}/transactions{tid}:
+   *   get:
+   *     tags:
+   *       - customers
+   *     summary: "Fetch customer transactions"
+   *     security:
+   *        - Bearer: []
+   *     operationId: customerTransactionsById
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: id
+   *         in: path
+   *         description: customer id
+   *         required: true
+   *         type: integer
+   *       - name: tid
+   *         in: path
+   *         description: transaction id
+   *         required: true
+   *         type: integer
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *           $ref: "#/definitions/CustomerTransactionPayload"
+   */
+
+  .get(customerCtrl.findCustomerTransactionById);
 
 export default router;

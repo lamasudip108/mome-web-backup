@@ -1,5 +1,6 @@
 import bookshelf from '../config/bookshelf';
 import Merchant from "./merchant.model";
+import Customer from "./customer.model";
 
 const TABLE_NAME = 'transactions';
 
@@ -32,7 +33,7 @@ class Transaction extends bookshelf.Model {
   }
 
   /**
-   * Create relation with Bank
+   * Create relation with Merchant
    *
    * @returns {Bookshelf.Model}
    */
@@ -40,6 +41,14 @@ class Transaction extends bookshelf.Model {
     return this.belongsTo(Merchant, 'merchant_id');
   }
 
+  /**
+   * Create relation with Customer
+   *
+   * @returns {Bookshelf.Model}
+   */
+  customer () {
+    return this.belongsTo(Customer, 'customer_id');
+  }
 }
 
 export default Transaction;
