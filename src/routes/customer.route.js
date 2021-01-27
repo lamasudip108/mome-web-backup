@@ -1183,7 +1183,7 @@ router
    *   get:
    *     tags:
    *       - customers
-   *     summary: "Fetch customer transactions"
+   *     summary: "Fetch customer transactions details by transaction id"
    *     security:
    *        - Bearer: []
    *     operationId: customerTransactionsById
