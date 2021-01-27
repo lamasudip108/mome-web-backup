@@ -1,4 +1,6 @@
 import bookshelf from '../config/bookshelf';
+import Request from "./request.model";
+import Transaction from "./transaction.model";
 
 const TABLE_NAME = 'customers';
 
@@ -27,6 +29,23 @@ class Customer extends bookshelf.Model {
    */
   get hidden(){
     return ['password', 'token', 'otp', 'created_at', 'updated_at'];
+  }
+
+  senderCustomer() {
+    return this.hasMany(Request, 'sender_customer_id');
+  }
+
+  receiverCustomer() {
+    return this.hasMany(Request, 'receiver_customer_id');
+  }
+
+  /**
+   * Create relation with customers bank
+   *
+   * @returns {Collection}
+   */
+  transaction() {
+    return this.hasMany(Transaction, 'customer_id');
   }
 }
 
