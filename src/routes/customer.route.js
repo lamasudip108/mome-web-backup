@@ -1266,7 +1266,7 @@ router
    *     summary: "Fetch all contacts "
    *     security:
    *        - Bearer: []
-   *     operationId: fetchAllContacts
+   *     operationId: fetchMyContacts
    *     consumes:
    *       - application/json
    *     produces:
@@ -1292,7 +1292,7 @@ router
    *     summary: "Fetch all customers excluding self"
    *     security:
    *        - Bearer: []
-   *     operationId: fetchAllContacts
+   *     operationId: fetchAllCustomers
    *     consumes:
    *       - application/json
    *     produces:
