@@ -10,6 +10,7 @@ import { notify } from "@config/mailer";
 import * as CustomerService from "@services/customer.service";
 import * as RequestService from "@services/request.service";
 import * as TransactionService from "@services/transaction.service";
+import * as ContactService from "@services/contact.service";
 import { successResponse, errorResponse } from "@utils/response";
 
 /**
@@ -597,5 +598,43 @@ export function findCustomerTransactionById(req, res, next) {
     .catch(err => {
       next(err);
     });
+}
 
+
+/**
+ * Fetch all contacts of the customer
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+export function findMyContacts(req, res, next) {
+
+  let criteria = { customer_id: req.params.id };
+
+  ContactService.findMyContacts(criteria)
+    .then(data => {
+      res.json({ data });
+    })
+    .catch(err => {
+      next(err);
+    });
+}
+
+/**
+ * Fetch all active customer excluding self
+ *
+ * @param req
+ * @param res
+ * @param next
+ */
+export function findAllCustomer(req, res, next) {
+
+  CustomerService.findAllCustomer(req.params.id)
+    .then(data => {
+      res.json({ data });
+    })
+    .catch(err => {
+      next(err);
+    });
 }

@@ -293,3 +293,7 @@ export function updateReceiverAmount(receiver, amount) {
       throw Boom.notFound("Customer not found.");
     });
 }
+
+export function findAllCustomer(id) {
+  return Customer.forge().where("id", "<>", id).where("status", "=", "active").fetchAll();
+}
