@@ -1226,7 +1226,7 @@ router
    *         description: id of the bank
    *         required: true
    *         example: 2
-   *       customer:
+   *       contact:
    *          type: object
    *          properties:
    *            id:
