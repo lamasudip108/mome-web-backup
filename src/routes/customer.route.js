@@ -1271,6 +1271,12 @@ router
    *       - application/json
    *     produces:
    *       - application/json
+   *     parameters:
+   *       - name: id
+   *         in: path
+   *         description: fetch all customer contact
+   *         required: true
+   *         type: integer
    *     responses:
    *       200:
    *         description: OK
@@ -1297,6 +1303,12 @@ router
    *       - application/json
    *     produces:
    *       - application/json
+   *     parameters:
+   *       - name: id
+   *         in: path
+   *         description: fetch all customer excluding self
+   *         required: true
+   *         type: integer
    *     responses:
    *       200:
    *         description: OK
