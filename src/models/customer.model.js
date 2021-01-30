@@ -1,6 +1,7 @@
 import bookshelf from '../config/bookshelf';
 import Request from "./request.model";
 import Transaction from "./transaction.model";
+import CustomerContact from "./customer_contact.model";
 
 const TABLE_NAME = 'customers';
 
@@ -46,6 +47,14 @@ class Customer extends bookshelf.Model {
    */
   transaction() {
     return this.hasMany(Transaction, 'customer_id');
+  }
+
+  contact() {
+    return this.hasMany(CustomerContact, "contact_id");
+  }
+
+  customer() {
+    return this.hasMany(CustomerContact, "customer_id");
   }
 }
 

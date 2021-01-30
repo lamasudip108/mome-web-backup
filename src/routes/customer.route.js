@@ -1211,4 +1211,111 @@ router
 
   .get(customerCtrl.findCustomerTransactionById);
 
+router
+  .route('/:id/my-contacts')
+
+
+  /**
+   * @swagger
+   * definitions:
+   *   MyContactPayload:
+   *     type: object
+   *     properties:
+   *       id:
+   *         type: string
+   *         description: id of the bank
+   *         required: true
+   *         example: 2
+   *       contact:
+   *          type: object
+   *          properties:
+   *            id:
+   *              type: string
+   *              description: id of the merchant
+   *              required: true
+   *              example: 2
+   *            first_name:
+   *              type: string
+   *              description: merchant register number
+   *              required: true
+   *              example: sundar
+   *            last_name:
+   *              type: string
+   *              description: name of the merchant
+   *              required: true
+   *              example: Addidas
+   *            email:
+   *              type: string
+   *              description: email of the merchant
+   *              required: true
+   *              example: merchant@gmail.com
+   *            phone:
+   *              type: string
+   *              description: phone of the merchant
+   *              required: true
+   *              example: 564646354
+   */
+
+
+  /**
+   * @swagger
+   * /customers/{id}/my-contacts:
+   *   get:
+   *     tags:
+   *       - customers
+   *     summary: "Fetch all contacts "
+   *     security:
+   *        - Bearer: []
+   *     operationId: fetchMyContacts
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: id
+   *         in: path
+   *         description: fetch all customer contact
+   *         required: true
+   *         type: integer
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *           $ref: "#/definitions/MyContactPayload"
+   */
+
+  .get(customerCtrl.findMyContacts);
+
+router
+  .route('/:id/contacts')
+
+  /**
+   * @swagger
+   * /customers/{id}/contacts:
+   *   get:
+   *     tags:
+   *       - customers
+   *     summary: "Fetch all customers excluding self"
+   *     security:
+   *        - Bearer: []
+   *     operationId: fetchAllCustomers
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - name: id
+   *         in: path
+   *         description: fetch all customer excluding self
+   *         required: true
+   *         type: integer
+   *     responses:
+   *       200:
+   *         description: OK
+   *         schema:
+   *           $ref: "#/definitions/NewCustomerPayload"
+   */
+
+  .get(customerCtrl.findAllCustomer);
+
 export default router;
