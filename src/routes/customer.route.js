@@ -738,7 +738,7 @@ router
    *     parameters:
    *       - name: id
    *         in: path
-   *         description: fetch all customer's bank
+   *         description: logged in user id
    *         required: true
    *         type: integer
    *     responses:
@@ -796,6 +796,11 @@ router
    *     produces:
    *       - application/json
    *     parameters:
+   *       - name: id
+   *         in: path
+   *         description: logged in user id
+   *         required: true
+   *         type: integer
    *       - name: body
    *         in: body
    *         required: true
@@ -902,6 +907,11 @@ router
    *     produces:
    *       - application/json
    *     parameters:
+   *       - name: id
+   *         in: path
+   *         description: logged in user id
+   *         required: true
+   *         type: integer
    *       - name: body
    *         in: body
    *         required: true
@@ -989,6 +999,11 @@ router
    *     produces:
    *       - application/json
    *     parameters:
+   *       - name: id
+   *         in: path
+   *         description: logged in user id
+   *         required: true
+   *         type: integer
    *       - name: body
    *         in: body
    *         required: true
@@ -1025,6 +1040,11 @@ router
    *     produces:
    *       - application/json
    *     parameters:
+   *       - name: id
+   *         in: path
+   *         description: logged in user id
+   *         required: true
+   *         type: integer
    *       - name: body
    *         in: body
    *         required: true
@@ -1190,7 +1210,7 @@ router
    *     consumes:
    *       - application/json
    *     produces:
-   *       - application/json
+   *       - application/json410265725
    *     parameters:
    *       - name: id
    *         in: path
