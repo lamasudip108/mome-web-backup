@@ -537,6 +537,11 @@ router
    *     produces:
    *       - application/json
    *     parameters:
+   *       - name: id
+   *         in: path
+   *         description: customer id for password update
+   *         required: true
+   *         type: integer
    *       - name: body
    *         in: body
    *         description: Update new password
@@ -657,6 +662,11 @@ router
    *     produces:
    *       - application/json
    *     parameters:
+   *       - name: id
+   *         in: path
+   *         description: id of customer that needs to be fetched
+   *         required: true
+   *         type: integer
    *       - name: body
    *         in: body
    *         description: Create a new bank for customer
