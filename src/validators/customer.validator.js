@@ -41,7 +41,7 @@ export default {
     }),
 
   addBank: Joi.object({
-    bank_id: Joi.string().required(),
+    bank_id: Joi.number().required(),
     branch_name: Joi.string().required(),
     account_holder: Joi.string().required(),
     account_number: Joi.string().required(),

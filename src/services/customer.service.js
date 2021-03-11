@@ -225,7 +225,13 @@ export function addBank(customer_id, bank) {
     account_number,
     customer_id,
     bank_id
-  }).save();
+  }).save().catch(function(err) {
+    if (err.code === "ER_DUP_ENTRY" || err.errno === 1062) { // MySQL
+      throw Boom.badRequest(err.sqlMessage);
+    } else if (err.code === "23505") { // PostgreSQL
+      throw Boom.badRequest(err.sqlMessage);
+    }
+  });
 }
 
 /**

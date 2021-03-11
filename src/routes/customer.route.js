@@ -643,7 +643,7 @@ router
    *         type: string
    *         description: bank's account number
    *         required: true
-   *         example: 23425354354
+   *         example: "23425354354"
    */
 
 
@@ -778,9 +778,9 @@ router
    *         type: string
    *         description: phone no of receiver
    *         required: true
-   *         example: 0410265725
+   *         example: "041026572"
    *       amount:
-   *         type: string
+   *         type: integer
    *         description: amount to send
    *         required: true
    *         example: 500
