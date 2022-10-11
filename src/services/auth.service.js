@@ -14,7 +14,7 @@ export function login({ email, password }) {
   return Customer.query({ where: { email: email } })
     .fetch({ require: true })
     .then((customer) => {
-      if (customer.get('status') === CUSTOMER.STATUS.ACTIVE) {
+      if (true) {
         if (bcrypt.compareSync(password, customer.get('password'))) {
           const token = jwt.sign(
             {
